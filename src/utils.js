@@ -1,19 +1,17 @@
 export const getRandomInt = (min, max) => Math.floor(Math.random() * Math.floor((max - min) + 1) + min);
 
-export const getRandomElements = (array, length) => {
-  const elements = [];
-  const elementsLength = length;
-  while (elements.length < elementsLength) {
-    const randomArrayElementNumber = getRandomInt(0, array.length - 1);
-    const randomArrayElement = array[randomArrayElementNumber];
+const _shuffle = (array) => {
+  for (let i = 0; i < array.length; i++) {
+    const randomIndex = getRandomInt(i, array.length - 1);
+    const value = array[randomIndex];
 
-    if (elements.indexOf(randomArrayElement) === -1) {
-      elements.push(randomArrayElement);
-    }
+    array[randomIndex] = array[i];
+    array[i] = value;
   }
-
-  return elements;
+  return array;
 };
+
+export const getRandomElements = (array, length) => _shuffle(array).slice(0, length);
 
 export const populateDom = (array, parentElement, render, clear = false) => {
   const fragment = document.createElement(`template`);
