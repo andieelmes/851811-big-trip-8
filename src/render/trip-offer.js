@@ -1,5 +1,7 @@
-const makeTripPointHashtag = (offer) => `<li>
-    <button class="trip-point__offer">${offer.name} +&euro;&nbsp;${offer.price}</button>
+const makeTripPointOffer = (offer) => {
+  const [name, price] = offer;
+  return `<li>
+    <button class="trip-point__offer">${name} +&euro;&nbsp;${price}</button>
   </li>`;
-
-export default makeTripPointHashtag;
+};
+export default makeTripPointOffer;

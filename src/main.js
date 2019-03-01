@@ -4,13 +4,22 @@ import filterMocks from './data/filters';
 
 import makeFilter from './render/filter';
 import renderTripPoints from './render/tripPoint';
+import renderTripInfo from './render/tripInfo';
+import renderTripDayInfo from './render/tripDayInfo';
 import subscribeToFilterClicks from './actions/filter';
 
 const filtersElement = document.querySelector(FILTERS_SELECTOR);
 
 const init = () => {
-  populateDom(filterMocks, filtersElement, makeFilter, true);
+  populateDom({
+    array: filterMocks,
+    parentElement: filtersElement,
+    render: makeFilter,
+    clear: true
+  });
   renderTripPoints();
+  renderTripInfo();
+  renderTripDayInfo()
   subscribeToFilterClicks();
 };
 
