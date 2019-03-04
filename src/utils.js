@@ -1,24 +1,25 @@
+import shuffle from 'lodash.shuffle';
+
 export const getRandomInt = (min, max) => Math.floor(Math.random() * Math.floor((max - min) + 1) + min);
 
-export const getRandomElements = (array, length) => {
-  const elements = [];
-  const elementsLength = length;
-  while (elements.length < elementsLength) {
-    const randomArrayElementNumber = getRandomInt(0, array.length - 1);
-    const randomArrayElement = array[randomArrayElementNumber];
+export const getRandomElements = (array, length) => shuffle(array).slice(0, length);
 
-    if (elements.indexOf(randomArrayElement) === -1) {
-      elements.push(randomArrayElement);
-    }
-  }
+export const populateDom = (config) => {
+  const {
+    array,
+    parentElement,
+    render,
+    clear = false,
+    fromMock = true
+  } = config;
 
-  return elements;
-};
-
-export const populateDom = (array, parentElement, render, clear = false) => {
   const fragment = document.createElement(`template`);
   array.forEach((item) => {
-    fragment.innerHTML += render(item);
+    if (fromMock) {
+      fragment.innerHTML += render(item);
+    } else {
+      fragment.innerHTML += item;
+    }
   });
 
   if (clear) {
@@ -26,3 +27,29 @@ export const populateDom = (array, parentElement, render, clear = false) => {
   }
   parentElement.appendChild(fragment.content);
 };
+
+export const appendToDom = (config) => {
+  const {
+    newElements,
+    parentElement,
+    clear = false,
+  } = config;
+
+  const fragment = document.createElement(`template`);
+  fragment.innerHTML += newElements;
+
+  if (clear) {
+    parentElement.innerHTML = ``;
+  }
+  parentElement.appendChild(fragment.content);
+};
+
+export const convertTimeIntoHoursAndMinutes = (timeStart, timeEnd) => {
+  const dateStart = new Date(timeStart);
+  const dateEnd = new Date(timeEnd);
+  const hours = dateEnd.getHours() - dateStart.getHours();
+  const minutes = Math.abs(dateEnd.getMinutes() - dateStart.getMinutes());
+  return `${hours ? `${hours}H` : ``} ${minutes ? `${minutes}M` : ``}`;
+};
+
+export const getRandomBool = () => getRandomInt(0, 1) === 1;
