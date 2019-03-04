@@ -9,37 +9,12 @@ import {
   MIN_OFFER_NUMBER,
   MAX_OFFER_NUMBER,
   LOREM_IPSUM,
+  TYPES,
 } from '../constants';
 
 const tripPoint = () => {
   return {
-    icon: [
-      [`Taxi`, `🚕`],
-      [`Bus`, `🚌`],
-      [`Train`, `🚂`],
-      [`Ship`, `️🛳️`],
-      [`Transport`, `🚊`],
-      [`Drive`, `🚗`],
-      [`Flight`, `️✈️`],
-      [`Check-in`, `🏨`],
-      [`Sightseeing`, `️🏛️`],
-      [`Restaurant`, `🍴`]
-    ][getRandomInt(0, 9)],
-    cities: [
-      `Paris`,
-      `Dubrovnik`,
-      `Barcelona`,
-      `Oslo`,
-      `Seul`,
-      `Malmo`,
-      `Amsterdam`,
-      `San-Francisco`,
-      `Derry`,
-      `Fargo`,
-      `New York`,
-      `Los Angeles`
-    ][getRandomInt(0, 11)],
-    picture: `//picsum.photos/100/100?r=${Math.random()}`,
+    type: TYPES[getRandomInt(0, TYPES.length - 1)],
     offers: getRandomElements([
       `Add luggage`,
       `Switch to comfort class`,
@@ -48,8 +23,8 @@ const tripPoint = () => {
     ].map((offer) => [offer, getRandomInt(MIN_PRICE, MAX_PRICE)]),
     getRandomInt(MIN_OFFER_NUMBER, MAX_OFFER_NUMBER)),
     desc: getRandomElements(LOREM_IPSUM.split(`. `), getRandomInt(1, 3)).join(`. `),
-    timeStart: Date.now() + 24 * 60 * 60 * 1000 + getRandomInt(0, 3) * 60 * 60 * 1000 + getRandomInt(0, 60) * 60 * 1000,
-    timeEnd: Date.now() + 24 * 60 * 60 * 1000 + getRandomInt(4, 7) * 60 * 60 * 1000 + getRandomInt(0, 60) * 60 * 1000,
+    timeStart: new Date(new Date().setHours(getRandomInt(10, 16))).setMinutes(getRandomInt(0, 59)),
+    timeEnd: new Date(new Date().setHours(getRandomInt(16, 23))).setMinutes(getRandomInt(0, 59)),
     price: getRandomInt(MIN_PRICE, MAX_PRICE)
   };
 };

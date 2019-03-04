@@ -1,14 +1,14 @@
 import {
   populateDom,
   getRandomInt,
-  coverTimeIntoHoursAndMinutes,
+  convertTimeIntoHoursAndMinutes,
 } from '../utils';
 import {
   TRIP_POINTS_SELECTOR,
   MIN_NUMBER_OF_TRIP_POINTS,
   MAX_NUMBER_OF_TRIP_POINTS,
 } from '../constants';
-import makeTripPointOffer from './trip-offer';
+import makeTripPointOffer from './tripOffer';
 import tripPoint from '../data/tripPoint';
 
 const tripPointsElement = document.querySelector(TRIP_POINTS_SELECTOR);
@@ -16,7 +16,7 @@ const defaultNumberOfTripPoints = getRandomInt(MIN_NUMBER_OF_TRIP_POINTS, MAX_NU
 
 const makeTripPoint = (config) => {
   const {
-    icon,
+    type: [typeDesc, typeEmoji],
     offers,
     timeStart,
     timeEnd,
@@ -24,17 +24,15 @@ const makeTripPoint = (config) => {
     desc,
   } = config;
 
-  const [iconTitle, emoji] = icon;
-  const duration = (timeEnd - timeStart);
   return `<article class="trip-point">
-    <i class="trip-icon" title="${iconTitle}">${emoji}</i>
+    <i class="trip-icon" title="${typeDesc}">${typeEmoji}</i>
     <h3 class="trip-point__title">${desc}</h3>
     <p class="trip-point__schedule">
       <span class="trip-point__timetable">
       ${new Date(timeStart).toLocaleTimeString(`en-gb`, {hour: `2-digit`, minute: `2-digit`})}
       &nbsp;&mdash;
       ${new Date(timeEnd).toLocaleTimeString(`en-gb`, {hour: `2-digit`, minute: `2-digit`})}</span>
-      <span class="trip-point__duration">${coverTimeIntoHoursAndMinutes(duration)}</span>
+      <span class="trip-point__duration">${convertTimeIntoHoursAndMinutes(timeStart, timeEnd)}</span>
     </p>
     <p class="trip-point__price">&euro;&nbsp;${price}</p>
     <ul class="trip-point__offers">

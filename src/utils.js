@@ -44,12 +44,11 @@ export const appendToDom = (config) => {
   parentElement.appendChild(fragment.content);
 };
 
-export const coverTimeIntoHoursAndMinutes = (milliseconds) => {
-  let minutes = Math.floor(milliseconds / (60 * 1000));
-  const hours = Math.floor(minutes / 60);
-
-  minutes = minutes % 60;
-
+export const convertTimeIntoHoursAndMinutes = (timeStart, timeEnd) => {
+  const dateStart = new Date(timeStart);
+  const dateEnd = new Date(timeEnd);
+  const hours = dateEnd.getHours() - dateStart.getHours();
+  const minutes = Math.abs(dateEnd.getMinutes() - dateStart.getMinutes());
   return `${hours ? `${hours}H` : ``} ${minutes ? `${minutes}M` : ``}`;
 };
 
