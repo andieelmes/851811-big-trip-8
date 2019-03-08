@@ -5,7 +5,7 @@ import {
 } from '../constants';
 
 import {getRandomInt} from '../utils';
-import renderTripPoints from '../render/tripPoint';
+import renderTripPoints from './tripPoint';
 
 const onFilterClick = () => {
   const numberOfTripPoints = getRandomInt(MIN_NUMBER_OF_TRIP_POINTS, MAX_NUMBER_OF_TRIP_POINTS);
