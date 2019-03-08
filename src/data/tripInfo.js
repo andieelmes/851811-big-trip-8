@@ -8,15 +8,17 @@ import {
   MAX_CITIES,
   MIN_TOTAL_PRICE,
   MAX_TOTAL_PRICE,
-  CITIES
+  CITIES,
+  START_DATE,
+  END_DATE,
 } from '../constants';
 
 const tripInfo = () => {
   return {
     cities: getRandomElements(CITIES, getRandomInt(MIN_CITIES, MAX_CITIES)),
     picture: `//picsum.photos/42/42?r=${Math.random()}`,
-    dateStart: Date.now() + 24 * 60 * 60 * 1000,
-    dateEnd: Date.now() + getRandomInt(2, 5) * 24 * 60 * 60 * 1000,
+    dateStart: new Date(new Date().setDate(START_DATE)),
+    dateEnd: new Date(new Date().setDate(END_DATE)),
     totalPrice: getRandomInt(MIN_TOTAL_PRICE, MAX_TOTAL_PRICE)
   };
 };

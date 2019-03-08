@@ -1,3 +1,5 @@
+import {getRandomInt} from "./utils";
+
 export const MIN_NUMBER_OF_TRIP_POINTS = 2;
 export const MAX_NUMBER_OF_TRIP_POINTS = 15;
 export const FILTERS_SELECTOR = `.trip-filter`;
@@ -33,6 +35,12 @@ export const CITIES = [
   `New York`,
   `Los Angeles`
 ];
+export const OFFERS = [
+  `Add luggage`,
+  `Switch to comfort class`,
+  `Add meal`,
+  `Choose seats`
+];
 export const MIN_CITIES = 2;
 export const MAX_CITIES = 5;
 export const MIN_TOTAL_PRICE = 750;
@@ -40,3 +48,8 @@ export const MAX_TOTAL_PRICE = 2000;
 export const TRIP_POINTS_SELECTOR = `.trip-day__items`;
 export const TRIP_INFO_SELECTOR = `.trip`;
 export const TRIP_DAY_INFO_SELECTOR = `.trip-day__info`;
+export const START_HOURS = [10, 16];
+export const END_HOURS = [16, 23];
+export const MINUTES = [0, 59];
+export const START_DATE = getRandomInt(1, 15);
+export const END_DATE = getRandomInt(16, 28);

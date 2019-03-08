@@ -10,22 +10,27 @@ import {
   MAX_OFFER_NUMBER,
   LOREM_IPSUM,
   TYPES,
+  CITIES,
+  OFFERS,
+  START_HOURS,
+  END_HOURS,
+  MINUTES,
 } from '../constants';
 
 const tripPoint = () => {
   return {
+    allTypes: TYPES,
     type: [...TYPES][getRandomInt(0, TYPES.size - 1)],
-    offers: getRandomElements([
-      `Add luggage`,
-      `Switch to comfort class`,
-      `Add meal`,
-      `Choose seats`
-    ].map((offer) => [offer, getRandomInt(MIN_PRICE, MAX_PRICE)]),
-    getRandomInt(MIN_OFFER_NUMBER, MAX_OFFER_NUMBER)),
+    allOffers: OFFERS,
+    offers: getRandomElements(OFFERS.map((offer) => [offer, getRandomInt(MIN_PRICE, MAX_PRICE)]),
+        getRandomInt(MIN_OFFER_NUMBER, MAX_OFFER_NUMBER)),
     desc: getRandomElements(LOREM_IPSUM.split(`. `), getRandomInt(1, 3)).join(`. `),
-    timeStart: new Date(new Date().setHours(getRandomInt(10, 16))).setMinutes(getRandomInt(0, 59)),
-    timeEnd: new Date(new Date().setHours(getRandomInt(16, 23))).setMinutes(getRandomInt(0, 59)),
-    price: getRandomInt(MIN_PRICE, MAX_PRICE)
+    timeStart: new Date(new Date().setHours(getRandomInt(...START_HOURS))).setMinutes(getRandomInt(...MINUTES)),
+    timeEnd: new Date(new Date().setHours(getRandomInt(...END_HOURS))).setMinutes(getRandomInt(...MINUTES)),
+    price: getRandomInt(MIN_PRICE, MAX_PRICE),
+    allCitites: CITIES,
+    title: CITIES[getRandomInt(0, CITIES.length - 1)],
+    pictures: new Array(getRandomInt(2, 4)).fill(``).map(() => `//picsum.photos/330/140?r=${Math.random()}`),
   };
 };
 

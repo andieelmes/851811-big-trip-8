@@ -1,54 +1,62 @@
 import {
-  populateDom,
-  getRandomInt,
   convertTimeIntoHoursAndMinutes,
+  getHourAndMinutes,
 } from '../utils';
-import {
-  TRIP_POINTS_SELECTOR,
-  MIN_NUMBER_OF_TRIP_POINTS,
-  MAX_NUMBER_OF_TRIP_POINTS,
-} from '../constants';
+
 import makeTripPointOffer from './tripOffer';
-import tripPoint from '../data/tripPoint';
+import Component from './tripPointComponent';
 
-const tripPointsElement = document.querySelector(TRIP_POINTS_SELECTOR);
-const defaultNumberOfTripPoints = getRandomInt(MIN_NUMBER_OF_TRIP_POINTS, MAX_NUMBER_OF_TRIP_POINTS);
+class TripPoint extends Component {
+  constructor(data) {
+    super();
+    [this._typeDesc, this._typeEmoji] = data.type;
+    this._offers = data.offers;
+    this._timeStart = data.timeStart;
+    this._timeEnd = data.timeEnd;
+    this._price = data.price;
+    this._title = data.title;
 
-const makeTripPoint = (config) => {
-  const {
-    type: [typeDesc, typeEmoji],
-    offers,
-    timeStart,
-    timeEnd,
-    price,
-    desc,
-  } = config;
+    this._onTripPointClick = this._onTripPointClick.bind(this);
 
-  return `<article class="trip-point">
-    <i class="trip-icon" title="${typeDesc}">${typeEmoji}</i>
-    <h3 class="trip-point__title">${desc}</h3>
+    this._onEdit = null;
+  }
+
+  get template() {
+    return `<article class="trip-point">
+    <i class="trip-icon" title="${this._typeDesc}">${this._typeEmoji}</i>
+    <h3 class="trip-point__title">${this._title}</h3>
     <p class="trip-point__schedule">
       <span class="trip-point__timetable">
-      ${new Date(timeStart).toLocaleTimeString(`en-gb`, {hour: `2-digit`, minute: `2-digit`})}
-      &nbsp;&mdash;
-      ${new Date(timeEnd).toLocaleTimeString(`en-gb`, {hour: `2-digit`, minute: `2-digit`})}</span>
-      <span class="trip-point__duration">${convertTimeIntoHoursAndMinutes(timeStart, timeEnd)}</span>
+        ${getHourAndMinutes(this._timeStart)}
+        &nbsp;&mdash;
+        ${getHourAndMinutes(this._timeEnd)}
+      </span>
+      <span class="trip-point__duration">${convertTimeIntoHoursAndMinutes(this._timeStart, this._timeEnd)}</span>
     </p>
-    <p class="trip-point__price">&euro;&nbsp;${price}</p>
+    <p class="trip-point__price">&euro;&nbsp;${this._price}</p>
     <ul class="trip-point__offers">
-      ${(offers.map((offer) => makeTripPointOffer(offer))).join(``)}
+      ${(this._offers.map((offer) => makeTripPointOffer(offer))).join(``)}
     </ul>
-  </article>`;
-};
+  </article>`.trim();
+  }
 
-const renderTripPoints = (numberOfTripPoints = defaultNumberOfTripPoints) => {
-  const tripPoints = new Array(+numberOfTripPoints).fill(``).map(() => makeTripPoint(tripPoint()));
-  populateDom({
-    array: tripPoints,
-    parentElement: tripPointsElement,
-    clear: true,
-    fromMock: false
-  });
-};
+  _onTripPointClick() {
+    return typeof this._onEdit === `function` && this._onEdit();
+  }
 
-export default renderTripPoints;
+  set onEdit(fn) {
+    this._onEdit = fn;
+  }
+
+  bind() {
+    this._element.addEventListener(`click`, this._onTripPointClick);
+  }
+
+  unbind() {
+    if (this._element) {
+      this._element.removeEventListener(`click`, this._onTripPointClick);
+    }
+  }
+}
+
+export default TripPoint;

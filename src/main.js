@@ -3,7 +3,7 @@ import {FILTERS_SELECTOR} from './constants';
 import filterMocks from './data/filters';
 
 import makeFilter from './render/filter';
-import renderTripPoints from './render/tripPoint';
+import renderTripPoints from './actions/tripPoint';
 import renderTripInfo from './render/tripInfo';
 import renderTripDayInfo from './render/tripDayInfo';
 import subscribeToFilterClicks from './actions/filter';
@@ -19,7 +19,7 @@ const init = () => {
   });
   renderTripPoints();
   renderTripInfo();
-  renderTripDayInfo()
+  renderTripDayInfo();
   subscribeToFilterClicks();
 };
 
