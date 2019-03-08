@@ -14,13 +14,7 @@ export const populateDom = (config) => {
   } = config;
 
   const fragment = document.createElement(`template`);
-  array.forEach((item) => {
-    if (fromMock) {
-      fragment.innerHTML += render(item);
-    } else {
-      fragment.innerHTML += item;
-    }
-  });
+  fragment.innerHTML = array.map((item) => fromMock ? render(item) : item).join(``);
 
   if (clear) {
     parentElement.innerHTML = ``;

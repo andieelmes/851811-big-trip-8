@@ -14,7 +14,7 @@ import {
 
 const tripPoint = () => {
   return {
-    type: TYPES[getRandomInt(0, TYPES.length - 1)],
+    type: [...TYPES][getRandomInt(0, TYPES.size - 1)],
     offers: getRandomElements([
       `Add luggage`,
       `Switch to comfort class`,
