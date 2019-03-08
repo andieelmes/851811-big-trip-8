@@ -1,7 +1,12 @@
-import {getHourAndMinutes} from '../utils';
+import {
+  getHourAndMinutes,
+  getRandomInt
+} from '../utils';
+import {
+  MIN_PRICE,
+  MAX_PRICE,
+} from '../constants';
 import Component from './tripPointComponent';
-import makeTripPointOfferCheckbox from '../render/tripOfferCheckbox';
-import makeTripPointTypeCheckbox from '../render/tripTypeCheckbox';
 
 class EditTripPoint extends Component {
   constructor(data) {
@@ -59,7 +64,7 @@ class EditTripPoint extends Component {
 
             <div class="travel-way__select">
               <div class="travel-way__select-group">
-                ${[...this._allTypes].map((type) => makeTripPointTypeCheckbox(type)).join(``)}
+                ${[...this._allTypes].map((type) => this._makeTripPointTypeCheckbox(type)).join(``)}
               </div>
 
               <div class="travel-way__select-group">
@@ -111,7 +116,7 @@ class EditTripPoint extends Component {
             <h3 class="point__details-title">offers</h3>
 
             <div class="point__offers-wrap">
-              ${this._allOffers.map((offerName) => makeTripPointOfferCheckbox(offerName, this._offers)).join(``)}
+              ${this._allOffers.map((offerName) => this._makeTripPointOfferCheckbox(offerName, this._offers)).join(``)}
             </div>
 
           </section>
@@ -142,6 +147,27 @@ class EditTripPoint extends Component {
       this._element.querySelector(`[type=reset]`)
         .removeEventListener(`click`, this._onResetButtonClick);
     }
+  }
+
+  _makeTripPointOfferCheckbox(offerName, chosenOffers) {
+    const idName = offerName.toLowerCase().replace(` `, ``);
+    const checked = chosenOffers.some((chosenOffer) => chosenOffer[0] === offerName);
+    return `<input
+      class="point__offers-input visually-hidden"
+      type="checkbox"
+      id="${idName}"
+      name="offer"
+      value="${idName}"
+      ${checked ? `checked` : ``}
+    >
+      <label for="${idName}" class="point__offers-label">
+        <span class="point__offer-service">${offerName}</span> + €<span class="point__offer-price">${getRandomInt(MIN_PRICE, MAX_PRICE)}</span>
+      </label>`;
+  }
+
+  _makeTripPointTypeCheckbox([typeDesc, typeEmoji]) {
+    return `<input class="travel-way__select-input visually-hidden" type="radio" id="${typeDesc}" name="travel-way" value="${typeDesc}">
+    <label class="travel-way__select-label" for="${typeDesc}">${typeEmoji} ${typeDesc}</label><br>`;
   }
 
 }

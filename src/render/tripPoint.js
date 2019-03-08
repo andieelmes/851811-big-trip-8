@@ -3,7 +3,6 @@ import {
   getHourAndMinutes,
 } from '../utils';
 
-import makeTripPointOffer from './tripOffer';
 import Component from './tripPointComponent';
 
 class TripPoint extends Component {
@@ -35,7 +34,7 @@ class TripPoint extends Component {
     </p>
     <p class="trip-point__price">&euro;&nbsp;${this._price}</p>
     <ul class="trip-point__offers">
-      ${(this._offers.map((offer) => makeTripPointOffer(offer))).join(``)}
+      ${(this._offers.map((offer) => this._makeTripPointOffer(offer))).join(``)}
     </ul>
   </article>`.trim();
   }
@@ -56,6 +55,12 @@ class TripPoint extends Component {
     if (this._element) {
       this._element.removeEventListener(`click`, this._onTripPointClick);
     }
+  }
+
+  _makeTripPointOffer([name, price]) {
+    return `<li>
+      <button class="trip-point__offer">${name} +&euro;&nbsp;${price}</button>
+    </li>`;
   }
 }
 
