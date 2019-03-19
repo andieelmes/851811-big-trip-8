@@ -17,7 +17,7 @@ const defaultNumberOfTripPoints = getRandomInt(MIN_NUMBER_OF_TRIP_POINTS, MAX_NU
 const makeTripPoints = (numberOfTripPoints) => {
   return new Array(+numberOfTripPoints).fill(``).map(() => {
     const data = generateTripPointData();
-    return [new TripPoint(data), new EditTripPoint(data)];
+    return [new TripPoint(data), new EditTripPoint(data), data];
   });
 
 };
@@ -27,14 +27,21 @@ const renderTripPoints = (numberOfTripPoints = defaultNumberOfTripPoints) => {
 
   tripPointsElement.innerHTML = ``;
 
-  tripPoints.forEach(([tripPointComponent, editTripPointComponent]) => {
+  tripPoints.forEach(([tripPointComponent, editTripPointComponent, data]) => {
     tripPointComponent.onEdit = () => {
       editTripPointComponent.render();
       tripPointsElement.replaceChild(editTripPointComponent.element, tripPointComponent.element);
       tripPointComponent.unrender();
     };
 
-    editTripPointComponent.onSubmit = () => {
+    editTripPointComponent.onSubmit = (newObject) => {
+      data.destination = newObject.destination;
+      data.offer = newObject.offer;
+      data.price = newObject.price;
+      data.favorite = newObject.favorite;
+
+      tripPointComponent.update(data);
+
       tripPointComponent.render();
       tripPointsElement.replaceChild(tripPointComponent.element, editTripPointComponent.element);
       editTripPointComponent.unrender();

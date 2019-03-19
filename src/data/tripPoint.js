@@ -22,15 +22,16 @@ const tripPoint = () => {
     allTypes: TYPES,
     type: [...TYPES][getRandomInt(0, TYPES.size - 1)],
     allOffers: OFFERS,
-    offers: getRandomElements(OFFERS.map((offer) => [offer, getRandomInt(MIN_PRICE, MAX_PRICE)]),
+    offer: getRandomElements(OFFERS.map((offer) => [offer, getRandomInt(MIN_PRICE, MAX_PRICE)]),
         getRandomInt(MIN_OFFER_NUMBER, MAX_OFFER_NUMBER)),
     desc: getRandomElements(LOREM_IPSUM.split(`. `), getRandomInt(1, 3)).join(`. `),
     timeStart: new Date(new Date().setHours(getRandomInt(...START_HOURS))).setMinutes(getRandomInt(...MINUTES)),
     timeEnd: new Date(new Date().setHours(getRandomInt(...END_HOURS))).setMinutes(getRandomInt(...MINUTES)),
     price: getRandomInt(MIN_PRICE, MAX_PRICE),
     allCitites: CITIES,
-    title: CITIES[getRandomInt(0, CITIES.length - 1)],
+    destination: CITIES[getRandomInt(0, CITIES.length - 1)],
     pictures: new Array(getRandomInt(2, 4)).fill(``).map(() => `//picsum.photos/330/140?r=${Math.random()}`),
+    favorite: `off`,
   };
 };
 

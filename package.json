@@ -24,6 +24,8 @@
     "node": "10"
   },
   "dependencies": {
-    "lodash.shuffle": "^4.2.0"
+    "flatpickr": "^4.5.7",
+    "lodash.shuffle": "^4.2.0",
+    "moment": "^2.24.0"
   }
 }
