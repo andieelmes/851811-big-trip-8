@@ -14,7 +14,7 @@ class EditTripPoint extends Component {
   constructor(data) {
     super();
     this._allTypes = data.allTypes;
-    [this._typeDesc, this._typeEmoji] = data.type;
+    this._type = data.type;
     this._allOffers = data.allOffers;
     this._offer = data.offer;
     this._timeStart = data.timeStart;
@@ -33,10 +33,12 @@ class EditTripPoint extends Component {
     this._onReset = null;
 
     this._onChangeDate = this._onChangeDate.bind(this);
-    this._onChangeOffers = this._onChangeOffers.bind(this);
+    this._onChangeType = this._onChangeType.bind(this);
   }
 
   get template() {
+    const [typeDesc, typeEmoji] = this._type;
+
     return `
     <article class="point">
       <form action="" method="get">
@@ -47,13 +49,13 @@ class EditTripPoint extends Component {
           </label>
 
           <div class="travel-way">
-            <label class="travel-way__label" for="travel-way__toggle">${this._typeEmoji}</label>
+            <label class="travel-way__label" for="travel-way__toggle">${typeEmoji}</label>
 
             <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
 
             <div class="travel-way__select">
               <div class="travel-way__select-group">
-                ${[...this._allTypes].map((type) => this._makeTripPointTypeCheckbox(type)).join(``)}
+                ${[...this._allTypes].map((type) => this._makeTripPointTypeRadioButton(type, typeDesc)).join(``)}
               </div>
             </div>
           </div>
@@ -129,21 +131,18 @@ class EditTripPoint extends Component {
     this._offer = data.offer;
     this._price = data.price;
     this._favorite = data.favorite;
-
-    this.unbind();
-    this._partialUpdate();
-    this.bind();
   }
 
   _processForm(formData) {
     const entry = {
+      type: [],
       destination: ``,
       price: ``,
       favorite: ``,
       offer: [],
     };
 
-    const editTripPointMapper = this._createMapper(entry);
+    const editTripPointMapper = EditTripPoint.createMapper(entry);
 
     for (const pair of formData.entries()) {
       const [property, value] = pair;
@@ -156,36 +155,6 @@ class EditTripPoint extends Component {
     return entry;
   }
 
-  _onSubmitButtonClick(evt) {
-    evt.preventDefault();
-
-    const formData = new FormData(this._element.querySelector(`form`));
-    const newData = this._processForm(formData);
-
-    this.update(newData);
-
-    return typeof this._onSubmit === `function` && this._onSubmit(newData);
-  }
-
-  _onChangeDate() {
-    this._state.isDate = !this._state.isDate;
-
-    const formData = new FormData(this._element.querySelector(`form`));
-    const newData = this._processForm(formData);
-
-    this.update(newData);
-  }
-
-  _onChangeOffers() {
-    const formData = new FormData(this._element.querySelector(`from`));
-    const newData = this._processForm(formData);
-
-    this.update(newData);
-  }
-
-  _onResetButtonClick() {
-    return typeof this._onReset === `function` && this._onReset();
-  }
 
   _partialUpdate() {
     const newElement = document.createElement(`div`);
@@ -210,12 +179,84 @@ class EditTripPoint extends Component {
       </label>`;
   }
 
-  _makeTripPointTypeCheckbox([typeDesc, typeEmoji]) {
-    return `<input class="travel-way__select-input visually-hidden" type="radio" id="${typeDesc}" name="type" value="${typeDesc}">
+  _makeTripPointTypeRadioButton([typeDesc, typeEmoji], chosenType) {
+    const checked = typeDesc === chosenType;
+    return `<input
+      class="travel-way__select-input
+      visually-hidden"
+      type="radio"
+      id="${typeDesc}"
+      name="type"
+      value="${typeDesc}"
+      ${checked ? `checked` : ``}
+    >
     <label class="travel-way__select-label" for="${typeDesc}">${typeEmoji} ${typeDesc}</label><br>`;
   }
 
-  _createMapper(target) {
+  bind() {
+    this._element.querySelector(`.point form`)
+        .addEventListener(`submit`, this._onSubmitButtonClick);
+    this._element.querySelector(`[type=reset]`)
+        .addEventListener(`click`, this._onResetButtonClick);
+    this._element.querySelectorAll(`.travel-way__select-input`).forEach((element) => {
+      element.addEventListener(`click`, this._onChangeType);
+    });
+
+    flatpickr(this._element.querySelector(`[name="time"]`), {
+      mode: `range`,
+      enableTime: true,
+    });
+  }
+
+  unbind() {
+    if (this._element) {
+      this._element.querySelector(`.point form`)
+        .removeEventListener(`submit`, this._onSubmitButtonClick);
+      this._element.querySelector(`[type=reset]`)
+        .removeEventListener(`click`, this._onResetButtonClick);
+      this._element.querySelectorAll(`.travel-way__select-input`).forEach((element) => {
+        element.removeEventListener(`click`, this._onChangeType);
+      });
+    }
+  }
+
+  _onSubmitButtonClick(evt) {
+    evt.preventDefault();
+
+    const formData = new FormData(this._element.querySelector(`form`));
+    const newData = this._processForm(formData);
+
+    this.update(newData);
+
+    return typeof this._onSubmit === `function` && this._onSubmit(newData);
+  }
+
+  _onChangeDate() {
+    this._state.isDate = !this._state.isDate;
+
+    const formData = new FormData(this._element.querySelector(`form`));
+    const newData = this._processForm(formData);
+
+    this.update(newData);
+  }
+
+
+  _onChangeType() {
+    const formData = new FormData(this._element.querySelector(`form`));
+    const newData = this._processForm(formData);
+
+    this.update(newData);
+
+    this.unbind();
+    this._partialUpdate();
+    this.bind();
+  }
+
+  _onResetButtonClick() {
+    return typeof this._onReset === `function` && this._onReset();
+  }
+
+  static createMapper(target) {
     return {
       type: (value) => {
         const typeInfo = [...TYPES].find((type) => type[0] === value);
@@ -236,28 +277,6 @@ class EditTripPoint extends Component {
       },
     };
   }
-
-  bind() {
-    this._element.querySelector(`.point form`)
-        .addEventListener(`submit`, this._onSubmitButtonClick);
-    this._element.querySelector(`[type=reset]`)
-        .addEventListener(`click`, this._onResetButtonClick);
-
-    flatpickr(this._element.querySelector(`[name="time"]`), {
-      mode: `range`,
-      enableTime: true,
-    });
-  }
-
-  unbind() {
-    if (this._element) {
-      this._element.querySelector(`.point form`)
-        .removeEventListener(`submit`, this._onSubmitButtonClick);
-      this._element.querySelector(`[type=reset]`)
-        .removeEventListener(`click`, this._onResetButtonClick);
-    }
-  }
-
 }
 
 export default EditTripPoint;
