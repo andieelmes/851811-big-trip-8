@@ -11,6 +11,8 @@ import generateTripPointData from '../data/tripPoint';
 import TripPoint from '../render/tripPoint';
 import EditTripPoint from '../render/editTripPoint';
 
+import makeStatistics from './statistics';
+
 const tripPointsElement = document.querySelector(TRIP_POINTS_SELECTOR);
 const defaultNumberOfTripPoints = getRandomInt(MIN_NUMBER_OF_TRIP_POINTS, MAX_NUMBER_OF_TRIP_POINTS);
 
@@ -20,6 +22,8 @@ const makeTripPoints = (numberOfTripPoints) => {
 
 const renderTripPoints = (numberOfTripPoints = defaultNumberOfTripPoints) => {
   const tripPoints = makeTripPoints(numberOfTripPoints);
+
+  makeStatistics(tripPoints);
 
   tripPointsElement.innerHTML = ``;
 

@@ -1,6 +1,6 @@
 import {getRandomInt} from "./utils";
 
-export const MIN_NUMBER_OF_TRIP_POINTS = 2;
+export const MIN_NUMBER_OF_TRIP_POINTS = 10;
 export const MAX_NUMBER_OF_TRIP_POINTS = 15;
 export const FILTERS_SELECTOR = `.trip-filter`;
 export const FILTER_SELECTOR = `.trip-filter__item`;
@@ -21,6 +21,25 @@ export const TYPES = new Map([
   [`Sightseeing`, `🏛️`],
   [`Restaurant`, `🍴`]
 ]);
+
+/* eslint-disable */
+export const AllTypeToLabel = {
+  Flight: `✈️ FLY`,
+  "Check-in": `🏨 STAY`,
+  Drive: `🚗 DRIVE`,
+  Sightseeing: `🏛️ LOOK`,
+  Restaurant: `🏨 EAT`,
+  Taxi: `🚕 RIDE`,
+}
+/* eslint-enale */
+
+export const TrasnportTypeToLabel = {
+  Drive: `🚗 DRIVE`,
+  Taxi: `🚕 RIDE`,
+  Flight: `✈️ FLY`,
+  Ship: `🛳️ SAIL`,
+}
+
 export const CITIES = [
   `Paris`,
   `Dubrovnik`,
@@ -67,3 +86,8 @@ export const START_DATE = getRandomInt(1, 15);
 export const END_DATE = getRandomInt(16, 28);
 export const FAVOURITE_OFF = `off`;
 export const FAVOURITE_ON = `on`;
+
+export const STATS_BTN_SELECTOR = `[href="#stats"]`;
+export const TRIP_POINTS_TABLE_BTN_SELECTOR = `[href="#table"]`;
+export const STATS_SELECTOR = `.statistic`;
+export const MAIN_SELECTOR = `main`;

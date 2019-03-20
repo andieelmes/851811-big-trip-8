@@ -50,3 +50,31 @@ export const getRandomBool = () => getRandomInt(0, 1) === 1;
 export const getHourAndMinutes = (diff) => `${Math.floor(moment.duration(diff).asHours())}H ${moment.duration(diff).minutes()}M`;
 
 export const getOfferId = (str) => str.replace(/ /g, `-`).toLowerCase();
+
+export const getTripPointDataByLabel = (data, labels) => {
+  return data.map((day) => {
+    const {
+      type,
+      price
+    } = day;
+
+    const typeLabel = type[0];
+    const label = labels[typeLabel];
+
+    return {label, price};
+  }).filter((activity) => activity.label);
+};
+
+export const sumTripPointPrices = (individualObject) => {
+  const sumObject = {};
+
+  individualObject.forEach((activity) => {
+    if (sumObject[activity.label]) {
+      sumObject[activity.label] += +activity.price;
+    } else {
+      sumObject[activity.label] = +activity.price;
+    }
+  });
+
+  return sumObject;
+};
