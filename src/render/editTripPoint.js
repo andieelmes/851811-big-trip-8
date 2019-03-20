@@ -5,6 +5,7 @@ import {
 } from '../utils';
 import {
   OFFERS,
+  TYPES,
   FAVOURITE_ON,
 } from '../constants';
 import Component from './tripPointComponent';
@@ -53,14 +54,6 @@ class EditTripPoint extends Component {
             <div class="travel-way__select">
               <div class="travel-way__select-group">
                 ${[...this._allTypes].map((type) => this._makeTripPointTypeCheckbox(type)).join(``)}
-              </div>
-
-              <div class="travel-way__select-group">
-                <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-check-in" name="travel-way" value="check-in">
-                <label class="travel-way__select-label" for="travel-way-check-in">🏨 check-in</label>
-
-                <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-sightseeing" name="travel-way" value="sight-seeing">
-                <label class="travel-way__select-label" for="travel-way-sightseeing">🏛 sightseeing</label>
               </div>
             </div>
           </div>
@@ -131,6 +124,7 @@ class EditTripPoint extends Component {
 
 
   update(data) {
+    this._type = data.type;
     this._destination = data.destination;
     this._offer = data.offer;
     this._price = data.price;
@@ -217,12 +211,16 @@ class EditTripPoint extends Component {
   }
 
   _makeTripPointTypeCheckbox([typeDesc, typeEmoji]) {
-    return `<input class="travel-way__select-input visually-hidden" type="radio" id="${typeDesc}" name="travel-way" value="${typeDesc}">
+    return `<input class="travel-way__select-input visually-hidden" type="radio" id="${typeDesc}" name="type" value="${typeDesc}">
     <label class="travel-way__select-label" for="${typeDesc}">${typeEmoji} ${typeDesc}</label><br>`;
   }
 
   _createMapper(target) {
     return {
+      type: (value) => {
+        const typeInfo = [...TYPES].find((type) => type[0] === value);
+        target.type = typeInfo;
+      },
       offer: (value) => {
         const offerInfo = OFFERS.find((offer) => getOfferId(offer.name) === value);
         target.offer.push({name: offerInfo.name, price: offerInfo.price});

@@ -92,7 +92,7 @@ export const sumTripPointPrices = (individualObject) => {
   return sumObject;
 };
 
-export const countTripPoints= (individualObject) => {
+export const countTripPoints = (individualObject) => {
   const sumObject = {};
 
   individualObject.forEach((activity) => {

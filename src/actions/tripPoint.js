@@ -38,6 +38,7 @@ const renderTripPoints = (numberOfTripPoints = defaultNumberOfTripPoints) => {
     };
 
     editTripPointComponent.onSubmit = (newObject) => {
+      tripPointData.type = newObject.type;
       tripPointData.destination = newObject.destination;
       tripPointData.offer = newObject.offer;
       tripPointData.price = newObject.price;

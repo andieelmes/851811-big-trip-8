@@ -7,7 +7,7 @@ import Component from './tripPointComponent';
 class TripPoint extends Component {
   constructor(data) {
     super();
-    [this._typeDesc, this._typeEmoji] = data.type;
+    this._type = data.type;
     this._offer = data.offer;
     this._timeStart = data.timeStart;
     this._timeEnd = data.timeEnd;
@@ -18,11 +18,14 @@ class TripPoint extends Component {
     this._onTripPointClick = this._onTripPointClick.bind(this);
 
     this._onEdit = null;
+
   }
 
   get template() {
+    const [typeDesc, typeEmoji] = this._type;
+
     return `<article class="trip-point">
-    <i class="trip-icon" title="${this._typeDesc}">${this._typeEmoji}</i>
+    <i class="trip-icon" title="${typeDesc}">${typeEmoji}</i>
     <h3 class="trip-point__title">${this._destination}</h3>
     <p class="trip-point__schedule">
       <span class="trip-point__timetable">
@@ -44,6 +47,7 @@ class TripPoint extends Component {
   }
 
   update(data) {
+    this._type = data.type;
     this._destination = data.destination;
     this._offer = data.offer;
     this._price = data.price;
