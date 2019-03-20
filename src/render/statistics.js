@@ -7,26 +7,21 @@ import {
 } from '../constants';
 
 import {
-  getTripPointDataByLabel,
+  getTripPointPriceByLabel,
+  getTripPointByLabel,
   sumTripPointPrices,
+  countTripPoints,
 } from '../utils';
 
 let moneyChart;
 let transportChart;
 
 const renderStatistics = (data) => {
-  const individualActivityPrices = getTripPointDataByLabel(data, AllTypeToLabel);
-  const individualTransportActivityPrices = getTripPointDataByLabel(data, TrasnportTypeToLabel);
+  const individualActivityPrices = getTripPointPriceByLabel(data, AllTypeToLabel);
+  const individualTransportActivity = getTripPointByLabel(data, TrasnportTypeToLabel);
 
   const activityPrices = sumTripPointPrices(individualActivityPrices);
-  const transportActivityPrices = sumTripPointPrices(individualTransportActivityPrices);
-
-  const allTransportActivityPrices = [...Object.values(transportActivityPrices)].reduce((acc, cur) => acc + cur, 0);
-  const relativeTransportActivityPrices = {};
-
-  [...Object.entries(transportActivityPrices)].forEach((transportActivity) => {
-    relativeTransportActivityPrices[transportActivity[0]] = Math.round((transportActivity[1] / allTransportActivityPrices) * 100);
-  });
+  const transportActivityCounts = countTripPoints(individualTransportActivity);
 
   const moneyCtx = document.querySelector(`.statistic__money`);
   const transportCtx = document.querySelector(`.statistic__transport`);
@@ -34,7 +29,7 @@ const renderStatistics = (data) => {
   // Рассчитаем высоту канваса в зависимости от того, сколько данных в него будет передаваться
   const BAR_HEIGHT = 55;
   moneyCtx.height = BAR_HEIGHT * [...Object.keys(activityPrices)].length;
-  transportCtx.height = BAR_HEIGHT * [...Object.keys(transportActivityPrices)].length;
+  transportCtx.height = BAR_HEIGHT * [...Object.keys(transportActivityCounts)].length;
 
   moneyChart = new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
@@ -105,9 +100,9 @@ const renderStatistics = (data) => {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: [...Object.keys(relativeTransportActivityPrices)],
+      labels: [...Object.keys(transportActivityCounts)],
       datasets: [{
-        data: [...Object.values(relativeTransportActivityPrices)],
+        data: [...Object.values(transportActivityCounts)],
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`

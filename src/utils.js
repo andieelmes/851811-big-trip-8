@@ -51,7 +51,7 @@ export const getHourAndMinutes = (diff) => `${Math.floor(moment.duration(diff).a
 
 export const getOfferId = (str) => str.replace(/ /g, `-`).toLowerCase();
 
-export const getTripPointDataByLabel = (data, labels) => {
+export const getTripPointPriceByLabel = (data, labels) => {
   return data.map((day) => {
     const {
       type,
@@ -65,6 +65,19 @@ export const getTripPointDataByLabel = (data, labels) => {
   }).filter((activity) => activity.label);
 };
 
+export const getTripPointByLabel = (data, labels) => {
+  return data.map((day) => {
+    const {
+      type,
+    } = day;
+
+    const typeLabel = type[0];
+    const label = labels[typeLabel];
+
+    return {label};
+  }).filter((activity) => activity.label);
+};
+
 export const sumTripPointPrices = (individualObject) => {
   const sumObject = {};
 
@@ -73,6 +86,20 @@ export const sumTripPointPrices = (individualObject) => {
       sumObject[activity.label] += +activity.price;
     } else {
       sumObject[activity.label] = +activity.price;
+    }
+  });
+
+  return sumObject;
+};
+
+export const countTripPoints= (individualObject) => {
+  const sumObject = {};
+
+  individualObject.forEach((activity) => {
+    if (sumObject[activity.label]) {
+      sumObject[activity.label] += 1;
+    } else {
+      sumObject[activity.label] = 1;
     }
   });
 
