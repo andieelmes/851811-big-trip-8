@@ -1,11 +1,11 @@
 import flatpickr from 'flatpickr';
+import moment from 'moment';
 import {
-  getHourAndMinutes,
-  getRandomInt
+  getOfferId,
 } from '../utils';
 import {
-  MIN_PRICE,
-  MAX_PRICE,
+  OFFERS,
+  FAVOURITE_ON,
 } from '../constants';
 import Component from './tripPointComponent';
 
@@ -33,81 +33,6 @@ class EditTripPoint extends Component {
 
     this._onChangeDate = this._onChangeDate.bind(this);
     this._onChangeOffers = this._onChangeOffers.bind(this);
-  }
-
-  _processForm(formData) {
-    const entry = {
-      destination: ``,
-      price: ``,
-      favorite: ``,
-      offer: [],
-    };
-
-    const EditTripPointMapper = this._createMapper(entry);
-
-    for (const pair of formData.entries()) {
-      const [property, value] = pair;
-
-      if (EditTripPointMapper[property]) {
-        EditTripPointMapper[property](value);
-      }
-    }
-
-    return entry;
-  }
-
-  _onSubmitButtonClick(evt) {
-    evt.preventDefault();
-
-    const formData = new FormData(this._element.querySelector(`form`));
-    const newData = this._processForm(formData);
-
-    this.update(newData);
-
-    return typeof this._onSubmit === `function` && this._onSubmit(newData);
-  }
-
-  _onChangeDate() {
-    this._state.isDate = !this._state.isDate;
-
-    const formData = new FormData(this._element.querySelector(`form`));
-    const newData = this._processForm(formData);
-
-    this.update(newData);
-
-    this.unbind();
-    this._partialUpdate();
-    this.bind();
-  }
-
-  _onChangeOffers() {
-    const formData = new FormData(this._element.querySelector(`from`));
-    const newData = this._processForm(formData);
-
-    this.update(newData);
-
-    this.unbind();
-    this._partialUpdate();
-    this.bind();
-  }
-
-  _onResetButtonClick() {
-    return typeof this._onReset === `function` && this._onReset();
-  }
-
-  _partialUpdate() {
-    const newElement = document.createElement(`div`);
-    newElement.innerHTML = this.template;
-    this._element.innerHTML = ``;
-    this._element.appendChild(newElement.querySelector(`form`));
-  }
-
-  set onSubmit(fn) {
-    this._onSubmit = fn;
-  }
-
-  set onReset(fn) {
-    this._onReset = fn;
   }
 
   get template() {
@@ -152,7 +77,7 @@ class EditTripPoint extends Component {
             choose time
             <input class="point__input"
               type="text"
-              value="${getHourAndMinutes(this._timeStart)}&nbsp;&mdash;${getHourAndMinutes(this._timeEnd)}"
+              value="${moment(this._timeStart).format(`HH mm`)}&nbsp;&mdash;${moment(this._timeEnd).format(`HH mm`)}"
               name="time"
               placeholder="00:00 — 00:00">
           </label>
@@ -169,7 +94,7 @@ class EditTripPoint extends Component {
           </div>
 
           <div class="paint__favorite-wrap">
-            <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite" ${this._favorite === `on` ? `checked` : ``}>
+            <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite" ${this._favorite === FAVOURITE_ON ? `checked` : ``}>
             <label class="point__favorite" for="favorite">favorite</label>
           </div>
         </header>
@@ -196,6 +121,124 @@ class EditTripPoint extends Component {
     </article>`.trim();
   }
 
+  set onSubmit(fn) {
+    this._onSubmit = fn;
+  }
+
+  set onReset(fn) {
+    this._onReset = fn;
+  }
+
+
+  update(data) {
+    this._destination = data.destination;
+    this._offer = data.offer;
+    this._price = data.price;
+    this._favorite = data.favorite;
+
+    this.unbind();
+    this._partialUpdate();
+    this.bind();
+  }
+
+  _processForm(formData) {
+    const entry = {
+      destination: ``,
+      price: ``,
+      favorite: ``,
+      offer: [],
+    };
+
+    const editTripPointMapper = this._createMapper(entry);
+
+    for (const pair of formData.entries()) {
+      const [property, value] = pair;
+
+      if (editTripPointMapper[property]) {
+        editTripPointMapper[property](value);
+      }
+    }
+
+    return entry;
+  }
+
+  _onSubmitButtonClick(evt) {
+    evt.preventDefault();
+
+    const formData = new FormData(this._element.querySelector(`form`));
+    const newData = this._processForm(formData);
+
+    this.update(newData);
+
+    return typeof this._onSubmit === `function` && this._onSubmit(newData);
+  }
+
+  _onChangeDate() {
+    this._state.isDate = !this._state.isDate;
+
+    const formData = new FormData(this._element.querySelector(`form`));
+    const newData = this._processForm(formData);
+
+    this.update(newData);
+  }
+
+  _onChangeOffers() {
+    const formData = new FormData(this._element.querySelector(`from`));
+    const newData = this._processForm(formData);
+
+    this.update(newData);
+  }
+
+  _onResetButtonClick() {
+    return typeof this._onReset === `function` && this._onReset();
+  }
+
+  _partialUpdate() {
+    const newElement = document.createElement(`div`);
+    newElement.innerHTML = this.template;
+    this._element.innerHTML = ``;
+    this._element.appendChild(newElement.querySelector(`form`));
+  }
+
+  _makeTripPointOfferCheckbox(offer, chosenOffers) {
+    const idName = getOfferId(offer.name);
+    const checked = chosenOffers.some((chosenOffer) => chosenOffer.name === offer.name);
+    return `<input
+      class="point__offers-input visually-hidden"
+      type="checkbox"
+      id="${idName}"
+      name="offer"
+      value="${idName}"
+      ${checked ? `checked` : ``}
+    >
+      <label for="${idName}" class="point__offers-label">
+        <span class="point__offer-service">${offer.name}</span> + €<span class="point__offer-price">${offer.price}</span>
+      </label>`;
+  }
+
+  _makeTripPointTypeCheckbox([typeDesc, typeEmoji]) {
+    return `<input class="travel-way__select-input visually-hidden" type="radio" id="${typeDesc}" name="travel-way" value="${typeDesc}">
+    <label class="travel-way__select-label" for="${typeDesc}">${typeEmoji} ${typeDesc}</label><br>`;
+  }
+
+  _createMapper(target) {
+    return {
+      offer: (value) => {
+        const offerInfo = OFFERS.find((offer) => getOfferId(offer.name) === value);
+        target.offer.push({name: offerInfo.name, price: offerInfo.price});
+      },
+      destination: (value) => {
+        target.destination = value;
+      },
+      price: (value) => {
+        target.price = value;
+      },
+      favorite: (value) => {
+        target.favorite = value;
+      },
+    };
+  }
+
   bind() {
     this._element.querySelector(`.point form`)
         .addEventListener(`submit`, this._onSubmitButtonClick);
@@ -215,58 +258,6 @@ class EditTripPoint extends Component {
       this._element.querySelector(`[type=reset]`)
         .removeEventListener(`click`, this._onResetButtonClick);
     }
-  }
-
-  _makeTripPointOfferCheckbox(offerName, chosenOffers) {
-    const idName = offerName.toLowerCase().replace(` `, ``);
-    const checked = chosenOffers.some((chosenOffer) => chosenOffer[0] === offerName);
-    return `<input
-      class="point__offers-input visually-hidden"
-      type="checkbox"
-      id="${idName}"
-      name="offer"
-      value="${idName}"
-      ${checked ? `checked` : ``}
-    >
-      <label for="${idName}" class="point__offers-label">
-        <span class="point__offer-service">${offerName}</span> + €<span class="point__offer-price">${getRandomInt(MIN_PRICE, MAX_PRICE)}</span>
-      </label>`;
-  }
-
-  _makeTripPointTypeCheckbox([typeDesc, typeEmoji]) {
-    return `<input class="travel-way__select-input visually-hidden" type="radio" id="${typeDesc}" name="travel-way" value="${typeDesc}">
-    <label class="travel-way__select-label" for="${typeDesc}">${typeEmoji} ${typeDesc}</label><br>`;
-  }
-
-  update(data) {
-    this._destination = data.destination;
-    this._offer = data.offer;
-    this._price = data.price;
-    this._favorite = data.favorite;
-  }
-
-  _createMapper(target) {
-    return {
-      offer: (value) => {
-        const newElement = document.createElement(`div`);
-        newElement.innerHTML = this.template;
-
-        const offer = newElement.querySelector(`[for="${value}"]`);
-        const name = offer.querySelector(`.point__offer-service`).textContent;
-        const price = offer.querySelector(`.point__offer-price`).textContent;
-
-        target.offer.push([name, price]);
-      },
-      destination: (value) => {
-        target.destination = value;
-      },
-      price: (value) => {
-        target.price = value;
-      },
-      favorite: (value) => {
-        target.favorite = value;
-      },
-    };
   }
 
 }

@@ -36,10 +36,22 @@ export const CITIES = [
   `Los Angeles`
 ];
 export const OFFERS = [
-  `Add luggage`,
-  `Switch to comfort class`,
-  `Add meal`,
-  `Choose seats`
+  {
+    name: `Add luggage`,
+    price: 10,
+  },
+  {
+    name: `Switch to comfort class`,
+    price: 11,
+  },
+  {
+    name: `Add meal`,
+    price: 12,
+  },
+  {
+    name: `Choose seats`,
+    price: 13,
+  },
 ];
 export const MIN_CITIES = 2;
 export const MAX_CITIES = 5;
@@ -53,3 +65,5 @@ export const END_HOURS = [16, 23];
 export const MINUTES = [0, 59];
 export const START_DATE = getRandomInt(1, 15);
 export const END_DATE = getRandomInt(16, 28);
+export const FAVOURITE_OFF = `off`;
+export const FAVOURITE_ON = `on`;

@@ -15,11 +15,7 @@ const tripPointsElement = document.querySelector(TRIP_POINTS_SELECTOR);
 const defaultNumberOfTripPoints = getRandomInt(MIN_NUMBER_OF_TRIP_POINTS, MAX_NUMBER_OF_TRIP_POINTS);
 
 const makeTripPoints = (numberOfTripPoints) => {
-  return new Array(+numberOfTripPoints).fill(``).map(() => {
-    const data = generateTripPointData();
-    return [new TripPoint(data), new EditTripPoint(data), data];
-  });
-
+  return new Array(+numberOfTripPoints).fill(``).map(() => generateTripPointData());
 };
 
 const renderTripPoints = (numberOfTripPoints = defaultNumberOfTripPoints) => {
@@ -27,7 +23,10 @@ const renderTripPoints = (numberOfTripPoints = defaultNumberOfTripPoints) => {
 
   tripPointsElement.innerHTML = ``;
 
-  tripPoints.forEach(([tripPointComponent, editTripPointComponent, data]) => {
+  tripPoints.forEach((tripPointData) => {
+    const tripPointComponent = new TripPoint(tripPointData);
+    const editTripPointComponent = new EditTripPoint(tripPointData);
+
     tripPointComponent.onEdit = () => {
       editTripPointComponent.render();
       tripPointsElement.replaceChild(editTripPointComponent.element, tripPointComponent.element);
@@ -35,12 +34,12 @@ const renderTripPoints = (numberOfTripPoints = defaultNumberOfTripPoints) => {
     };
 
     editTripPointComponent.onSubmit = (newObject) => {
-      data.destination = newObject.destination;
-      data.offer = newObject.offer;
-      data.price = newObject.price;
-      data.favorite = newObject.favorite;
+      tripPointData.destination = newObject.destination;
+      tripPointData.offer = newObject.offer;
+      tripPointData.price = newObject.price;
+      tripPointData.favorite = newObject.favorite;
 
-      tripPointComponent.update(data);
+      tripPointComponent.update(tripPointData);
 
       tripPointComponent.render();
       tripPointsElement.replaceChild(tripPointComponent.element, editTripPointComponent.element);

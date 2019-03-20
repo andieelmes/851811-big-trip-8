@@ -1,4 +1,5 @@
 import shuffle from 'lodash.shuffle';
+import moment from 'moment';
 
 export const getRandomInt = (min, max) => Math.floor(Math.random() * Math.floor((max - min) + 1) + min);
 
@@ -44,14 +45,8 @@ export const appendToDom = (config) => {
   parentElement.appendChild(fragment.content);
 };
 
-export const convertTimeIntoHoursAndMinutes = (timeStart, timeEnd) => {
-  const dateStart = new Date(timeStart);
-  const dateEnd = new Date(timeEnd);
-  const hours = dateEnd.getHours() - dateStart.getHours();
-  const minutes = Math.abs(dateEnd.getMinutes() - dateStart.getMinutes());
-  return `${hours ? `${hours}H` : ``} ${minutes ? `${minutes}M` : ``}`;
-};
-
 export const getRandomBool = () => getRandomInt(0, 1) === 1;
 
-export const getHourAndMinutes = (timeStamp) => new Date(timeStamp).toLocaleTimeString(`en-gb`, {hour: `2-digit`, minute: `2-digit`})
+export const getHourAndMinutes = (diff) => `${Math.floor(moment.duration(diff).asHours())}H ${moment.duration(diff).minutes()}M`;
+
+export const getOfferId = (str) => str.replace(/ /g, `-`).toLowerCase();
