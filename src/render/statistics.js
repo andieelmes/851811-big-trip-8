@@ -8,9 +8,7 @@ import {
 } from '../constants';
 
 import {
-  getTripPointPriceByLabel,
-  getTripPointByLabel,
-  sumTripPointPrices,
+  getTripPointInfoByLabel,
   countTripPoints,
 } from '../utils';
 
@@ -18,10 +16,10 @@ let moneyChart;
 let transportChart;
 
 const renderStatistics = (data) => {
-  const individualActivityPrices = getTripPointPriceByLabel(data, AllTypeToLabel);
-  const individualTransportActivity = getTripPointByLabel(data, TrasnportTypeToLabel);
+  const individualActivityPrices = getTripPointInfoByLabel(data, AllTypeToLabel, `price`);
+  const individualTransportActivity = getTripPointInfoByLabel(data, TrasnportTypeToLabel);
 
-  const activityPrices = sumTripPointPrices(individualActivityPrices);
+  const activityPrices = countTripPoints(individualActivityPrices, `price`);
   const transportActivityCounts = countTripPoints(individualTransportActivity);
 
   const moneyCtx = document.querySelector(`.statistic__money`);
