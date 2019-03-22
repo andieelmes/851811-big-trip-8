@@ -49,22 +49,9 @@ export const getRandomBool = () => getRandomInt(0, 1) === 1;
 
 export const getOfferId = (str) => str.replace(/\s/g, `-`).toLowerCase();
 
-export const getTripPointPriceByLabel = (data, labels) => {
-  return data.map((day) => {
-    const {
-      type,
-      price
-    } = day;
+export const getTripPointInfoByLabel = (data, labels, tripPointKey) => {
 
-    const typeLabel = type[0];
-    const label = labels[typeLabel];
-
-    return {label, price};
-  }).filter((activity) => activity.label);
-};
-
-export const getTripPointByLabel = (data, labels) => {
-  return data.map((day) => {
+  return data.reduce((activities, day) => {
     const {
       type,
     } = day;
@@ -72,31 +59,19 @@ export const getTripPointByLabel = (data, labels) => {
     const typeLabel = type[0];
     const label = labels[typeLabel];
 
-    return {label};
-  }).filter((activity) => activity.label);
-};
-
-export const sumTripPointPrices = (individualObject) => {
-  const sumObject = {};
-
-  individualObject.forEach((activity) => {
-    const activityPrice = sumObject[activity.label];
-    sumObject[activity.label] = activityPrice ? activityPrice + +activity.price : +activity.price;
-  });
-
-  return sumObject;
-};
-
-export const countTripPoints = (individualObject) => {
-  const sumObject = {};
-
-  individualObject.forEach((activity) => {
-    if (sumObject[activity.label]) {
-      sumObject[activity.label] += 1;
-    } else {
-      sumObject[activity.label] = 1;
+    if (label) {
+      const tripPointInfo = tripPointKey ? {label, [tripPointKey]: day[tripPointKey]} : {label};
+      activities.push(tripPointInfo);
     }
-  });
+    return activities;
+  }, []);
+};
 
-  return sumObject;
+export const countTripPoints = (individualTripPoints, tripPointKey) => {
+  return individualTripPoints.reduce((obj, activity) => {
+    const amount = obj[activity.label];
+    const activityAmount = +activity[tripPointKey] || 1;
+    obj[activity.label] = amount ? amount + activityAmount : activityAmount;
+    return obj;
+  }, {});
 };
