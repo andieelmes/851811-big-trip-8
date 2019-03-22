@@ -4,6 +4,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {
   AllTypeToLabel,
   TrasnportTypeToLabel,
+  BAR_HEIGHT,
 } from '../constants';
 
 import {
@@ -27,9 +28,8 @@ const renderStatistics = (data) => {
   const transportCtx = document.querySelector(`.statistic__transport`);
 
   // Рассчитаем высоту канваса в зависимости от того, сколько данных в него будет передаваться
-  const BAR_HEIGHT = 55;
-  moneyCtx.height = BAR_HEIGHT * [...Object.keys(activityPrices)].length;
-  transportCtx.height = BAR_HEIGHT * [...Object.keys(transportActivityCounts)].length;
+  moneyCtx.height = BAR_HEIGHT * Object.keys(activityPrices).length;
+  transportCtx.height = BAR_HEIGHT * Object.keys(transportActivityCounts).length;
 
   moneyChart = new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
@@ -163,8 +163,10 @@ const renderStatistics = (data) => {
 };
 
 export const destroyCanvas = () => {
-  moneyChart.destroy();
-  transportChart.destroy();
+  if (moneyChart && transportChart) {
+    moneyChart.destroy();
+    transportChart.destroy();
+  }
 };
 
 export default renderStatistics;

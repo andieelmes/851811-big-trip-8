@@ -23,9 +23,7 @@ const tripPoint = () => {
     allTypes: TYPES,
     type: [...TYPES][getRandomInt(0, TYPES.size - 1)],
     allOffers: OFFERS,
-    offer: getRandomElements(OFFERS.map((offer) => {
-      return {name: offer.name, price: offer.price};
-    }), getRandomInt(MIN_OFFER_NUMBER, MAX_OFFER_NUMBER)),
+    offer: getRandomElements(OFFERS, getRandomInt(MIN_OFFER_NUMBER, MAX_OFFER_NUMBER)),
     desc: getRandomElements(LOREM_IPSUM.split(`. `), getRandomInt(1, 3)).join(`. `),
     timeStart: new Date(new Date().setHours(getRandomInt(...START_HOURS))).setMinutes(getRandomInt(...MINUTES)),
     timeEnd: new Date(new Date().setHours(getRandomInt(...END_HOURS))).setMinutes(getRandomInt(...MINUTES)),

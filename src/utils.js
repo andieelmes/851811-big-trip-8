@@ -47,9 +47,7 @@ export const appendToDom = (config) => {
 
 export const getRandomBool = () => getRandomInt(0, 1) === 1;
 
-export const getHourAndMinutes = (diff) => `${Math.floor(moment.duration(diff).asHours())}H ${moment.duration(diff).minutes()}M`;
-
-export const getOfferId = (str) => str.replace(/ /g, `-`).toLowerCase();
+export const getOfferId = (str) => str.replace(/\s/g, `-`).toLowerCase();
 
 export const getTripPointPriceByLabel = (data, labels) => {
   return data.map((day) => {
@@ -82,11 +80,8 @@ export const sumTripPointPrices = (individualObject) => {
   const sumObject = {};
 
   individualObject.forEach((activity) => {
-    if (sumObject[activity.label]) {
-      sumObject[activity.label] += +activity.price;
-    } else {
-      sumObject[activity.label] = +activity.price;
-    }
+    const activityPrice = sumObject[activity.label];
+    sumObject[activity.label] = activityPrice ? activityPrice + +activity.price : +activity.price;
   });
 
   return sumObject;

@@ -1,6 +1,5 @@
 import moment from 'moment';
-
-import {getHourAndMinutes} from '../utils';
+import momentDurationFormatSetup from 'moment-duration-format'; // eslint-disable-line
 
 import Component from './tripPointComponent';
 
@@ -33,7 +32,7 @@ class TripPoint extends Component {
         &nbsp;&mdash;
         ${moment(this._timeEnd).format(`HH mm`)}
       </span>
-      <span class="trip-point__duration">${getHourAndMinutes(moment(this._timeEnd).diff(this._timeStart))}</span>
+      <span class="trip-point__duration">${moment.duration(moment(this._timeEnd).diff(this._timeStart), `milliseconds`).format(`h[H] m[M]`)}</span>
     </p>
     <p class="trip-point__price">&euro;&nbsp;${this._price}</p>
     <ul class="trip-point__offers">

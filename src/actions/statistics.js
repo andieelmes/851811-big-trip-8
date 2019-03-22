@@ -12,6 +12,7 @@ const tripPointsTableElement = document.querySelector(TRIP_POINTS_TABLE_BTN_SELE
 
 const makeStatistics = (data) => {
   statsElement.addEventListener(`click`, () => {
+    destroyCanvas();
     document.querySelector(STATS_SELECTOR).classList.remove(`visually-hidden`);
     document.querySelector(MAIN_SELECTOR).classList.add(`visually-hidden`);
     renderStatistics(data);
