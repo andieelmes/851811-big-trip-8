@@ -1,4 +1,5 @@
 import shuffle from 'lodash.shuffle';
+import moment from 'moment';
 
 export const getRandomInt = (min, max) => Math.floor(Math.random() * Math.floor((max - min) + 1) + min);
 
@@ -44,14 +45,58 @@ export const appendToDom = (config) => {
   parentElement.appendChild(fragment.content);
 };
 
-export const convertTimeIntoHoursAndMinutes = (timeStart, timeEnd) => {
-  const dateStart = new Date(timeStart);
-  const dateEnd = new Date(timeEnd);
-  const hours = dateEnd.getHours() - dateStart.getHours();
-  const minutes = Math.abs(dateEnd.getMinutes() - dateStart.getMinutes());
-  return `${hours ? `${hours}H` : ``} ${minutes ? `${minutes}M` : ``}`;
-};
-
 export const getRandomBool = () => getRandomInt(0, 1) === 1;
 
-export const getHourAndMinutes = (timeStamp) => new Date(timeStamp).toLocaleTimeString(`en-gb`, {hour: `2-digit`, minute: `2-digit`})
+export const getOfferId = (str) => str.replace(/\s/g, `-`).toLowerCase();
+
+export const getTripPointPriceByLabel = (data, labels) => {
+  return data.map((day) => {
+    const {
+      type,
+      price
+    } = day;
+
+    const typeLabel = type[0];
+    const label = labels[typeLabel];
+
+    return {label, price};
+  }).filter((activity) => activity.label);
+};
+
+export const getTripPointByLabel = (data, labels) => {
+  return data.map((day) => {
+    const {
+      type,
+    } = day;
+
+    const typeLabel = type[0];
+    const label = labels[typeLabel];
+
+    return {label};
+  }).filter((activity) => activity.label);
+};
+
+export const sumTripPointPrices = (individualObject) => {
+  const sumObject = {};
+
+  individualObject.forEach((activity) => {
+    const activityPrice = sumObject[activity.label];
+    sumObject[activity.label] = activityPrice ? activityPrice + +activity.price : +activity.price;
+  });
+
+  return sumObject;
+};
+
+export const countTripPoints = (individualObject) => {
+  const sumObject = {};
+
+  individualObject.forEach((activity) => {
+    if (sumObject[activity.label]) {
+      sumObject[activity.label] += 1;
+    } else {
+      sumObject[activity.label] = 1;
+    }
+  });
+
+  return sumObject;
+};

@@ -12,7 +12,7 @@ const makeTripDayInfo = (config) => {
 
   return `<span class="trip-day__caption">Day</span>
   <p class="trip-day__number">${day}</p>
-  <h2 class="trip-day__title">${new Date(date).toLocaleDateString(`en-gb`, {month: `short`})}&nbsp;
+  <h2 class="trip-day__destination">${new Date(date).toLocaleDateString(`en-gb`, {month: `short`})}&nbsp;
   ${new Date(date).toLocaleDateString(`en-gb`, {day: `2-digit`})}</h2>`;
 };
 

@@ -1,6 +1,11 @@
 import {populateDom} from './utils';
-import {FILTERS_SELECTOR} from './constants';
 import filterMocks from './data/filters';
+
+import {
+  FILTERS_SELECTOR,
+  STATS_BTN_SELECTOR,
+  TRIP_POINTS_TABLE_BTN_SELECTOR,
+} from './constants';
 
 import makeFilter from './render/filter';
 import renderTripPoints from './actions/tripPoint';
