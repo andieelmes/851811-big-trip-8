@@ -4,6 +4,7 @@ class Filter extends Component {
   constructor(data) {
     super();
     this._type = data.type;
+    this._disabled = data.disabled;
 
     this._onClick = this._onClick.bind(this);
 
@@ -19,6 +20,7 @@ class Filter extends Component {
         id="filter-${this._type}"
         name="filter"
         value="${this._type}"
+        ${this._disabled ? `disabled` : ``}"
       />
       ${this._type[0].toUpperCase() + this._type.slice(1)}
 
@@ -30,7 +32,7 @@ class Filter extends Component {
   }
 
   _onClick() {
-    return typeof this._onFilter === `function` && this._onFilter();
+    return !this._disabled && typeof this._onFilter === `function` && this._onFilter();
   }
 
   bind() {

@@ -5,10 +5,17 @@ import generateTripPointData from '../data/tripPoint';
 
 import TripPoint from '../render/tripPoint';
 import EditTripPoint from '../render/editTripPoint';
+import renderTripInfo from '../render/tripInfo';
 
 import makeStatistics from './statistics';
 
 const tripPointsElement = document.querySelector(TRIP_POINTS_SELECTOR);
+
+const deleteTripPoint = (tripPoints, id) => {
+  const tripPointToDelete = tripPoints.find((tripPoint) => tripPoint.id === id);
+  const index = tripPoints.indexOf(tripPointToDelete);
+  tripPoints.splice(index, 1);
+};
 
 export const makeTripPoints = (numberOfTripPoints) => {
   return new Array(+numberOfTripPoints).fill(``).map(() => generateTripPointData());
@@ -43,11 +50,21 @@ const renderTripPoints = (tripPoints) => {
       tripPointComponent.render();
       tripPointsElement.replaceChild(tripPointComponent.element, editTripPointComponent.element);
       editTripPointComponent.unrender();
+
+      renderTripInfo(tripPoints);
     };
 
-    editTripPointComponent.onReset = () => {
+    editTripPointComponent.onDelete = () => {
       editTripPointComponent.unrender();
+      deleteTripPoint(tripPoints, tripPointData.id);
       tripPointComponent.unrender();
+      renderTripInfo(tripPoints);
+    };
+
+    editTripPointComponent.onEsc = () => {
+      tripPointComponent.render();
+      tripPointsElement.replaceChild(tripPointComponent.element, editTripPointComponent.element);
+      editTripPointComponent.unrender();
     };
 
     tripPointsElement.appendChild(tripPointComponent.render());

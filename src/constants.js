@@ -41,8 +41,25 @@ export const AllTypeToLabel = {
   "Check-in": `🏨 STAY`,
   Drive: `🚗 DRIVE`,
   Sightseeing: `🏛️ LOOK`,
-  Restaurant: `🏨 EAT`,
+  Restaurant: `🍴 EAT`,
   Taxi: `🚕 RIDE`,
+  Bus: `🚌 BUS`,
+  Train: `🚂 CHOO-CHOO`,
+  Ship: `🛳️ SAIL`,
+  Transport: `🚊 GO AROUND`,
+}
+
+export const AllTypeToInputLabel = {
+  Flight: `Flight to`,
+  "Check-in": `Check-in at hotel in`,
+  Drive: `Drive to`,
+  Sightseeing: `Sightseeing in`,
+  Restaurant: `Restaurant in`,
+  Taxi: `Taxi to`,
+  Bus: `Bus to`,
+  Train: `Train to`,
+  Ship: `Ship to`,
+  Transport: `Transport to`,
 }
 /* eslint-enale */
 
@@ -51,6 +68,9 @@ export const TrasnportTypeToLabel = {
   Taxi: `🚕 RIDE`,
   Flight: `✈️ FLY`,
   Ship: `🛳️ SAIL`,
+  Train: `🚂 CHOO-CHOO`,
+  Transport: `🚊 GO AROUND`,
+  Bus: `🚌 BUS`,
 }
 
 export const CITIES = [
@@ -113,3 +133,5 @@ export const FLATPICKR_CONFIG = {
   altFormat: `d M h:i`,
   dateFormat: `d M h:i`,
 }
+
+export const ESC_KEYCODE = 27;

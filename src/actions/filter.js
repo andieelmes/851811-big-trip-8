@@ -23,11 +23,15 @@ const renderFilters = (initialTripPoints) => {
   filtersElement.innerHTML = ``;
 
   filtersData.forEach((filterData) => {
+    const filteredTripPoints = filterTasks(initialTripPoints, filterData.type);
+
+    if (!filteredTripPoints.length) {
+      filterData.disabled = true;
+    }
+
     const filterCompontent = new Filter(filterData);
 
     filterCompontent.onFilter = () => {
-      const filterName = filterData.type;
-      const filteredTripPoints = filterTasks(initialTripPoints, filterName);
       renderTripPoints(filteredTripPoints);
     };
 

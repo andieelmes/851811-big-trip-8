@@ -1,4 +1,5 @@
 import moment from 'moment';
+import nanoid from 'nanoid';
 
 import {
   getRandomInt,
@@ -24,6 +25,7 @@ import {
 
 const tripPoint = () => {
   return {
+    id: nanoid(),
     allTypes: TYPES,
     type: [...TYPES][getRandomInt(0, TYPES.size - 1)],
     allOffers: OFFERS,

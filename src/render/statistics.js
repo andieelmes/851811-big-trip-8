@@ -190,7 +190,7 @@ const renderStatistics = (data) => {
       },
       title: {
         display: true,
-        text: `MONEY`,
+        text: `TIME`,
         fontColor: `#000000`,
         fontSize: 23,
         position: `left`

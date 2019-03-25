@@ -20,7 +20,7 @@ const init = () => {
 
   renderTripPoints(tripPoints);
   renderFilters(tripPoints);
-  renderTripInfo();
+  renderTripInfo(tripPoints);
   renderTripDayInfo();
 };
 
