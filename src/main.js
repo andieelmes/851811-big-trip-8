@@ -1,31 +1,24 @@
-import {populateDom} from './utils';
-import filterMocks from './data/filters';
+import {getRandomInt} from './utils';
 
 import {
-  FILTERS_SELECTOR,
-  STATS_BTN_SELECTOR,
-  TRIP_POINTS_TABLE_BTN_SELECTOR,
+  MIN_NUMBER_OF_TRIP_POINTS,
+  MAX_NUMBER_OF_TRIP_POINTS,
 } from './constants';
 
-import makeFilter from './render/filter';
-import renderTripPoints from './actions/tripPoint';
+import renderTripPoints, {makeTripPoints} from './actions/tripPoint';
+import renderFilters from './actions/filter';
 import renderTripInfo from './render/tripInfo';
 import renderTripDayInfo from './render/tripDayInfo';
-import subscribeToFilterClicks from './actions/filter';
 
-const filtersElement = document.querySelector(FILTERS_SELECTOR);
+const defaultNumberOfTripPoints = getRandomInt(MIN_NUMBER_OF_TRIP_POINTS, MAX_NUMBER_OF_TRIP_POINTS);
 
 const init = () => {
-  populateDom({
-    array: filterMocks,
-    parentElement: filtersElement,
-    render: makeFilter,
-    clear: true
-  });
-  renderTripPoints();
+  const tripPoints = makeTripPoints(defaultNumberOfTripPoints);
+
+  renderTripPoints(tripPoints);
+  renderFilters(tripPoints);
   renderTripInfo();
   renderTripDayInfo();
-  subscribeToFilterClicks();
 };
 
 init();

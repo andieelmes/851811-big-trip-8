@@ -7,6 +7,7 @@ import {
   OFFERS,
   TYPES,
   FAVOURITE_ON,
+  FLATPICKR_CONFIG,
 } from '../constants';
 import Component from './tripPointComponent';
 
@@ -32,7 +33,6 @@ class EditTripPoint extends Component {
     this._onSubmit = null;
     this._onReset = null;
 
-    this._onChangeDate = this._onChangeDate.bind(this);
     this._onChangeType = this._onChangeType.bind(this);
   }
 
@@ -68,12 +68,21 @@ class EditTripPoint extends Component {
             </datalist>
           </div>
 
+          <label class="point__time" style="margin-right: 0">
+            choose time
+            <input class="point__input"
+              type="text"
+              value="${moment(this._timeStart).format(`D MMM h:mm`)}"
+              name="timeStart"
+              placeholder="00:00 — 00:00">
+          </label>
+          &nbsp;&mdash;&nbsp;
           <label class="point__time">
             choose time
             <input class="point__input"
               type="text"
-              value="${moment(this._timeStart).format(`HH mm`)}&nbsp;&mdash;${moment(this._timeEnd).format(`HH mm`)}"
-              name="time"
+              value="${moment(this._timeEnd).format(`D MMM h:mm`)}"
+              name="timeEnd"
               placeholder="00:00 — 00:00">
           </label>
 
@@ -131,6 +140,8 @@ class EditTripPoint extends Component {
     this._offer = data.offer;
     this._price = data.price;
     this._favorite = data.favorite;
+    this._timeStart = data.timeStart;
+    this._timeEnd = data.timeEnd;
   }
 
   _processForm(formData) {
@@ -140,6 +151,8 @@ class EditTripPoint extends Component {
       price: ``,
       favorite: ``,
       offer: [],
+      timeStart: ``,
+      timeEnd: ``,
     };
 
     const editTripPointMapper = EditTripPoint.createMapper(entry);
@@ -202,9 +215,20 @@ class EditTripPoint extends Component {
       element.addEventListener(`click`, this._onChangeType);
     });
 
-    flatpickr(this._element.querySelector(`[name="time"]`), {
-      mode: `range`,
-      enableTime: true,
+    const timeStartPicker = flatpickr(this._element.querySelector(`[name="timeStart"]`), {
+      ...FLATPICKR_CONFIG,
+      onChange: (dateStr) => {
+        timeEndPicker.set(`disable`, [
+          (date) => date <= new Date(dateStr)
+        ])
+      },
+    });
+
+    const timeEndPicker = flatpickr(this._element.querySelector(`[name="timeEnd"]`), {
+      ...FLATPICKR_CONFIG,
+      disable: [
+        (date) => date <= new Date(this._timeStart)
+      ]
     });
   }
 
@@ -230,16 +254,6 @@ class EditTripPoint extends Component {
 
     return typeof this._onSubmit === `function` && this._onSubmit(newData);
   }
-
-  _onChangeDate() {
-    this._state.isDate = !this._state.isDate;
-
-    const formData = new FormData(this._element.querySelector(`form`));
-    const newData = this._processForm(formData);
-
-    this.update(newData);
-  }
-
 
   _onChangeType() {
     const formData = new FormData(this._element.querySelector(`form`));
@@ -274,6 +288,12 @@ class EditTripPoint extends Component {
       },
       favorite: (value) => {
         target.favorite = value;
+      },
+      timeStart: (value) => {
+        target.timeStart = value;
+      },
+      timeEnd: (value) => {
+        target.timeEnd = value;
       },
     };
   }

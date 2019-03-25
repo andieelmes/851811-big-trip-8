@@ -1,3 +1,13 @@
-const filterMocks = [`everything`, `future`, `past`];
+const filterMocks = [
+  {
+    type: `everything`,
+  },
+  {
+    type: `future`,
+  },
+  {
+    type: `past`,
+  }
+];
 
 export default filterMocks;

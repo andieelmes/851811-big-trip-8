@@ -1,5 +1,4 @@
 import shuffle from 'lodash.shuffle';
-import moment from 'moment';
 
 export const getRandomInt = (min, max) => Math.floor(Math.random() * Math.floor((max - min) + 1) + min);
 

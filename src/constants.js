@@ -1,9 +1,8 @@
-import {getRandomInt} from "./utils";
+import moment from 'moment';
 
 export const MIN_NUMBER_OF_TRIP_POINTS = 10;
 export const MAX_NUMBER_OF_TRIP_POINTS = 15;
 export const FILTERS_SELECTOR = `.trip-filter`;
-export const FILTER_SELECTOR = `.trip-filter__item`;
 export const MIN_PRICE = 50;
 export const MAX_PRICE = 100;
 export const MIN_OFFER_NUMBER = 0;
@@ -96,8 +95,8 @@ export const TRIP_DAY_INFO_SELECTOR = `.trip-day__info`;
 export const START_HOURS = [10, 16];
 export const END_HOURS = [16, 23];
 export const MINUTES = [0, 59];
-export const START_DATE = getRandomInt(1, 15);
-export const END_DATE = getRandomInt(16, 28);
+export const START_DATE = [moment().date() - 2, moment().date() + 2];
+export const END_DATE = [moment().date() + 3, moment().date() + 2];
 export const FAVOURITE_OFF = `off`;
 export const FAVOURITE_ON = `on`;
 
@@ -107,3 +106,10 @@ export const STATS_SELECTOR = `.statistic`;
 export const MAIN_SELECTOR = `main`;
 
 export const BAR_HEIGHT = 55;
+
+export const FLATPICKR_CONFIG = {
+  enableTime: true,
+  altInput: true,
+  altFormat: `d M h:i`,
+  dateFormat: `d M h:i`,
+}

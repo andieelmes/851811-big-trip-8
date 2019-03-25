@@ -1,22 +1,39 @@
-import {
-  MIN_NUMBER_OF_TRIP_POINTS,
-  MAX_NUMBER_OF_TRIP_POINTS,
-  FILTER_SELECTOR
-} from '../constants';
+import moment from 'moment';
+import {FILTERS_SELECTOR} from '../constants';
+import filtersData from '../data/filters';
+import renderTripPoints from '../actions/tripPoint';
+import Filter from '../render/filter';
 
-import {getRandomInt} from '../utils';
-import renderTripPoints from './tripPoint';
+const filtersElement = document.querySelector(FILTERS_SELECTOR);
 
-const onFilterClick = () => {
-  const numberOfTripPoints = getRandomInt(MIN_NUMBER_OF_TRIP_POINTS, MAX_NUMBER_OF_TRIP_POINTS);
-  renderTripPoints(numberOfTripPoints);
+const filterTasks = (initialTasks, filterName) => {
+  switch (filterName) {
+    case `everything`:
+      return initialTasks;
+
+    case `future`:
+      return initialTasks.filter((it) => it.timeStart > moment());
+
+    case `past`:
+      return initialTasks.filter((it) => it.timeStart < moment());
+  }
 };
 
-const subscribeToFilterClicks = () => {
-  const filters = document.querySelectorAll(FILTER_SELECTOR);
-  filters.forEach((filter) => {
-    filter.addEventListener(`click`, onFilterClick);
+const renderFilters = (initialTripPoints) => {
+  filtersElement.innerHTML = ``;
+
+  filtersData.forEach((filterData) => {
+    const filterCompontent = new Filter(filterData);
+
+    filterCompontent.onFilter = () => {
+      const filterName = filterData.type;
+      const filteredTripPoints = filterTasks(initialTripPoints, filterName);
+      renderTripPoints(filteredTripPoints);
+    };
+
+    filtersElement.appendChild(filterCompontent.render());
   });
+
 };
 
-export default subscribeToFilterClicks;
+export default renderFilters;
