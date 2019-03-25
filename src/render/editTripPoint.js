@@ -7,6 +7,9 @@ import {
   OFFERS,
   TYPES,
   FAVOURITE_ON,
+  FLATPICKR_CONFIG,
+  ESC_KEYCODE,
+  AllTypeToInputLabel,
 } from '../constants';
 import Component from './tripPointComponent';
 
@@ -27,12 +30,15 @@ class EditTripPoint extends Component {
     this._pictures = data.pictures;
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
-    this._onResetButtonClick = this._onResetButtonClick.bind(this);
+    this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
+    this._onEscPress = this._onEscPress.bind(this);
+    this._onDocumentClickOutside = this._onDocumentClickOutside.bind(this);
 
     this._onSubmit = null;
-    this._onReset = null;
+    this._onDelete = null;
+    this._onEsc = null;
+    this._onClickOutside = null;
 
-    this._onChangeDate = this._onChangeDate.bind(this);
     this._onChangeType = this._onChangeType.bind(this);
   }
 
@@ -61,19 +67,28 @@ class EditTripPoint extends Component {
           </div>
 
           <div class="point__destination-wrap">
-            <label class="point__destination-label" for="destination">Flight to</label>
+            <label class="point__destination-label" for="destination">${AllTypeToInputLabel[typeDesc]}</label>
             <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination}" name="destination">
             <datalist id="destination-select">
               ${this._allCitites.map((city) => `<option value="${city}"></option>`).join(``)}
             </datalist>
           </div>
 
+          <label class="point__time" style="margin-right: 0">
+            choose time
+            <input class="point__input"
+              type="text"
+              value="${moment(this._timeStart).format(`D MMM h:mm`)}"
+              name="timeStart"
+              placeholder="00:00 — 00:00">
+          </label>
+          &nbsp;&mdash;&nbsp;
           <label class="point__time">
             choose time
             <input class="point__input"
               type="text"
-              value="${moment(this._timeStart).format(`HH mm`)}&nbsp;&mdash;${moment(this._timeEnd).format(`HH mm`)}"
-              name="time"
+              value="${moment(this._timeEnd).format(`D MMM h:mm`)}"
+              name="timeEnd"
               placeholder="00:00 — 00:00">
           </label>
 
@@ -120,10 +135,17 @@ class EditTripPoint extends Component {
     this._onSubmit = fn;
   }
 
-  set onReset(fn) {
-    this._onReset = fn;
+  set onDelete(fn) {
+    this._onDelete = fn;
   }
 
+  set onEsc(fn) {
+    this._onEsc = fn;
+  }
+
+  set onClickOutside(fn) {
+    this._onClickOutside = fn;
+  }
 
   update(data) {
     this._type = data.type;
@@ -131,6 +153,8 @@ class EditTripPoint extends Component {
     this._offer = data.offer;
     this._price = data.price;
     this._favorite = data.favorite;
+    this._timeStart = data.timeStart;
+    this._timeEnd = data.timeEnd;
   }
 
   _processForm(formData) {
@@ -140,6 +164,8 @@ class EditTripPoint extends Component {
       price: ``,
       favorite: ``,
       offer: [],
+      timeStart: ``,
+      timeEnd: ``,
     };
 
     const editTripPointMapper = EditTripPoint.createMapper(entry);
@@ -197,15 +223,29 @@ class EditTripPoint extends Component {
     this._element.querySelector(`.point form`)
         .addEventListener(`submit`, this._onSubmitButtonClick);
     this._element.querySelector(`[type=reset]`)
-        .addEventListener(`click`, this._onResetButtonClick);
+        .addEventListener(`click`, this._onDeleteButtonClick);
     this._element.querySelectorAll(`.travel-way__select-input`).forEach((element) => {
       element.addEventListener(`click`, this._onChangeType);
     });
+    document.addEventListener(`keydown`, this._onEscPress);
+    document.addEventListener(`click`, this._onDocumentClickOutside);
 
-    flatpickr(this._element.querySelector(`[name="time"]`), {
-      mode: `range`,
-      enableTime: true,
+    flatpickr(this._element.querySelector(`[name="timeStart"]`), {
+      ...FLATPICKR_CONFIG,
+      onChange: (dateStr) => {
+        timeEndPicker.set(`disable`, [
+          (date) => date <= new Date(dateStr)
+        ]);
+      },
     });
+
+    const timeEndPicker = flatpickr(this._element.querySelector(`[name="timeEnd"]`), {
+      ...FLATPICKR_CONFIG,
+      disable: [
+        (date) => date <= new Date(this._timeStart)
+      ]
+    });
+
   }
 
   unbind() {
@@ -213,10 +253,12 @@ class EditTripPoint extends Component {
       this._element.querySelector(`.point form`)
         .removeEventListener(`submit`, this._onSubmitButtonClick);
       this._element.querySelector(`[type=reset]`)
-        .removeEventListener(`click`, this._onResetButtonClick);
+        .removeEventListener(`click`, this._onDeleteButtonClick);
       this._element.querySelectorAll(`.travel-way__select-input`).forEach((element) => {
         element.removeEventListener(`click`, this._onChangeType);
       });
+      document.removeEventListener(`keydown`, this._onEscPress);
+      document.removeEventListener(`click`, this._onDocumentClickOutside);
     }
   }
 
@@ -231,16 +273,6 @@ class EditTripPoint extends Component {
     return typeof this._onSubmit === `function` && this._onSubmit(newData);
   }
 
-  _onChangeDate() {
-    this._state.isDate = !this._state.isDate;
-
-    const formData = new FormData(this._element.querySelector(`form`));
-    const newData = this._processForm(formData);
-
-    this.update(newData);
-  }
-
-
   _onChangeType() {
     const formData = new FormData(this._element.querySelector(`form`));
     const newData = this._processForm(formData);
@@ -252,8 +284,16 @@ class EditTripPoint extends Component {
     this.bind();
   }
 
-  _onResetButtonClick() {
-    return typeof this._onReset === `function` && this._onReset();
+  _onDeleteButtonClick() {
+    return typeof this._onDelete === `function` && this._onDelete();
+  }
+
+  _onEscPress(e) {
+    return e.keyCode === ESC_KEYCODE && typeof this._onEsc === `function` && this._onEsc();
+  }
+
+  _onDocumentClickOutside() {
+    // return this._element && !this._element.contains(e.target) && typeof this._onClickOutside === `function` && this._onClickOutside();
   }
 
   static createMapper(target) {
@@ -274,6 +314,12 @@ class EditTripPoint extends Component {
       },
       favorite: (value) => {
         target.favorite = value;
+      },
+      timeStart: (value) => {
+        target.timeStart = value;
+      },
+      timeEnd: (value) => {
+        target.timeEnd = value;
       },
     };
   }

@@ -1,3 +1,6 @@
+import moment from 'moment';
+import nanoid from 'nanoid';
+
 import {
   getRandomInt,
   getRandomElements
@@ -16,17 +19,20 @@ import {
   END_HOURS,
   MINUTES,
   FAVOURITE_OFF,
+  START_DATE,
+  END_DATE,
 } from '../constants';
 
 const tripPoint = () => {
   return {
+    id: nanoid(),
     allTypes: TYPES,
     type: [...TYPES][getRandomInt(0, TYPES.size - 1)],
     allOffers: OFFERS,
     offer: getRandomElements(OFFERS, getRandomInt(MIN_OFFER_NUMBER, MAX_OFFER_NUMBER)),
     desc: getRandomElements(LOREM_IPSUM.split(`. `), getRandomInt(1, 3)).join(`. `),
-    timeStart: new Date(new Date().setHours(getRandomInt(...START_HOURS))).setMinutes(getRandomInt(...MINUTES)),
-    timeEnd: new Date(new Date().setHours(getRandomInt(...END_HOURS))).setMinutes(getRandomInt(...MINUTES)),
+    timeStart: moment().date(getRandomInt(...START_DATE)).hour(getRandomInt(...START_HOURS)).minute(getRandomInt(...MINUTES)),
+    timeEnd: moment().date(getRandomInt(...END_DATE)).hour(getRandomInt(...END_HOURS)).minute(getRandomInt(...MINUTES)),
     price: getRandomInt(MIN_PRICE, MAX_PRICE),
     allCitites: CITIES,
     destination: CITIES[getRandomInt(0, CITIES.length - 1)],

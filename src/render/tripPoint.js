@@ -28,11 +28,11 @@ class TripPoint extends Component {
     <h3 class="trip-point__title">${this._destination}</h3>
     <p class="trip-point__schedule">
       <span class="trip-point__timetable">
-        ${moment(this._timeStart).format(`HH mm`)}
+        ${moment(this._timeStart).format(`D MMM h:mm`)}
         &nbsp;&mdash;
-        ${moment(this._timeEnd).format(`HH mm`)}
+        ${moment(this._timeEnd).format(`D MMM h:mm`)}
       </span>
-      <span class="trip-point__duration">${moment.duration(moment(this._timeEnd).diff(this._timeStart), `milliseconds`).format(`h[H] m[M]`)}</span>
+      <span class="trip-point__duration">${moment.duration(moment(this._timeEnd).diff(this._timeStart), `milliseconds`).format(`d [days] h[H] m[M]`)}</span>
     </p>
     <p class="trip-point__price">&euro;&nbsp;${this._price}</p>
     <ul class="trip-point__offers">
@@ -51,6 +51,8 @@ class TripPoint extends Component {
     this._offer = data.offer;
     this._price = data.price;
     this._favorite = data.favorite;
+    this._timeStart = data.timeStart;
+    this._timeEnd = data.timeEnd;
   }
 
   _onTripPointClick() {

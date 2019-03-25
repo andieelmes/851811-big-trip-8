@@ -5,14 +5,15 @@ import tripInfo from '../data/tripInfo';
 
 const tripInfoElement = document.querySelector(TRIP_INFO_SELECTOR);
 
-const makeTripInfo = (config) => {
+const makeTripInfo = (config, tripPoints) => {
   const {
     cities,
     picture,
     dateStart,
     dateEnd,
-    totalPrice
   } = config;
+
+  const totalPrice = tripPoints.reduce((acc, tripPoint) => acc + +tripPoint.price, 0);
 
   return `<div class="trip__schedule">
   <i class="trip-icon"><img src="${picture}" style="border-radius: 50%"/></i>
@@ -30,9 +31,9 @@ const makeTripInfo = (config) => {
 <p class="trip__total">Total: <span class="trip__total-cost">&euro;&nbsp;${totalPrice}</span></p>`;
 };
 
-const renderTripInfo = () => {
+const renderTripInfo = (tripPoints) => {
   appendToDom({
-    newElements: makeTripInfo(tripInfo()),
+    newElements: makeTripInfo(tripInfo(), tripPoints),
     parentElement: tripInfoElement,
     clear: true,
   });

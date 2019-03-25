@@ -1,5 +1,6 @@
 import shuffle from 'lodash.shuffle';
 import moment from 'moment';
+import momentDurationFormatSetup from 'moment-duration-format'; // eslint-disable-line
 
 export const getRandomInt = (min, max) => Math.floor(Math.random() * Math.floor((max - min) + 1) + min);
 
@@ -49,54 +50,71 @@ export const getRandomBool = () => getRandomInt(0, 1) === 1;
 
 export const getOfferId = (str) => str.replace(/\s/g, `-`).toLowerCase();
 
-export const getTripPointPriceByLabel = (data, labels) => {
-  return data.map((day) => {
+export const getTripPointInfoByLabel = (data, labels, tripPointKey) => {
+
+  return data.reduce((activities, day) => {
     const {
       type,
-      price
+      timeStart,
+      timeEnd,
     } = day;
 
     const typeLabel = type[0];
     const label = labels[typeLabel];
 
-    return {label, price};
-  }).filter((activity) => activity.label);
-};
-
-export const getTripPointByLabel = (data, labels) => {
-  return data.map((day) => {
-    const {
-      type,
-    } = day;
-
-    const typeLabel = type[0];
-    const label = labels[typeLabel];
-
-    return {label};
-  }).filter((activity) => activity.label);
-};
-
-export const sumTripPointPrices = (individualObject) => {
-  const sumObject = {};
-
-  individualObject.forEach((activity) => {
-    const activityPrice = sumObject[activity.label];
-    sumObject[activity.label] = activityPrice ? activityPrice + +activity.price : +activity.price;
-  });
-
-  return sumObject;
-};
-
-export const countTripPoints = (individualObject) => {
-  const sumObject = {};
-
-  individualObject.forEach((activity) => {
-    if (sumObject[activity.label]) {
-      sumObject[activity.label] += 1;
-    } else {
-      sumObject[activity.label] = 1;
+    if (label) {
+      let tripPointInfo;
+      if (tripPointKey === `time`) {
+        tripPointInfo = {label, [tripPointKey]: moment(timeEnd).diff(timeStart)};
+      } else {
+        tripPointInfo = tripPointKey ? {label, [tripPointKey]: day[tripPointKey]} : {label};
+      }
+      activities.push(tripPointInfo);
     }
-  });
+    return activities;
+  }, []);
+};
 
-  return sumObject;
+export const countTripPoints = (individualTripPoints, tripPointKey) => {
+  return individualTripPoints.reduce((obj, activity) => {
+    const amount = obj[activity.label];
+    let activityAmount;
+    if (tripPointKey === `time`) {
+      activityAmount = moment(activity[tripPointKey]).hours();
+    } else {
+      activityAmount = +activity[tripPointKey] || 1;
+    }
+    obj[activity.label] = amount ? amount + activityAmount : activityAmount;
+    return obj;
+  }, {});
+};
+
+/**
+ * shows certain block by clicking on corresponding link
+ * block set depends on url hash
+ * @param {String} urlHash
+ * @return
+ */
+
+const showCertainBlock = (urlHash) => {
+  document.querySelector(`[href="#${urlHash}"]`).click();
+};
+
+export const checkUrlHash = () => {
+  const urlHash = location.hash.replace(`#`, ``);
+  if (!urlHash) {
+    return false;
+  }
+
+  const determineFunctionBasedOnUrl = {
+    'stats': showCertainBlock.bind(null, urlHash),
+  };
+
+  const func = determineFunctionBasedOnUrl[urlHash];
+
+  if (!func) {
+    return false;
+  }
+
+  func();
 };

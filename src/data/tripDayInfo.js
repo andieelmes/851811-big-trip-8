@@ -6,10 +6,12 @@ import {
 } from '../constants';
 
 const tripDayInfo = () => {
-  const currentDay = getRandomInt(START_DATE, END_DATE);
+  const start = getRandomInt(...START_DATE);
+  const end = getRandomInt(...END_DATE);
+  const currentDay = getRandomInt(start, end);
   return {
-    day: currentDay - START_DATE + 1,
-    date: new Date(new Date().setDate(currentDay)),
+    day: currentDay - start + 1,
+    date: Date.now(),
   };
 };
 
