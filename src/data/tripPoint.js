@@ -22,8 +22,6 @@ import {
   END_DATE,
 } from '../constants';
 
-console.log(START_DATE, END_DATE);
-
 const tripPoint = () => {
   return {
     allTypes: TYPES,

@@ -1,4 +1,7 @@
-import {getRandomInt} from './utils';
+import {
+  getRandomInt,
+  checkUrlHash,
+} from './utils';
 
 import {
   MIN_NUMBER_OF_TRIP_POINTS,
@@ -22,3 +25,5 @@ const init = () => {
 };
 
 init();
+
+checkUrlHash();

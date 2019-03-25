@@ -1,4 +1,6 @@
 import shuffle from 'lodash.shuffle';
+import moment from 'moment';
+import momentDurationFormatSetup from 'moment-duration-format'; // eslint-disable-line
 
 export const getRandomInt = (min, max) => Math.floor(Math.random() * Math.floor((max - min) + 1) + min);
 
@@ -53,13 +55,20 @@ export const getTripPointInfoByLabel = (data, labels, tripPointKey) => {
   return data.reduce((activities, day) => {
     const {
       type,
+      timeStart,
+      timeEnd,
     } = day;
 
     const typeLabel = type[0];
     const label = labels[typeLabel];
 
     if (label) {
-      const tripPointInfo = tripPointKey ? {label, [tripPointKey]: day[tripPointKey]} : {label};
+      let tripPointInfo;
+      if (tripPointKey === `time`) {
+        tripPointInfo = {label, [tripPointKey]: moment(timeEnd).diff(timeStart)};
+      } else {
+        tripPointInfo = tripPointKey ? {label, [tripPointKey]: day[tripPointKey]} : {label};
+      }
       activities.push(tripPointInfo);
     }
     return activities;
@@ -69,8 +78,43 @@ export const getTripPointInfoByLabel = (data, labels, tripPointKey) => {
 export const countTripPoints = (individualTripPoints, tripPointKey) => {
   return individualTripPoints.reduce((obj, activity) => {
     const amount = obj[activity.label];
-    const activityAmount = +activity[tripPointKey] || 1;
+    let activityAmount;
+    if (tripPointKey === `time`) {
+      activityAmount = moment(activity[tripPointKey]).hours();
+    } else {
+      activityAmount = +activity[tripPointKey] || 1;
+    }
     obj[activity.label] = amount ? amount + activityAmount : activityAmount;
     return obj;
   }, {});
+};
+
+/**
+ * shows certain block by clicking on corresponding link
+ * block set depends on url hash
+ * @param {String} urlHash
+ * @return
+ */
+
+const showCertainBlock = (urlHash) => {
+  document.querySelector(`[href="#${urlHash}"]`).click();
+};
+
+export const checkUrlHash = () => {
+  const urlHash = location.hash.replace(`#`, ``);
+  if (!urlHash) {
+    return false;
+  }
+
+  const determineFunctionBasedOnUrl = {
+    'stats': showCertainBlock.bind(null, urlHash),
+  };
+
+  const func = determineFunctionBasedOnUrl[urlHash];
+
+  if (!func) {
+    return false;
+  }
+
+  func();
 };
