@@ -222,14 +222,14 @@ class EditTripPoint extends Component {
     this._element.querySelectorAll(`.travel-way__select-input`).forEach((element) => {
       element.addEventListener(`click`, this._onChangeType);
     });
-    document.addEventListener('keydown', this._onEscPress);
+    document.addEventListener(`keydown`, this._onEscPress);
 
-    const timeStartPicker = flatpickr(this._element.querySelector(`[name="timeStart"]`), {
+    flatpickr(this._element.querySelector(`[name="timeStart"]`), {
       ...FLATPICKR_CONFIG,
       onChange: (dateStr) => {
         timeEndPicker.set(`disable`, [
           (date) => date <= new Date(dateStr)
-        ])
+        ]);
       },
     });
 
@@ -239,6 +239,7 @@ class EditTripPoint extends Component {
         (date) => date <= new Date(this._timeStart)
       ]
     });
+
   }
 
   unbind() {
@@ -250,7 +251,7 @@ class EditTripPoint extends Component {
       this._element.querySelectorAll(`.travel-way__select-input`).forEach((element) => {
         element.removeEventListener(`click`, this._onChangeType);
       });
-      document.removeEventListener('keydown', this._onEscPress);
+      document.removeEventListener(`keydown`, this._onEscPress);
     }
   }
 
@@ -282,7 +283,7 @@ class EditTripPoint extends Component {
 
   _onEscPress(e) {
     return e.keyCode === ESC_KEYCODE && typeof this._onEsc === `function` && this._onEsc();
-  };
+  }
 
   static createMapper(target) {
     return {

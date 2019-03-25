@@ -61,7 +61,7 @@ export const AllTypeToInputLabel = {
   Ship: `Ship to`,
   Transport: `Transport to`,
 }
-/* eslint-enale */
+/* eslint-enable */
 
 export const TrasnportTypeToLabel = {
   Drive: `🚗 DRIVE`,

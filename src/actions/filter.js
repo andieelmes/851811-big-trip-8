@@ -17,6 +17,8 @@ const filterTasks = (initialTasks, filterName) => {
     case `past`:
       return initialTasks.filter((it) => it.timeStart < moment());
   }
+
+  return false;
 };
 
 const renderFilters = (initialTripPoints) => {
