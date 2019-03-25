@@ -11,18 +11,18 @@ class Sort extends Component {
   }
 
   get template() {
-    return `<label
-      class="trip-sorting__item trip-sorting__item--${this._type}"
-      for="sorting-${this._type}
-    >
-      <input type="radio"
+    return `<span><input type="radio"
         id="sorting-${this._type}"
         name="trip-sorting"
         value="${this._type}"
-        ${this._checked ? `checked` : ``};
+        ${this._checked ? `checked` : ``}
       />
+    <label
+      class="trip-sorting__item trip-sorting__item--${this._type}"
+      for="sorting-${this._type}"
+    >
       ${this._type.toUpperCase()}
-    </label>`.trim();
+    </label></span>`.trim();
   }
 
   set onSort(fn) {

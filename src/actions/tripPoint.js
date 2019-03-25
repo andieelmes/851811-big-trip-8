@@ -67,6 +67,12 @@ const renderTripPoints = (tripPoints) => {
       editTripPointComponent.unrender();
     };
 
+    editTripPointComponent.onClickOutside = () => {
+      tripPointComponent.render();
+      tripPointsElement.replaceChild(tripPointComponent.element, editTripPointComponent.element);
+      editTripPointComponent.unrender();
+    };
+
     tripPointsElement.appendChild(tripPointComponent.render());
   });
 

@@ -32,10 +32,12 @@ class EditTripPoint extends Component {
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
     this._onEscPress = this._onEscPress.bind(this);
+    this._onDocumentClickOutside = this._onDocumentClickOutside.bind(this);
 
     this._onSubmit = null;
     this._onDelete = null;
     this._onEsc = null;
+    this._onClickOutside = null;
 
     this._onChangeType = this._onChangeType.bind(this);
   }
@@ -141,6 +143,9 @@ class EditTripPoint extends Component {
     this._onEsc = fn;
   }
 
+  set onClickOutside(fn) {
+    this._onClickOutside = fn;
+  }
 
   update(data) {
     this._type = data.type;
@@ -223,6 +228,7 @@ class EditTripPoint extends Component {
       element.addEventListener(`click`, this._onChangeType);
     });
     document.addEventListener(`keydown`, this._onEscPress);
+    document.addEventListener(`click`, this._onDocumentClickOutside);
 
     flatpickr(this._element.querySelector(`[name="timeStart"]`), {
       ...FLATPICKR_CONFIG,
@@ -252,6 +258,7 @@ class EditTripPoint extends Component {
         element.removeEventListener(`click`, this._onChangeType);
       });
       document.removeEventListener(`keydown`, this._onEscPress);
+      document.removeEventListener(`click`, this._onDocumentClickOutside);
     }
   }
 
@@ -283,6 +290,10 @@ class EditTripPoint extends Component {
 
   _onEscPress(e) {
     return e.keyCode === ESC_KEYCODE && typeof this._onEsc === `function` && this._onEsc();
+  }
+
+  _onDocumentClickOutside() {
+    // return this._element && !this._element.contains(e.target) && typeof this._onClickOutside === `function` && this._onClickOutside();
   }
 
   static createMapper(target) {

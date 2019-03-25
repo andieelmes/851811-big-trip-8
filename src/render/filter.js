@@ -12,19 +12,18 @@ class Filter extends Component {
   }
 
   get template() {
-    return `<label
+    return `<span><input type="radio"
+      id="filter-${this._type}"
+      name="filter"
+      value="${this._type}"
+      ${this._disabled ? `disabled` : ``}
+    />
+    <label
       class="trip-filter__item"
-      for="filter-${this._type}
+      for="filter-${this._type}"
     >
-      <input type="radio"
-        id="filter-${this._type}"
-        name="filter"
-        value="${this._type}"
-        ${this._disabled ? `disabled` : ``}"
-      />
       ${this._type[0].toUpperCase() + this._type.slice(1)}
-
-    </label>`.trim();
+    </label></span>`.trim();
   }
 
   set onFilter(fn) {
