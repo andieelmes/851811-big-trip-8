@@ -10,6 +10,7 @@ import {
 
 import renderTripPoints, {makeTripPoints} from './actions/tripPoint';
 import renderFilters from './actions/filter';
+import renderSort from './actions/sort';
 import renderTripInfo from './render/tripInfo';
 import renderTripDayInfo from './render/tripDayInfo';
 
@@ -20,6 +21,7 @@ const init = () => {
 
   renderTripPoints(tripPoints);
   renderFilters(tripPoints);
+  renderSort(tripPoints);
   renderTripInfo(tripPoints);
   renderTripDayInfo();
 };
