@@ -1,28 +1,44 @@
 import {
-  getRandomInt,
   checkUrlHash,
 } from './utils';
 
 import {
-  MIN_NUMBER_OF_TRIP_POINTS,
-  MAX_NUMBER_OF_TRIP_POINTS,
+  ENDPOINT_URL,
+  AUTHORIZATION,
+  TRIP_POINTS_SELECTOR,
+  TRIP_POINT_GET_LOADING,
+  TRIP_POINT_GET_ERROR,
 } from './constants';
 
-import renderTripPoints, {makeTripPoints} from './actions/tripPoint';
+import API from './api';
+
+import renderTripPoints from './actions/tripPoint';
 import renderFilters from './actions/filter';
 import renderSort from './actions/sort';
 import renderTripInfo from './render/tripInfo';
 import renderTripDayInfo from './render/tripDayInfo';
 
-const defaultNumberOfTripPoints = getRandomInt(MIN_NUMBER_OF_TRIP_POINTS, MAX_NUMBER_OF_TRIP_POINTS);
+const api = new API({endPoint: ENDPOINT_URL, authorization: AUTHORIZATION});
 
 const init = () => {
-  const tripPoints = makeTripPoints(defaultNumberOfTripPoints);
+  document.querySelector(TRIP_POINTS_SELECTOR).textContent = TRIP_POINT_GET_LOADING;
+  api.getTripPoints()
+    .then((tripPoints) => {
+      renderFilters(tripPoints);
+      renderSort(tripPoints);
+      renderTripInfo(tripPoints);
+      api.getDestinations()
+        .then((destinations) => {
+          api.getOffers()
+            .then((offers) => {
+              renderTripPoints(tripPoints, destinations, offers, api);
+            });
+        });
+    })
+    .catch(() => {
+      document.querySelector(TRIP_POINTS_SELECTOR).textContent = TRIP_POINT_GET_ERROR;
+    });
 
-  renderTripPoints(tripPoints);
-  renderFilters(tripPoints);
-  renderSort(tripPoints);
-  renderTripInfo(tripPoints);
   renderTripDayInfo();
 };
 

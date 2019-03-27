@@ -22,6 +22,7 @@ export const Types = {
   TRAIN: `Train`,
   SHIP: `Ship`,
   TRANSPORT: `Transport`,
+  TRAVEL: `Travel`,
 };
 
 export const TYPES = new Map([
@@ -34,7 +35,8 @@ export const TYPES = new Map([
   [Types.FLIGHT, `️✈️`],
   [Types.CHECK_IN, `🏨`],
   [Types.SIGHTSEEING, `🏛️`],
-  [Types.RESTATURANT, `🍴`]
+  [Types.RESTATURANT, `🍴`],
+  [Types.TRAVEL, `🌍`]
 ]);
 
 /* eslint-disable */
@@ -62,6 +64,7 @@ export const AllTypeToInputLabel = {
   Train: `Train to`,
   Ship: `Ship to`,
   Transport: `Transport to`,
+  Travel: `Travel to`,
 }
 /* eslint-enable */
 
@@ -170,8 +173,15 @@ export const STATISTICS_TIME_SELECTOR = `.statistic__time-spend`;
 export const FLATPICKR_CONFIG = {
   enableTime: true,
   altInput: true,
-  altFormat: `d M h:i`,
-  dateFormat: `d M h:i`,
+  altFormat: `H:i`,
+  dateFormat: `U`,
+  time_24hr: true, // eslint-disable-line
 };
 
 export const ESC_KEYCODE = 27;
+
+export const ENDPOINT_URL = `https://es8-demo-srv.appspot.com/big-trip/`;
+export const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=kekghghtjgfbjfgbfj-00015}`;
+
+export const TRIP_POINT_GET_LOADING = `Loading route...`;
+export const TRIP_POINT_GET_ERROR = `Something went wrong while loading your route info. Check your connection or try again later`;

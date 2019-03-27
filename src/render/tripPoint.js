@@ -1,6 +1,10 @@
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format'; // eslint-disable-line
 
+import {TYPES} from '../constants';
+
+import {capitalize} from '../utils';
+
 import Component from './tripPointComponent';
 
 class TripPoint extends Component {
@@ -21,20 +25,21 @@ class TripPoint extends Component {
   }
 
   get template() {
-    const [typeDesc, typeEmoji] = this._type;
+    const [typeDesc, typeEmoji] = [this._type, TYPES.get(capitalize(this._type))];
+    const totalPrice = this._offer.reduce((price, current) => price + +current.price, 0) + +this._price;
 
     return `<article class="trip-point">
     <i class="trip-icon" title="${typeDesc}">${typeEmoji}</i>
     <h3 class="trip-point__title">${this._destination}</h3>
     <p class="trip-point__schedule">
       <span class="trip-point__timetable">
-        ${moment(this._timeStart).format(`D MMM h:mm`)}
+        ${moment(this._timeStart).format(`D MMM HH:mm`)}
         &nbsp;&mdash;
-        ${moment(this._timeEnd).format(`D MMM h:mm`)}
+        ${moment(this._timeEnd).format(`D MMM HH:mm`)}
       </span>
       <span class="trip-point__duration">${moment.duration(moment(this._timeEnd).diff(this._timeStart), `milliseconds`).format(`d [days] h[H] m[M]`)}</span>
     </p>
-    <p class="trip-point__price">&euro;&nbsp;${this._price}</p>
+    <p class="trip-point__price">&euro;&nbsp;${totalPrice}</p>
     <ul class="trip-point__offers">
       ${(this._offer.map((offer) => this._makeTripPointOffer(offer))).join(``)}
     </ul>
@@ -60,9 +65,9 @@ class TripPoint extends Component {
   }
 
   _makeTripPointOffer(offer) {
-    return `<li>
-      <button class="trip-point__offer">${offer.name} +&euro;&nbsp;${offer.price}</button>
-    </li>`;
+    return offer.accepted ? `<li>
+        <button class="trip-point__offer">${offer.name} +&euro;&nbsp;${offer.price}</button>
+      </li>` : ``;
   }
 
   bind() {
