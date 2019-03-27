@@ -12,9 +12,8 @@ import makeStatistics from './statistics';
 const tripPointsElement = document.querySelector(TRIP_POINTS_SELECTOR);
 
 const deleteTripPoint = (tripPoints, id) => {
-  const tripPointToDelete = tripPoints.find((tripPoint) => tripPoint.id === id);
-  const index = tripPoints.indexOf(tripPointToDelete);
-  tripPoints.splice(index, 1);
+  const tripPointIndexToDelete = tripPoints.findIndex((tripPoint) => tripPoint.id === id);
+  tripPoints.splice(tripPointIndexToDelete, 1);
 };
 
 export const makeTripPoints = (numberOfTripPoints) => {

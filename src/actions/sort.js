@@ -1,5 +1,8 @@
 import sortBy from 'lodash.sortby';
-import {SORTING_SELECTOR} from '../constants';
+import {
+  SORTING_SELECTOR,
+  OFFERS_FORM_NAME,
+} from '../constants';
 import sortingData from '../data/sort';
 import renderTripPoints from '../actions/tripPoint';
 import Sort from '../render/sort';
@@ -8,10 +11,7 @@ const sortElement = document.querySelector(SORTING_SELECTOR);
 
 const sortTasks = (initialTasks, tripPointType) => {
   const sorted = sortBy(initialTasks, [(tripPoint) => tripPoint[tripPointType]]);
-  if (tripPointType === `offer`) {
-    return sorted.reverse();
-  }
-  return sorted;
+  return tripPointType === OFFERS_FORM_NAME ? sorted.reverse() : sorted;
 };
 
 const renderSort = (initialTripPoints) => {

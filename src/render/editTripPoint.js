@@ -228,7 +228,7 @@ class EditTripPoint extends Component {
       element.addEventListener(`click`, this._onChangeType);
     });
     document.addEventListener(`keydown`, this._onEscPress);
-    document.addEventListener(`click`, this._onDocumentClickOutside);
+    document.addEventListener(`click`, this._onDocumentClickOutside, true);
 
     flatpickr(this._element.querySelector(`[name="timeStart"]`), {
       ...FLATPICKR_CONFIG,
@@ -258,7 +258,7 @@ class EditTripPoint extends Component {
         element.removeEventListener(`click`, this._onChangeType);
       });
       document.removeEventListener(`keydown`, this._onEscPress);
-      document.removeEventListener(`click`, this._onDocumentClickOutside);
+      document.removeEventListener(`click`, this._onDocumentClickOutside, true);
     }
   }
 
@@ -292,8 +292,8 @@ class EditTripPoint extends Component {
     return e.keyCode === ESC_KEYCODE && typeof this._onEsc === `function` && this._onEsc();
   }
 
-  _onDocumentClickOutside() {
-    // return this._element && !this._element.contains(e.target) && typeof this._onClickOutside === `function` && this._onClickOutside();
+  _onDocumentClickOutside(e) {
+    return !this._element.contains(e.target) && this._onClickOutside();
   }
 
   static createMapper(target) {

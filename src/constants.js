@@ -4,6 +4,7 @@ export const MIN_NUMBER_OF_TRIP_POINTS = 10;
 export const MAX_NUMBER_OF_TRIP_POINTS = 15;
 export const FILTERS_SELECTOR = `.trip-filter`;
 export const SORTING_SELECTOR = `.trip-sorting`;
+export const OFFERS_FORM_NAME = `offer`;
 export const MIN_PRICE = 50;
 export const MAX_PRICE = 100;
 export const MIN_OFFER_NUMBER = 0;
@@ -72,7 +73,7 @@ export const TrasnportTypeToLabel = {
   Train: `🚂 CHOO-CHOO`,
   Transport: `🚊 GO AROUND`,
   Bus: `🚌 BUS`,
-}
+};
 
 export const CITIES = [
   `Paris`,
@@ -128,11 +129,49 @@ export const MAIN_SELECTOR = `main`;
 
 export const BAR_HEIGHT = 55;
 
+export const CHART_OPTIONS_CONFIG = {
+  scales: {
+    yAxes: [{
+      ticks: {
+        fontColor: `#000000`,
+        padding: 5,
+        fontSize: 13,
+      },
+      gridLines: {
+        display: false,
+        drawBorder: false
+      },
+      barThickness: 44,
+    }],
+    xAxes: [{
+      ticks: {
+        display: false,
+        beginAtZero: true,
+      },
+      gridLines: {
+        display: false,
+        drawBorder: false
+      },
+      minBarLength: 50
+    }],
+  },
+  legend: {
+    display: false
+  },
+  tooltips: {
+    enabled: false,
+  }
+};
+
+export const STATISTICS_MONEY_SELECTOR = `.statistic__money`;
+export const STATISTICS_TRANSPORT_SELECTOR = `.statistic__transport`;
+export const STATISTICS_TIME_SELECTOR = `.statistic__time-spend`;
+
 export const FLATPICKR_CONFIG = {
   enableTime: true,
   altInput: true,
   altFormat: `d M h:i`,
   dateFormat: `d M h:i`,
-}
+};
 
 export const ESC_KEYCODE = 27;
