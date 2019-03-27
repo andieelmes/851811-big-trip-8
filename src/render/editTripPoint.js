@@ -309,7 +309,7 @@ class EditTripPoint extends Component {
       ...FLATPICKR_CONFIG,
       onChange: (dateStr) => {
         timeEndPicker.set(`disable`, [
-          (date) => date.getDate() < new Date(dateStr).getDate()
+          (date) => moment(date.dayOfYear()) < moment(dateStr).dayOfYear()
         ]);
       },
     });
@@ -317,7 +317,7 @@ class EditTripPoint extends Component {
     const timeEndPicker = flatpickr(this._element.querySelector(`[name="date-end"]`), {
       ...FLATPICKR_CONFIG,
       disable: [
-        (date) => date.getDate() < new Date(this._timeStart).getDate()
+        (date) => moment(date).dayOfYear() < moment(this._timeStart).dayOfYear()
       ]
     });
 

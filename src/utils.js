@@ -59,7 +59,7 @@ export const getTripPointInfoByLabel = (data, labels, tripPointKey) => {
       timeEnd,
     } = day;
 
-    const typeLabel = type[0];
+    const typeLabel = capitalize(type);
     const label = labels[typeLabel];
 
     if (label) {
@@ -71,6 +71,7 @@ export const getTripPointInfoByLabel = (data, labels, tripPointKey) => {
       }
       activities.push(tripPointInfo);
     }
+
     return activities;
   }, []);
 };
@@ -80,7 +81,7 @@ export const countTripPoints = (individualTripPoints, tripPointKey) => {
     const amount = obj[activity.label];
     let activityAmount;
     if (tripPointKey === `time`) {
-      activityAmount = moment(activity[tripPointKey]).hours();
+      activityAmount = +moment.duration(activity[tripPointKey], `milliseconds`).format(`h`);
     } else {
       activityAmount = +activity[tripPointKey] || 1;
     }

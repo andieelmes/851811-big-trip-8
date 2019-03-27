@@ -32,6 +32,7 @@ const init = () => {
           api.getOffers()
             .then((offers) => {
               renderTripPoints(tripPoints, destinations, offers, api);
+              checkUrlHash();
             });
         });
     })
@@ -42,6 +43,4 @@ const init = () => {
   renderTripDayInfo();
 };
 
-init();
-
-checkUrlHash();
+init()
