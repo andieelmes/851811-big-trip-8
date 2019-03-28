@@ -124,3 +124,11 @@ export const checkUrlHash = () => {
 
 
 export const capitalize = ([first, ...rest]) => first.toUpperCase().concat(...rest);
+
+export const escapeHtml = (s) => {
+  const text = document.createTextNode(s);
+  const p = document.createElement(`p`);
+
+  p.appendChild(text);
+  return p.innerHTML;
+};
