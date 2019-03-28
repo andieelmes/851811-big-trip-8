@@ -20,27 +20,26 @@ import renderTripDayInfo from './render/tripDayInfo';
 
 const api = new API({endPoint: ENDPOINT_URL, authorization: AUTHORIZATION});
 
-const init = () => {
+const init = async () => {
   document.querySelector(TRIP_POINTS_SELECTOR).textContent = TRIP_POINT_GET_LOADING;
-  api.getTripPoints()
-    .then((tripPoints) => {
-      renderFilters(tripPoints);
-      renderSort(tripPoints);
-      renderTripInfo(tripPoints);
-      api.getDestinations()
-        .then((destinations) => {
-          api.getOffers()
-            .then((offers) => {
-              renderTripPoints(tripPoints, destinations, offers, api);
-              checkUrlHash();
-            });
-        });
-    })
-    .catch(() => {
-      document.querySelector(TRIP_POINTS_SELECTOR).textContent = TRIP_POINT_GET_ERROR;
-    });
+
+  try {
+    const tripPoints = await api.getTripPoints();
+    const destinations = await api.getDestinations();
+    const offers = await api.getOffers();
+
+    renderFilters(tripPoints);
+    renderSort(tripPoints);
+    renderTripInfo(tripPoints);
+    renderTripPoints(tripPoints, destinations, offers, api);
+
+  } catch (err) {
+    document.querySelector(TRIP_POINTS_SELECTOR).textContent = TRIP_POINT_GET_ERROR;
+  }
+
+  checkUrlHash();
 
   renderTripDayInfo();
 };
 
-init()
+init();
