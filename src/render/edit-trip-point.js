@@ -70,7 +70,7 @@ class EditTripPoint extends Component {
           </div>
 
           <div class="point__destination-wrap">
-            <label class="point__destination-label" for="destination">${AllTypeToInputLabel[typeDesc]}</label>
+            <label class="point__destination-label" for="destination">${AllTypeToInputLabel[capitalize(typeDesc)]}</label>
             <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination}" name="destination">
             <datalist id="destination-select">
               ${this._makeDestinationsDatalist(this._destinations)}
