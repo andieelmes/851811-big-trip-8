@@ -390,12 +390,12 @@ class EditTripPoint extends Component {
     return typeof this._onDelete === `function` && this._onDelete({id: this._id});
   }
 
-  _onEscPress(e) {
-    return e.keyCode === ESC_KEYCODE && typeof this._onEsc === `function` && this._onEsc();
+  _onEscPress(evt) {
+    return evt.keyCode === ESC_KEYCODE && typeof this._onEsc === `function` && this._onEsc();
   }
 
-  _onDocumentClickOutside(e) {
-    return !this._element.contains(e.target) && !e.target.closest(`.flatpickr-calendar`) && this._onClickOutside();
+  _onDocumentClickOutside(evt) {
+    return !this._element.contains(evt.target) && !evt.target.closest(`.flatpickr-calendar`) && this._onClickOutside();
   }
 }
 
