@@ -20,7 +20,7 @@ class EditTripPoint extends Component {
     super();
     this._id = data.id;
     this._type = data.type;
-    this._offer = data.offer;
+    this._offers = data.offer;
     this._timeStart = data.timeStart;
     this._timeEnd = data.timeEnd;
     this._price = data.price;
@@ -29,7 +29,7 @@ class EditTripPoint extends Component {
     this._favorite = data.favorite;
     this._pictures = data.pictures;
     this._destinations = destinations;
-    this._offersByType = offersByType;
+    this._offerssByType = offersByType;
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
@@ -115,7 +115,7 @@ class EditTripPoint extends Component {
             <h3 class="point__details-title">offers</h3>
 
             <div class="point__offers-wrap">
-              ${this._offer.map((offer, index) => this._makeTripPointOfferCheckbox(offer, index)).join(``)}
+              ${this._offers.map((offer, index) => this._makeTripPointOfferCheckbox(offer, index)).join(``)}
             </div>
 
           </section>
@@ -151,7 +151,7 @@ class EditTripPoint extends Component {
   update(data) {
     this._type = data.type;
     this._destination = data.destination;
-    this._offer = data.offer;
+    this._offers = data.offer;
     this._price = data.price;
     this._favorite = data.favorite;
     this._timeStart = data.timeStart;
@@ -196,8 +196,8 @@ class EditTripPoint extends Component {
         target.type = value;
       },
       offer: (value) => {
-        this._offer[value].accepted = true;
-        target.offer = this._offer;
+        this._offers[value].accepted = true;
+        target.offer = this._offers;
       },
       destination: (value) => {
         target.destination = value;
@@ -340,7 +340,7 @@ class EditTripPoint extends Component {
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
 
-    this._offer = this._offer.map((offer) => {
+    this._offers = this._offers.map((offer) => {
       return {
         name: offer.name,
         price: offer.price,
@@ -351,7 +351,7 @@ class EditTripPoint extends Component {
     const formData = new FormData(this._element.querySelector(`form`));
     const newData = this._processForm(formData);
 
-    newData.offer = newData.offer.length ? newData.offer : this._offer;
+    newData.offer = newData.offer.length ? newData.offer : this._offers;
 
     this.update(newData);
 
@@ -364,8 +364,8 @@ class EditTripPoint extends Component {
 
     this.update(newData);
 
-    const offerByType = this._offersByType.find((offer) => capitalize(offer.type) === this._type);
-    this._offer = offerByType && offerByType.offers.length ? offerByType.offers : this._offer;
+    const offerByType = this._offerssByType.find((offer) => capitalize(offer.type) === this._type);
+    this._offers = offerByType && offerByType.offers.length ? offerByType.offers : this._offers;
 
     this.unbind();
     this._partialUpdate();

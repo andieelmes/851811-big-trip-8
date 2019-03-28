@@ -14,7 +14,7 @@ class TripPoint extends Component {
   constructor(data) {
     super();
     this._type = data.type;
-    this._offer = data.offer;
+    this._offers = data.offer;
     this._timeStart = data.timeStart;
     this._timeEnd = data.timeEnd;
     this._price = data.price;
@@ -29,7 +29,7 @@ class TripPoint extends Component {
 
   get template() {
     const [typeDesc, typeEmoji] = [this._type, TYPES.get(capitalize(this._type))];
-    const totalPrice = getOffersPrice(this._offer) + +this._price;
+    const totalPrice = getOffersPrice(this._offers) + +this._price;
 
     return `<article class="trip-point">
     <i class="trip-icon" title="${typeDesc}">${typeEmoji}</i>
@@ -44,7 +44,7 @@ class TripPoint extends Component {
     </p>
     <p class="trip-point__price">&euro;&nbsp;${totalPrice}</p>
     <ul class="trip-point__offers">
-      ${(this._offer.map((offer) => this._makeTripPointOffer(offer))).join(``)}
+      ${(this._offers.map((offer) => this._makeTripPointOffer(offer))).join(``)}
     </ul>
   </article>`.trim();
   }
@@ -56,7 +56,7 @@ class TripPoint extends Component {
   update(data) {
     this._type = data.type;
     this._destination = data.destination;
-    this._offer = data.offer;
+    this._offers = data.offer;
     this._price = data.price;
     this._favorite = data.favorite;
     this._timeStart = data.timeStart;
