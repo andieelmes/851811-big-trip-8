@@ -1,13 +1,14 @@
 import {
   FAVOURITE_ON,
   FAVOURITE_OFF,
+  Types,
 } from '../constants';
 
 class ModelTripPoint {
   constructor(data) {
     this.id = data[`id`];
     this.favorite = data[`is_favorite`] ? FAVOURITE_ON : FAVOURITE_OFF;
-    this.type = data[`type`] || `travel`;
+    this.type = data[`type`] || Types.TRAVEL;
     this.timeStart = data[`date_from`];
     this.timeEnd = data[`date_to`];
     this.price = data[`base_price`];

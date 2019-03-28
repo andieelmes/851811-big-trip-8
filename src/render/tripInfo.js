@@ -1,4 +1,7 @@
-import {appendToDom} from '../utils';
+import {
+  appendToDom,
+  getOffersPrice,
+} from '../utils';
 import {TRIP_INFO_SELECTOR} from '../constants';
 import makeCity from './makeCity';
 import tripInfo from '../data/tripInfo';
@@ -13,7 +16,7 @@ const makeTripInfo = (config, tripPoints) => {
     dateEnd,
   } = config;
 
-  const totalPrice = tripPoints.reduce((acc, tripPoint) => acc + +tripPoint.price + tripPoint.offer.reduce((price, current) => price + +current.price, 0), 0);
+  const totalPrice = tripPoints.reduce((price, tripPoint) => price + +tripPoint.price + getOffersPrice(tripPoint.offer), 0);
 
   return `<div class="trip__schedule">
   <i class="trip-icon"><img src="${picture}" style="border-radius: 50%"/></i>

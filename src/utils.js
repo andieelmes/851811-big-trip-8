@@ -50,6 +50,8 @@ export const getRandomBool = () => getRandomInt(0, 1) === 1;
 
 export const getOfferId = (str) => str.replace(/\s/g, `-`).toLowerCase();
 
+export const getOffersPrice = (offers) => offers.reduce((price, current) => current.accepted ? price + +current.price : price + 0, 0);
+
 export const getTripPointInfoByLabel = (data, labels, tripPointKey) => {
 
   return data.reduce((activities, day) => {
@@ -121,4 +123,4 @@ export const checkUrlHash = () => {
 };
 
 
-export const capitalize = (str) => str[0].toUpperCase() + str.slice(1)
+export const capitalize = ([first, ...rest]) => first.toUpperCase().concat(...rest);

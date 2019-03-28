@@ -16,7 +16,7 @@ import {
 import Component from './tripPointComponent';
 
 class EditTripPoint extends Component {
-  constructor(data, destinations, offersByType) {
+  constructor(data, destinations = [], offersByType) {
     super();
     this._id = data.id;
     this._type = data.type;
@@ -115,7 +115,7 @@ class EditTripPoint extends Component {
             <h3 class="point__details-title">offers</h3>
 
             <div class="point__offers-wrap">
-              ${this._offer.map((offer) => this._makeTripPointOfferCheckbox(offer)).join(``)}
+              ${this._offer.map((offer, index) => this._makeTripPointOfferCheckbox(offer, index)).join(``)}
             </div>
 
           </section>
@@ -159,12 +159,11 @@ class EditTripPoint extends Component {
   }
 
   shake() {
-    const ANIMATION_TIMEOUT = 600;
-    this._element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
+    this._element.classList.add(`shake`);
 
-    setTimeout(() => {
-      this._element.style.animation = ``;
-    }, ANIMATION_TIMEOUT);
+    this._element.addEventListener(`animationend`, () => {
+      this._element.classList.remove(`shake`);
+    });
   }
 
   makeRedBorder() {
@@ -197,9 +196,7 @@ class EditTripPoint extends Component {
         target.type = value;
       },
       offer: (value) => {
-        const [name, price] = value.split(`-delimiter-`);
-        const currentOfferIndex = this._offer.findIndex((offer) => getOfferId(offer.name) === name && offer.price === +price);
-        this._offer[currentOfferIndex].accepted = true;
+        this._offer[value].accepted = true;
         target.offer = this._offer;
       },
       destination: (value) => {
@@ -252,7 +249,7 @@ class EditTripPoint extends Component {
     this._element.appendChild(newElement.querySelector(`form`));
   }
 
-  _makeTripPointOfferCheckbox(offer) {
+  _makeTripPointOfferCheckbox(offer, index) {
     const idName = getOfferId(offer.name);
     const checked = offer.accepted;
     const idSuffix = nanoid();
@@ -261,7 +258,7 @@ class EditTripPoint extends Component {
       type="checkbox"
       id="${idName}-${idSuffix}"
       name="offer"
-      value="${idName}-delimiter-${offer.price}"
+      value="${index}"
       ${checked ? `checked` : ``}
     >
       <label for="${idName}-${idSuffix}" class="point__offers-label">

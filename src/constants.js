@@ -185,3 +185,10 @@ export const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=kekghghtjgfbjfgbfj-00015
 
 export const TRIP_POINT_GET_LOADING = `Loading route...`;
 export const TRIP_POINT_GET_ERROR = `Something went wrong while loading your route info. Check your connection or try again later`;
+
+export const Method = {
+  GET: `GET`,
+  POST: `POST`,
+  PUT: `PUT`,
+  DELETE: `DELETE`
+};

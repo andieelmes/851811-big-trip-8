@@ -24,9 +24,9 @@ const renderTimeStatistics = (data) => {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: [...Object.keys(activityDurations)],
+      labels: Object.keys(activityDurations),
       datasets: [{
-        data: [...Object.values(activityDurations)],
+        data: Object.values(activityDurations),
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`

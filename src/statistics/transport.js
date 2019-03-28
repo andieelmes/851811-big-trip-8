@@ -24,9 +24,9 @@ const renderTrasnportStatistics = (data) => {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: [...Object.keys(transportActivityCounts)],
+      labels: Object.keys(transportActivityCounts),
       datasets: [{
-        data: [...Object.values(transportActivityCounts)],
+        data: Object.values(transportActivityCounts),
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`

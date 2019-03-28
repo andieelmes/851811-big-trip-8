@@ -24,9 +24,9 @@ const renderMoneyStatistics = (data) => {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: [...Object.keys(activityPrices)],
+      labels: Object.keys(activityPrices),
       datasets: [{
-        data: [...Object.values(activityPrices)],
+        data: Object.values(activityPrices),
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`

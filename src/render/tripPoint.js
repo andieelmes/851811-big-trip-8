@@ -3,7 +3,10 @@ import momentDurationFormatSetup from 'moment-duration-format'; // eslint-disabl
 
 import {TYPES} from '../constants';
 
-import {capitalize} from '../utils';
+import {
+  capitalize,
+  getOffersPrice
+} from '../utils';
 
 import Component from './tripPointComponent';
 
@@ -26,7 +29,7 @@ class TripPoint extends Component {
 
   get template() {
     const [typeDesc, typeEmoji] = [this._type, TYPES.get(capitalize(this._type))];
-    const totalPrice = this._offer.reduce((price, current) => price + current.accepted ? +current.price : 0, 0) + +this._price;
+    const totalPrice = getOffersPrice(this._offer) + +this._price;
 
     return `<article class="trip-point">
     <i class="trip-icon" title="${typeDesc}">${typeEmoji}</i>

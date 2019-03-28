@@ -1,11 +1,6 @@
 import ModelTripPoint from './model/trip-point';
 
-const Method = {
-  GET: `GET`,
-  POST: `POST`,
-  PUT: `PUT`,
-  DELETE: `DELETE`
-};
+import {Method} from './constants';
 
 const checkStatus = (response) => {
   if (response.status >= 200 && response.status < 300) {
