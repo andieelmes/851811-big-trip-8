@@ -3,8 +3,8 @@ import {
   getOffersPrice,
 } from '../utils';
 import {TRIP_INFO_SELECTOR} from '../constants';
-import makeCity from './makeCity';
-import tripInfo from '../data/tripInfo';
+import makeCity from './make-city';
+import tripInfo from '../data/trip-info';
 
 const tripInfoElement = document.querySelector(TRIP_INFO_SELECTOR);
 

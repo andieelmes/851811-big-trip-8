@@ -12,11 +12,11 @@ import {
 
 import API from './api';
 
-import renderTripPoints from './actions/tripPoint';
-import renderFilters from './actions/filter';
-import renderSort from './actions/sort';
-import renderTripInfo from './render/tripInfo';
-import renderTripDayInfo from './render/tripDayInfo';
+import makeTripPoints from './make/trip-point';
+import renderFilters from './make/filter';
+import renderSort from './make/sort';
+import renderTripInfo from './render/trip-info';
+import renderTripDayInfo from './render/trip-day-info';
 
 const api = new API({endPoint: ENDPOINT_URL, authorization: AUTHORIZATION});
 
@@ -31,7 +31,7 @@ const init = async () => {
     renderFilters(tripPoints);
     renderSort(tripPoints);
     renderTripInfo(tripPoints);
-    renderTripPoints(tripPoints, destinations, offers, api);
+    makeTripPoints(tripPoints, destinations, offers, api);
 
   } catch (err) {
     document.querySelector(TRIP_POINTS_SELECTOR).textContent = TRIP_POINT_GET_ERROR;

@@ -1,7 +1,7 @@
 import moment from 'moment';
 import {FILTERS_SELECTOR} from '../constants';
 import filtersData from '../data/filters';
-import renderTripPoints from '../actions/tripPoint';
+import makeTripPoints from './trip-point';
 import Filter from '../render/filter';
 
 const filtersElement = document.querySelector(FILTERS_SELECTOR);
@@ -22,7 +22,7 @@ const filterTasks = (initialTasks, filterName) => {
   }
 };
 
-const renderFilters = (initialTripPoints) => {
+const makeFilters = (initialTripPoints) => {
   filtersElement.innerHTML = ``;
 
   filtersData.forEach((filterData) => {
@@ -35,7 +35,7 @@ const renderFilters = (initialTripPoints) => {
     const filterCompontent = new Filter(filterData);
 
     filterCompontent.onFilter = () => {
-      renderTripPoints(filteredTripPoints);
+      makeTripPoints(filteredTripPoints);
     };
 
     filtersElement.appendChild(filterCompontent.render());
@@ -43,4 +43,4 @@ const renderFilters = (initialTripPoints) => {
 
 };
 
-export default renderFilters;
+export default makeFilters;

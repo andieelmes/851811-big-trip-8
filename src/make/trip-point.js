@@ -2,15 +2,15 @@ import {
   TRIP_POINTS_SELECTOR,
 } from '../constants';
 
-import TripPoint from '../render/tripPoint';
-import EditTripPoint from '../render/editTripPoint';
-import renderTripInfo from '../render/tripInfo';
+import TripPoint from '../render/trip-point';
+import EditTripPoint from '../render/edit-trip-point';
+import renderTripInfo from '../render/trip-info';
 
 import makeStatistics from './statistics';
 
 const tripPointsElement = document.querySelector(TRIP_POINTS_SELECTOR);
 
-const renderTripPoints = (tripPoints, destinations, offers, api) => {
+const makeTripPoints = (tripPoints, destinations, offers, api) => {
   makeStatistics(tripPoints);
 
   tripPointsElement.innerHTML = ``;
@@ -91,4 +91,4 @@ const renderTripPoints = (tripPoints, destinations, offers, api) => {
 
 };
 
-export default renderTripPoints;
+export default makeTripPoints;

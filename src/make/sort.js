@@ -4,7 +4,7 @@ import {
   OFFERS_FORM_NAME,
 } from '../constants';
 import sortingData from '../data/sort';
-import renderTripPoints from '../actions/tripPoint';
+import makeTripPoints from './trip-point';
 import Sort from '../render/sort';
 
 const sortElement = document.querySelector(SORTING_SELECTOR);
@@ -14,14 +14,14 @@ const sortTasks = (initialTasks, tripPointType) => {
   return tripPointType === OFFERS_FORM_NAME ? sorted.reverse() : sorted;
 };
 
-const renderSort = (initialTripPoints) => {
+const makeSort = (initialTripPoints) => {
   sortElement.innerHTML = ``;
 
   sortingData.forEach((sortData) => {
     const filteredTripPoints = sortTasks(initialTripPoints, sortData.tripPointType);
     const filterCompontent = new Sort(sortData);
     filterCompontent.onSort = () => {
-      renderTripPoints(filteredTripPoints);
+      makeTripPoints(filteredTripPoints);
     };
 
     sortElement.appendChild(filterCompontent.render());
@@ -29,4 +29,4 @@ const renderSort = (initialTripPoints) => {
 
 };
 
-export default renderSort;
+export default makeSort;

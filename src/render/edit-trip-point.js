@@ -13,7 +13,7 @@ import {
   ESC_KEYCODE,
   AllTypeToInputLabel,
 } from '../constants';
-import Component from './tripPointComponent';
+import Component from './trip-point-component';
 
 class EditTripPoint extends Component {
   constructor(data, destinations = [], offersByType) {

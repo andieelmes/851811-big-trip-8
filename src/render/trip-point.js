@@ -8,7 +8,7 @@ import {
   getOffersPrice
 } from '../utils';
 
-import Component from './tripPointComponent';
+import Component from './trip-point-component';
 
 class TripPoint extends Component {
   constructor(data) {

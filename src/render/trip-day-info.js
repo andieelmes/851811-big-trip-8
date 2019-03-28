@@ -1,6 +1,6 @@
 import {appendToDom} from '../utils';
 import {TRIP_DAY_INFO_SELECTOR} from '../constants';
-import tripDayInfo from '../data/tripDayInfo';
+import tripDayInfo from '../data/trip-day-info';
 
 const tripDayInfoElement = document.querySelector(TRIP_DAY_INFO_SELECTOR);
 

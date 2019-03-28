@@ -1,4 +1,4 @@
-import Component from './tripPointComponent';
+import Component from './trip-point-component';
 
 class Filter extends Component {
   constructor(data) {
