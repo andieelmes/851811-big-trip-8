@@ -159,10 +159,14 @@ class EditTripPoint extends Component {
   }
 
   shake() {
-    this._element.classList.add(`shake`);
-
-    this._element.addEventListener(`animationend`, () => {
-      this._element.classList.remove(`shake`);
+    return new Promise((resolve) => {
+      const onShake = () => {
+        this._element.removeEventListener(`animationend`, onShake);
+        this._element.classList.remove(`shake`);
+        resolve();
+      };
+      this._element.classList.add(`shake`);
+      this._element.addEventListener(`animationend`, onShake);
     });
   }
 
