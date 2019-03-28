@@ -15,7 +15,7 @@ class ModelTripPoint {
     this.desc = data[`destination`][`description`];
     this.destination = data[`destination`][`name`];
     this.pictures = data[`destination`][`pictures`] || [];
-    this.offer = data[`offers`].reduce((renamed, current) => {
+    this.offers = data[`offers`].reduce((renamed, current) => {
       renamed.push({
         name: current.title,
         price: current.price,
@@ -38,7 +38,7 @@ class ModelTripPoint {
         'name': this.destination,
         'pictures': this.pictures,
       },
-      'offers': this.offer.reduce((offers, current) => {
+      'offers': this.offers.reduce((offers, current) => {
         offers.push({
           title: current.name,
           price: current.price,

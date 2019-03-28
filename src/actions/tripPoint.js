@@ -28,7 +28,7 @@ const renderTripPoints = (tripPoints, destinations, offers, api) => {
     editTripPointComponent.onSubmit = (newObject) => {
       tripPointData.type = newObject.type;
       tripPointData.destination = newObject.destination;
-      tripPointData.offer = newObject.offer;
+      tripPointData.offers = newObject.offers;
       tripPointData.price = newObject.price;
       tripPointData.favorite = newObject.favorite;
       tripPointData.timeStart = newObject.timeStart;

@@ -20,7 +20,7 @@ class EditTripPoint extends Component {
     super();
     this._id = data.id;
     this._type = data.type;
-    this._offers = data.offer;
+    this._offers = data.offers;
     this._timeStart = data.timeStart;
     this._timeEnd = data.timeEnd;
     this._price = data.price;
@@ -151,7 +151,7 @@ class EditTripPoint extends Component {
   update(data) {
     this._type = data.type;
     this._destination = data.destination;
-    this._offers = data.offer;
+    this._offers = data.offers;
     this._price = data.price;
     this._favorite = data.favorite;
     this._timeStart = data.timeStart;
@@ -197,7 +197,7 @@ class EditTripPoint extends Component {
       },
       offer: (value) => {
         this._offers[value].accepted = true;
-        target.offer = this._offers;
+        target.offers = this._offers;
       },
       destination: (value) => {
         target.destination = value;
@@ -223,7 +223,7 @@ class EditTripPoint extends Component {
       destination: ``,
       price: ``,
       favorite: ``,
-      offer: [],
+      offers: [],
       timeStart: ``,
       timeEnd: ``,
     };
@@ -351,7 +351,7 @@ class EditTripPoint extends Component {
     const formData = new FormData(this._element.querySelector(`form`));
     const newData = this._processForm(formData);
 
-    newData.offer = newData.offer.length ? newData.offer : this._offers;
+    newData.offers = newData.offers.length ? newData.offers : this._offers;
 
     this.update(newData);
 

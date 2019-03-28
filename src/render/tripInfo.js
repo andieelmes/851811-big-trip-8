@@ -16,7 +16,7 @@ const makeTripInfo = (config, tripPoints) => {
     dateEnd,
   } = config;
 
-  const totalPrice = tripPoints.reduce((price, tripPoint) => price + +tripPoint.price + getOffersPrice(tripPoint.offer), 0);
+  const totalPrice = tripPoints.reduce((price, tripPoint) => price + +tripPoint.price + getOffersPrice(tripPoint.offers), 0);
 
   return `<div class="trip__schedule">
   <i class="trip-icon"><img src="${picture}" style="border-radius: 50%"/></i>

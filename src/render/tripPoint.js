@@ -14,7 +14,7 @@ class TripPoint extends Component {
   constructor(data) {
     super();
     this._type = data.type;
-    this._offers = data.offer;
+    this._offers = data.offers;
     this._timeStart = data.timeStart;
     this._timeEnd = data.timeEnd;
     this._price = data.price;
@@ -56,7 +56,7 @@ class TripPoint extends Component {
   update(data) {
     this._type = data.type;
     this._destination = data.destination;
-    this._offers = data.offer;
+    this._offers = data.offers;
     this._price = data.price;
     this._favorite = data.favorite;
     this._timeStart = data.timeStart;
