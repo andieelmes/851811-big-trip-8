@@ -23,19 +23,21 @@ const api = new API({endPoint: ENDPOINT_URL, authorization: AUTHORIZATION});
 const init = async () => {
   document.querySelector(TRIP_POINTS_SELECTOR).textContent = TRIP_POINT_GET_LOADING;
 
-  try {
-    const tripPoints = await api.getTripPoints();
-    const destinations = await api.getDestinations();
-    const offers = await api.getOffers();
-
-    renderFilters(tripPoints);
-    renderSort(tripPoints);
-    renderTripInfo(tripPoints);
-    makeTripPoints(tripPoints, destinations, offers, api);
-
-  } catch (err) {
-    document.querySelector(TRIP_POINTS_SELECTOR).textContent = TRIP_POINT_GET_ERROR;
-  }
+  Promise.all([
+    api.getTripPoints(),
+    api.getDestinations(),
+    api.getOffers(),
+  ])
+    .then((results) => {
+      const tripPoints = results[0];
+      renderFilters(tripPoints);
+      renderSort(tripPoints);
+      renderTripInfo(tripPoints);
+      makeTripPoints(...results, api);
+    })
+    .catch(() => {
+      document.querySelector(TRIP_POINTS_SELECTOR).textContent = TRIP_POINT_GET_ERROR;
+    });
 
   checkUrlHash();
 
