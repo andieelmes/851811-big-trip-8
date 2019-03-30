@@ -317,18 +317,18 @@ class EditTripPoint extends Component {
 
     flatpickr(this._element.querySelector(`[name="date-start"]`), {
       ...FLATPICKR_CONFIG,
-      // onChange: (dateStr) => {
-      //   timeEndPicker.set(`disable`, [
-      //     (date) => moment(date.dayOfYear()) < moment(dateStr).dayOfYear()
-      //   ]);
-      // },
+      onChange: (dateStr) => {
+        timeEndPicker.set(`disable`, [
+          (date) => moment(date).startOf(`day`) < moment(dateStr).startOf(`day`)
+        ]);
+      },
     });
 
     const timeEndPicker = flatpickr(this._element.querySelector(`[name="date-end"]`), {
       ...FLATPICKR_CONFIG,
-      // disable: [
-      //   (date) => moment(date).dayOfYear() < moment(this._timeStart).dayOfYear()
-      // ]
+      disable: [
+        (date) => moment(date).startOf(`day`) < moment(this._timeStart).startOf(`day`)
+      ]
     });
 
   }

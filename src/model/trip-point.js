@@ -6,7 +6,6 @@ import {
 
 class ModelTripPoint {
   constructor(data) {
-    console.log(data);
     this.id = data[`id`];
     this.favorite = data[`is_favorite`] ? FAVOURITE_ON : FAVOURITE_OFF;
     this.type = data[`type`] || Types.TRAVEL;

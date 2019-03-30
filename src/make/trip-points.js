@@ -135,19 +135,6 @@ const makeTripPoints = (tripPointsDataModel, destinations, offers, api) => {
   const createNewTripPoint = () => {
     const tripPointsContainerElement = document.querySelector(TRIP_POINTS_CONTAINER_SELECTOR);
 
-    const defaultTripPointData = {
-      id: nanoid(),
-      favorite: FAVOURITE_OFF,
-      type: offers[0].type,
-      timeStart: Date.now(),
-      timeEnd: Date.now(),
-      price: 0,
-      desc: destinations[0].description,
-      destination: destinations[0].name,
-      pictures: destinations[0].pictures,
-      offers: offers[0].offers,
-    };
-
     const tripPointData = ModelTripPoint.parseTripPoint({
       id: nanoid(),
       favorite: FAVOURITE_OFF,
@@ -178,19 +165,18 @@ const makeTripPoints = (tripPointsDataModel, destinations, offers, api) => {
         .then(() => {
           newTripPointComponent.unBlock();
           tripPointsDataModel.update(tripPointData);
-          console.log(tripPointData.toRAW());
           renderTripDayInfo(tripPointsDataModel);
           renderTripInfo(tripPointsDataModel);
           makeTripPoints(tripPointsDataModel, destinations, offers, api);
         })
-        // .catch((err) => {
-        //   // eslint-disable-next-line no-console
-        //   console.error(`submit error: ${err}`);
-        //   newTripPointComponent.shake();
-        //   newTripPointComponent.makeRedBorder();
-        //   newTripPointComponent.unBlock();
-        //   throw err;
-        // });
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error(`submit error: ${err}`);
+          newTripPointComponent.shake();
+          newTripPointComponent.makeRedBorder();
+          newTripPointComponent.unBlock();
+          throw err;
+        });
     };
 
     newTripPointComponent.onDelete = () => {
