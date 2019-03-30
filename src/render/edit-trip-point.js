@@ -5,6 +5,7 @@ import nanoid from 'nanoid';
 import {
   getOfferId,
   capitalize,
+  escapeHtml,
 } from '../utils';
 import {
   TYPES,
@@ -16,7 +17,7 @@ import {
 import Component from './trip-point-component';
 
 class EditTripPoint extends Component {
-  constructor(data, destinations = [], offersByType) {
+  constructor(data, destinations = []) {
     super();
     this._id = data.id;
     this._type = data.type;
@@ -29,7 +30,6 @@ class EditTripPoint extends Component {
     this._favorite = data.favorite;
     this._pictures = data.pictures;
     this._destinations = destinations;
-    this._offerssByType = offersByType;
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
@@ -160,6 +160,7 @@ class EditTripPoint extends Component {
   update(data) {
     this._type = data.type;
     this._destination = data.destination;
+    this._desc = data.desc;
     this._offers = data.offers;
     this._price = data.price;
     this._favorite = data.favorite;
@@ -213,10 +214,10 @@ class EditTripPoint extends Component {
         target.offers = this._offers;
       },
       destination: (value) => {
-        target.destination = value;
+        target.destination = escapeHtml(value);
       },
       price: (value) => {
-        target.price = value;
+        target.price = escapeHtml(value);
       },
       favorite: (value) => {
         target.favorite = value === FAVOURITE_ON;

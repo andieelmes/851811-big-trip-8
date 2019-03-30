@@ -14,7 +14,7 @@ import API from './api';
 
 import ModelTripPoints from './model/trip-points';
 
-import makeTripPoints from './make/trip-point';
+import makeTripPoints from './make/trip-points';
 import makeStatistics from './make/statistics';
 import makeFilters from './make/filter';
 import makeSort from './make/sort';

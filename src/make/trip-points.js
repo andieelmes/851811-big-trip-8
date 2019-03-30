@@ -1,7 +1,11 @@
 import moment from 'moment';
+import nanoid from 'nanoid';
 
 import {
   TRIP_POINTS_SELECTOR,
+  NEW_EVENT_BTN_SELECTOR,
+  FAVOURITE_OFF,
+  TRIP_POINTS_CONTAINER_SELECTOR,
 } from '../constants';
 
 import {
@@ -13,9 +17,10 @@ import EditTripPoint from '../render/edit-trip-point';
 import renderTripInfo from '../render/trip-info';
 import renderTripDayInfo from '../render/trip-day-info';
 
+import ModelTripPoint from '../model/trip-point';
+
 const makeTripPoints = (tripPointsDataModel, destinations, offers, api) => {
   const createTripPointComponents = (tripPoints) => {
-
     document.querySelectorAll(`[data-day]`).forEach((element) => {
       const tripPointsElement = element.querySelector(TRIP_POINTS_SELECTOR);
       tripPointsElement.innerHTML = ``;
@@ -28,7 +33,7 @@ const makeTripPoints = (tripPointsDataModel, destinations, offers, api) => {
       const tripPointsElement = tripPointsDayElement.querySelector(TRIP_POINTS_SELECTOR);
 
       const tripPointComponent = new TripPoint(tripPointData);
-      const editTripPointComponent = new EditTripPoint(tripPointData, destinations, offers);
+      const editTripPointComponent = new EditTripPoint(tripPointData, destinations);
 
       tripPointComponent.onEdit = () => {
         editTripPointComponent.render();
@@ -126,8 +131,102 @@ const makeTripPoints = (tripPointsDataModel, destinations, offers, api) => {
     });
   };
 
-  createTripPointComponents(tripPointsDataModel.data);
 
+  const createNewTripPoint = () => {
+    const tripPointsContainerElement = document.querySelector(TRIP_POINTS_CONTAINER_SELECTOR);
+
+    const defaultTripPointData = {
+      id: nanoid(),
+      favorite: FAVOURITE_OFF,
+      type: offers[0].type,
+      timeStart: Date.now(),
+      timeEnd: Date.now(),
+      price: 0,
+      desc: destinations[0].description,
+      destination: destinations[0].name,
+      pictures: destinations[0].pictures,
+      offers: offers[0].offers,
+    };
+
+    const tripPointData = ModelTripPoint.parseTripPoint({
+      id: nanoid(),
+      favorite: FAVOURITE_OFF,
+      type: offers[0].type,
+      timeStart: Date.now(),
+      timeEnd: Date.now(),
+      price: 0,
+      desc: destinations[0].description,
+      destination: destinations[0].name,
+      pictures: destinations[0].pictures,
+      offers: offers[0].offers,
+    });
+
+    const newTripPointComponent = new EditTripPoint(tripPointData, destinations);
+
+    newTripPointComponent.onSubmit = (newObject) => {
+      tripPointData.type = newObject.type;
+      tripPointData.destination = newObject.destination;
+      tripPointData.offers = newObject.offers;
+      tripPointData.price = newObject.price;
+      tripPointData.favorite = newObject.favorite;
+      tripPointData.timeStart = newObject.timeStart;
+      tripPointData.timeEnd = newObject.timeEnd;
+
+      newTripPointComponent.blockSubmitting();
+
+      api.createTripPoint(tripPointData.toRAW())
+        .then(() => {
+          newTripPointComponent.unBlock();
+          tripPointsDataModel.update(tripPointData);
+          console.log(tripPointData.toRAW());
+          renderTripDayInfo(tripPointsDataModel);
+          renderTripInfo(tripPointsDataModel);
+          makeTripPoints(tripPointsDataModel, destinations, offers, api);
+        })
+        // .catch((err) => {
+        //   // eslint-disable-next-line no-console
+        //   console.error(`submit error: ${err}`);
+        //   newTripPointComponent.shake();
+        //   newTripPointComponent.makeRedBorder();
+        //   newTripPointComponent.unBlock();
+        //   throw err;
+        // });
+    };
+
+    newTripPointComponent.onDelete = () => {
+      newTripPointComponent.unrender();
+    };
+
+    newTripPointComponent.onEsc = () => {
+      newTripPointComponent.unrender();
+    };
+
+    newTripPointComponent.onClickOutside = () => {
+      newTripPointComponent.unrender();
+    };
+
+    newTripPointComponent.onChangeType = (newObject) => {
+      tripPointData.type = newObject.type;
+      const offerByType = offers.find((offer) => capitalize(offer.type) === newObject.type);
+      tripPointData.offers = offerByType && offerByType.offers.length ? offerByType.offers : tripPointData.offers;
+
+      newTripPointComponent.update(tripPointData);
+      tripPointsDataModel.update(tripPointData);
+    };
+
+    newTripPointComponent.onChangeDestination = (newObject) => {
+      tripPointData.destination = newObject.destination;
+      tripPointData.desc = destinations.find((destination) => destination.name === newObject.destination).description;
+      tripPointData.pictures = destinations.find((destination) => destination.name === newObject.destination).pictures;
+
+      newTripPointComponent.update(tripPointData);
+      tripPointsDataModel.update(tripPointData);
+    };
+
+    tripPointsContainerElement.prepend(newTripPointComponent.render());
+  };
+
+  createTripPointComponents(tripPointsDataModel.data);
 
   document.body.addEventListener(`sort`, () => {
     createTripPointComponents(tripPointsDataModel.sortedData);
@@ -136,6 +235,9 @@ const makeTripPoints = (tripPointsDataModel, destinations, offers, api) => {
   document.body.addEventListener(`filter`, () => {
     createTripPointComponents(tripPointsDataModel.filteredData);
   });
+
+  const newEventBtn = document.querySelector(NEW_EVENT_BTN_SELECTOR);
+  newEventBtn.addEventListener(`click`, createNewTripPoint);
 
 };
 

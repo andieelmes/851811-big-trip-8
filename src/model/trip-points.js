@@ -49,7 +49,11 @@ class ModelTripPoints {
 
   update(data) {
     const tripPointIndexToUpdate = this._data.findIndex((id) => id === data.id);
-    this._data[tripPointIndexToUpdate] = {...data};
+    if (tripPointIndexToUpdate) {
+      this._data[tripPointIndexToUpdate] = {...data};
+    } else {
+      this._data.push(data);
+    }
   }
 }
 

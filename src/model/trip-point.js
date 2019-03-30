@@ -6,20 +6,21 @@ import {
 
 class ModelTripPoint {
   constructor(data) {
+    console.log(data);
     this.id = data[`id`];
     this.favorite = data[`is_favorite`] ? FAVOURITE_ON : FAVOURITE_OFF;
     this.type = data[`type`] || Types.TRAVEL;
-    this.timeStart = data[`date_from`];
-    this.timeEnd = data[`date_to`];
-    this.price = data[`base_price`];
-    this.desc = data[`destination`][`description`];
-    this.destination = data[`destination`][`name`];
-    this.pictures = data[`destination`][`pictures`] || [];
+    this.timeStart = data[`date_from`] || data[`timeStart`];
+    this.timeEnd = data[`date_to`] || data[`timeEnd`];
+    this.price = data[`base_price`] || data[`price`];
+    this.desc = data[`destination`][`description`] || data[`desc`];
+    this.destination = data[`destination`][`name`] || data[`destination`];
+    this.pictures = data[`destination`][`pictures`] || data[`pictures`] || [];
     this.offers = data[`offers`].reduce((renamed, current) => {
       renamed.push({
-        name: current.title,
+        name: current.title || current.name,
         price: current.price,
-        accepted: current.accepted,
+        accepted: current.accepted || false,
       });
       return renamed;
     }, []);
