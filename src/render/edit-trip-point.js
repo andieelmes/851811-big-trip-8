@@ -35,14 +35,15 @@ class EditTripPoint extends Component {
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
     this._onEscPress = this._onEscPress.bind(this);
     this._onDocumentClickOutside = this._onDocumentClickOutside.bind(this);
+    this._onChangeTypeBtnClick = this._onChangeTypeBtnClick.bind(this);
+    this._onChangeDestinationBtnClick = this._onChangeDestinationBtnClick.bind(this);
 
     this._onSubmit = null;
     this._onDelete = null;
     this._onEsc = null;
     this._onClickOutside = null;
-
-    this._onChangeType = this._onChangeType.bind(this);
-    this._onChangeDestination = this._onChangeDestination.bind(this);
+    this._onChangeType = null;
+    this._onChangeDestination = null;
   }
 
   get template() {
@@ -146,6 +147,14 @@ class EditTripPoint extends Component {
 
   set onClickOutside(fn) {
     this._onClickOutside = fn;
+  }
+
+  set onChangeType(fn) {
+    this._onChangeType = fn;
+  }
+
+  set onChangeDestination(fn) {
+    this._onChangeDestination = fn;
   }
 
   update(data) {
@@ -297,10 +306,10 @@ class EditTripPoint extends Component {
     this._element.querySelector(`[type=reset]`)
         .addEventListener(`click`, this._onDeleteButtonClick);
     this._element.querySelectorAll(`[name=type]`).forEach((element) => {
-      element.addEventListener(`change`, this._onChangeType);
+      element.addEventListener(`change`, this._onChangeTypeBtnClick);
     });
     this._element.querySelector(`[name=destination]`)
-        .addEventListener(`change`, this._onChangeDestination);
+        .addEventListener(`change`, this._onChangeDestinationBtnClick);
 
     document.addEventListener(`keydown`, this._onEscPress);
     // document.addEventListener(`click`, this._onDocumentClickOutside, true);
@@ -330,10 +339,10 @@ class EditTripPoint extends Component {
       this._element.querySelector(`[type=reset]`)
         .removeEventListener(`click`, this._onDeleteButtonClick);
       this._element.querySelectorAll(`[name=type]`).forEach((element) => {
-        element.removeEventListener(`change`, this._onChangeType);
+        element.removeEventListener(`change`, this._onChangeTypeBtnClick);
       });
       this._element.querySelector(`[name=destination]`)
-        .removeEventListener(`change`, this._onChangeDestination);
+        .removeEventListener(`change`, this._onChangeDestinationBtnClick);
 
       document.removeEventListener(`keydown`, this._onEscPress);
       document.removeEventListener(`click`, this._onDocumentClickOutside, true);
@@ -361,28 +370,30 @@ class EditTripPoint extends Component {
     return typeof this._onSubmit === `function` && this._onSubmit(newData);
   }
 
-  _onChangeType() {
+  _onChangeTypeBtnClick() {
     const formData = new FormData(this._element.querySelector(`form`));
     const newData = this._processForm(formData);
 
     this.update(newData);
 
-    const offerByType = this._offerssByType.find((offer) => capitalize(offer.type) === this._type);
-    this._offers = offerByType && offerByType.offers.length ? offerByType.offers : this._offers;
+    if (typeof this._onChangeType === `function`) {
+      this._onChangeType(newData);
+    }
 
     this.unbind();
     this._partialUpdate();
     this.bind();
   }
 
-  _onChangeDestination() {
+  _onChangeDestinationBtnClick() {
     const formData = new FormData(this._element.querySelector(`form`));
     const newData = this._processForm(formData);
 
     this.update(newData);
 
-    this._desc = this._destinations.find((destination) => destination.name === this._destination).description;
-    this._pictures = this._destinations.find((destination) => destination.name === this._destination).pictures;
+    if (typeof this._onChangeDestination === `function`) {
+      this._onChangeDestination(newData);
+    }
 
     this.unbind();
     this._partialUpdate();

@@ -50,8 +50,10 @@ const init = async () => {
 
     })
     .catch((err) => {
+      // eslint-disable-next-line no-console
       console.error(`initial error: ${err}`);
       document.querySelector(TRIP_POINTS_SELECTOR).textContent = TRIP_POINT_GET_ERROR;
+      throw err;
     });
 };
 

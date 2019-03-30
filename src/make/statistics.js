@@ -5,10 +5,30 @@ import {
   MAIN_SELECTOR,
 } from '../constants';
 
-import renderStatistics, {destroyCanvas} from '../render/statistics';
+import renderMoneyStatistics from '../statistics/money';
+import renderTransportStatistics from '../statistics/transport';
+import renderTimeStatistics from '../statistics/time';
 
 const statsElement = document.querySelector(STATS_BTN_SELECTOR);
 const tripPointsTableElement = document.querySelector(TRIP_POINTS_TABLE_BTN_SELECTOR);
+
+let moneyChart;
+let transportChart;
+let timeChart;
+
+const renderStatistics = (data) => {
+  moneyChart = renderMoneyStatistics(data);
+  transportChart = renderTransportStatistics(data);
+  timeChart = renderTimeStatistics(data);
+};
+
+const destroyCanvas = () => {
+  if (moneyChart && transportChart && timeChart) {
+    moneyChart.destroy();
+    transportChart.destroy();
+    timeChart.destroy();
+  }
+};
 
 const makeStatistics = (data) => {
   statsElement.addEventListener(`click`, () => {
@@ -24,5 +44,6 @@ const makeStatistics = (data) => {
     destroyCanvas();
   });
 };
+
 
 export default makeStatistics;

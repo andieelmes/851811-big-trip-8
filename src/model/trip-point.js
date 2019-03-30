@@ -29,7 +29,7 @@ class ModelTripPoint {
     return {
       'id': this.id,
       'is_favorite': this.favorite,
-      'type': this.type,
+      'type': this.type.toLowerCase(),
       'date_from': this.timeStart,
       'date_to': this.timeEnd,
       'base_price': this.price,

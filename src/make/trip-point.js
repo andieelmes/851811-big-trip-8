@@ -4,6 +4,10 @@ import {
   TRIP_POINTS_SELECTOR,
 } from '../constants';
 
+import {
+  capitalize,
+} from '../utils';
+
 import TripPoint from '../render/trip-point';
 import EditTripPoint from '../render/edit-trip-point';
 import renderTripInfo from '../render/trip-info';
@@ -54,10 +58,12 @@ const makeTripPoints = (tripPointsDataModel, destinations, offers, api) => {
             makeTripPoints(tripPointsDataModel, destinations, offers, api);
           })
           .catch((err) => {
+            // eslint-disable-next-line no-console
             console.error(`submit error: ${err}`);
             editTripPointComponent.shake();
             editTripPointComponent.makeRedBorder();
             editTripPointComponent.unBlock();
+            throw err;
           });
       };
 
@@ -72,10 +78,12 @@ const makeTripPoints = (tripPointsDataModel, destinations, offers, api) => {
             editTripPointComponent.unrender();
           })
           .catch((err) => {
+            // eslint-disable-next-line no-console
             console.error(`delete error: ${err}`);
             editTripPointComponent.shake();
             editTripPointComponent.makeRedBorder();
             editTripPointComponent.unBlock();
+            throw err;
           });
 
         renderTripInfo(tripPoints);
@@ -91,6 +99,26 @@ const makeTripPoints = (tripPointsDataModel, destinations, offers, api) => {
         tripPointComponent.render();
         tripPointsElement.replaceChild(tripPointComponent.element, editTripPointComponent.element);
         editTripPointComponent.unrender();
+      };
+
+      editTripPointComponent.onChangeType = (newObject) => {
+        tripPointData.type = newObject.type;
+        const offerByType = offers.find((offer) => capitalize(offer.type) === newObject.type);
+        tripPointData.offers = offerByType && offerByType.offers.length ? offerByType.offers : tripPointData.offers;
+
+        tripPointComponent.update(tripPointData);
+        editTripPointComponent.update(tripPointData);
+        tripPointsDataModel.update(tripPointData);
+      };
+
+      editTripPointComponent.onChangeDestination = (newObject) => {
+        tripPointData.destination = newObject.destination;
+        tripPointData.desc = destinations.find((destination) => destination.name === newObject.destination).description;
+        tripPointData.pictures = destinations.find((destination) => destination.name === newObject.destination).pictures;
+
+        tripPointComponent.update(tripPointData);
+        editTripPointComponent.update(tripPointData);
+        tripPointsDataModel.update(tripPointData);
       };
 
       tripPointsDayElement.classList.remove(`visually-hidden`);
