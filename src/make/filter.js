@@ -1,32 +1,33 @@
 import moment from 'moment';
 import {FILTERS_SELECTOR} from '../constants';
 import filtersData from '../data/filters';
-import makeTripPoints from './trip-point';
 import Filter from '../render/filter';
 
 const filtersElement = document.querySelector(FILTERS_SELECTOR);
 
-const filterTasks = (initialTasks, filterName) => {
+const filterTasks = (initialTripPointData, filterName) => {
   switch (filterName) {
     case `everything`:
-      return initialTasks;
+      return initialTripPointData;
 
     case `future`:
-      return initialTasks.filter((it) => it.timeStart > moment());
+      return initialTripPointData.filter((it) => it.timeEnd > moment());
 
     case `past`:
-      return initialTasks.filter((it) => it.timeStart < moment());
+      return initialTripPointData.filter((it) => it.timeStart < moment());
 
     default:
-      return initialTasks;
+      return initialTripPointData;
   }
 };
 
-const makeFilters = (initialTripPoints) => {
+const makeFilters = (tripPointsDataModel) => {
   filtersElement.innerHTML = ``;
 
+  const initialTripPointData = tripPointsDataModel.data;
+
   filtersData.forEach((filterData) => {
-    const filteredTripPoints = filterTasks(initialTripPoints, filterData.type);
+    const filteredTripPoints = filterTasks(initialTripPointData, filterData.type);
 
     if (!filteredTripPoints.length) {
       filterData.disabled = true;
@@ -35,7 +36,9 @@ const makeFilters = (initialTripPoints) => {
     const filterCompontent = new Filter(filterData);
 
     filterCompontent.onFilter = () => {
-      makeTripPoints(filteredTripPoints);
+      const filterEvent = new Event(`filter`);
+      tripPointsDataModel.filteredData = filteredTripPoints;
+      document.body.dispatchEvent(filterEvent);
     };
 
     filtersElement.appendChild(filterCompontent.render());

@@ -245,7 +245,6 @@ class EditTripPoint extends Component {
     return entry;
   }
 
-
   _partialUpdate() {
     const newElement = document.createElement(`div`);
     newElement.innerHTML = this.template;
@@ -304,22 +303,22 @@ class EditTripPoint extends Component {
         .addEventListener(`change`, this._onChangeDestination);
 
     document.addEventListener(`keydown`, this._onEscPress);
-    document.addEventListener(`click`, this._onDocumentClickOutside, true);
+    // document.addEventListener(`click`, this._onDocumentClickOutside, true);
 
     flatpickr(this._element.querySelector(`[name="date-start"]`), {
       ...FLATPICKR_CONFIG,
-      onChange: (dateStr) => {
-        timeEndPicker.set(`disable`, [
-          (date) => moment(date.dayOfYear()) < moment(dateStr).dayOfYear()
-        ]);
-      },
+      // onChange: (dateStr) => {
+      //   timeEndPicker.set(`disable`, [
+      //     (date) => moment(date.dayOfYear()) < moment(dateStr).dayOfYear()
+      //   ]);
+      // },
     });
 
     const timeEndPicker = flatpickr(this._element.querySelector(`[name="date-end"]`), {
       ...FLATPICKR_CONFIG,
-      disable: [
-        (date) => moment(date).dayOfYear() < moment(this._timeStart).dayOfYear()
-      ]
+      // disable: [
+      //   (date) => moment(date).dayOfYear() < moment(this._timeStart).dayOfYear()
+      // ]
     });
 
   }

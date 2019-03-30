@@ -1,25 +1,54 @@
+import moment from 'moment';
 import {appendToDom} from '../utils';
-import {TRIP_DAY_INFO_SELECTOR} from '../constants';
-import tripDayInfo from '../data/trip-day-info';
+import {TRIP_POINTS_CONTAINER_SELECTOR} from '../constants';
 
-const tripDayInfoElement = document.querySelector(TRIP_DAY_INFO_SELECTOR);
+const tripPointsContainerElement = document.querySelector(TRIP_POINTS_CONTAINER_SELECTOR);
 
-const makeTripDayInfo = (config) => {
-  const {
-    day,
-    date,
-  } = config;
+const makeTripDaySection = ({dayTimestamp, count, title}) => {
+  return `
+  <section class="trip-day" data-day=${+dayTimestamp}>
+    <article class="trip-day__info">
+      <span class="trip-day__caption">Day</span>
+      <p class="trip-day__number">${count}</p>
+      <h2 class="trip-day__title">${title}</h2>
+    </article>
+    <div class="trip-day__items">
 
-  return `<span class="trip-day__caption">Day</span>
-  <p class="trip-day__number">${day}</p>
-  <h2 class="trip-day__destination">${new Date(date).toLocaleDateString(`en-gb`, {month: `short`})}&nbsp;
-  ${new Date(date).toLocaleDateString(`en-gb`, {day: `2-digit`})}</h2>`;
+    </div>
+  </section>`;
 };
 
-const renderTripDayInfo = () => {
+const makeTripDayInfo = (tripPointsDataModel) => {
+  tripPointsDataModel.sortByTimeStamp();
+
+  const tripPoints = tripPointsDataModel.data;
+
+  const timeStamps = tripPoints.map((tripPoint) => tripPoint.timeStart);
+
+  const dayTimestamps = timeStamps.reduce((dayStamps, timeStamp) => {
+    const currentTimeStamp = moment(timeStamp);
+    const startOfDay = currentTimeStamp.startOf(`day`);
+
+    if (dayStamps.every((dayStamp) => !dayStamp.isSame(startOfDay))) {
+      dayStamps.push(startOfDay);
+    }
+    return dayStamps;
+  }, []);
+
+  const firstDay = dayTimestamps[0];
+
+  return dayTimestamps.map((dayTimestamp) => {
+    const count = dayTimestamp.diff(firstDay, `days`) + 1;
+    const title = dayTimestamp.format(`MMMM D`);
+
+    return makeTripDaySection({dayTimestamp, count, title});
+  }).join(``);
+};
+
+const renderTripDayInfo = (tripPoints) => {
   appendToDom({
-    newElements: makeTripDayInfo(tripDayInfo()),
-    parentElement: tripDayInfoElement,
+    newElements: makeTripDayInfo(tripPoints),
+    parentElement: tripPointsContainerElement,
     clear: true,
   });
 };

@@ -114,6 +114,7 @@ export const MIN_CITIES = 2;
 export const MAX_CITIES = 5;
 export const MIN_TOTAL_PRICE = 750;
 export const MAX_TOTAL_PRICE = 2000;
+export const TRIP_POINTS_CONTAINER_SELECTOR = `.trip-points`;
 export const TRIP_POINTS_SELECTOR = `.trip-day__items`;
 export const TRIP_INFO_SELECTOR = `.trip`;
 export const TRIP_DAY_INFO_SELECTOR = `.trip-day__info`;

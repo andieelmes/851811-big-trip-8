@@ -4,24 +4,28 @@ import {
   OFFERS_FORM_NAME,
 } from '../constants';
 import sortingData from '../data/sort';
-import makeTripPoints from './trip-point';
 import Sort from '../render/sort';
 
 const sortElement = document.querySelector(SORTING_SELECTOR);
 
-const sortTasks = (initialTasks, tripPointType) => {
-  const sorted = sortBy(initialTasks, [(tripPoint) => tripPoint[tripPointType]]);
-  return tripPointType === OFFERS_FORM_NAME ? sorted.reverse() : sorted;
+const sortTasks = (tripPointsByDay, tripPointType) => {
+  return tripPointsByDay.map((tripPointsInDay) => {
+    const sorted = sortBy(tripPointsInDay, [(tripPoint) => tripPoint[tripPointType]]);
+    return tripPointType === OFFERS_FORM_NAME ? sorted.reverse() : sorted;
+  }).flat();
 };
 
-const makeSort = (initialTripPoints) => {
+const makeSort = (tripPointsDataModel) => {
   sortElement.innerHTML = ``;
 
   sortingData.forEach((sortData) => {
-    const filteredTripPoints = sortTasks(initialTripPoints, sortData.tripPointType);
+    const tripPointsByDay = tripPointsDataModel.dataByDay;
+    const sortedTripPoints = sortTasks(tripPointsByDay, sortData.tripPointType);
     const filterCompontent = new Sort(sortData);
     filterCompontent.onSort = () => {
-      makeTripPoints(filteredTripPoints);
+      const sortingEvent = new Event(`sort`);
+      tripPointsDataModel.sortedData = sortedTripPoints;
+      document.body.dispatchEvent(sortingEvent);
     };
 
     sortElement.appendChild(filterCompontent.render());

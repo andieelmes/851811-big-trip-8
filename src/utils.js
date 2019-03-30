@@ -68,6 +68,8 @@ export const getTripPointInfoByLabel = (data, labels, tripPointKey) => {
       let tripPointInfo;
       if (tripPointKey === `time`) {
         tripPointInfo = {label, [tripPointKey]: moment(timeEnd).diff(timeStart)};
+      } else if (tripPointKey === `price`) {
+        tripPointInfo = {label, [tripPointKey]: +day[tripPointKey] + +getOffersPrice(day.offers)};
       } else {
         tripPointInfo = tripPointKey ? {label, [tripPointKey]: day[tripPointKey]} : {label};
       }

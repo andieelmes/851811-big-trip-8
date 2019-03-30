@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 import {
   TRIP_POINTS_SELECTOR,
 } from '../constants';
@@ -5,88 +7,106 @@ import {
 import TripPoint from '../render/trip-point';
 import EditTripPoint from '../render/edit-trip-point';
 import renderTripInfo from '../render/trip-info';
+import renderTripDayInfo from '../render/trip-day-info';
 
-import makeStatistics from './statistics';
+const makeTripPoints = (tripPointsDataModel, destinations, offers, api) => {
+  const createTripPointComponents = (tripPoints) => {
 
-const tripPointsElement = document.querySelector(TRIP_POINTS_SELECTOR);
+    document.querySelectorAll(`[data-day]`).forEach((element) => {
+      const tripPointsElement = element.querySelector(TRIP_POINTS_SELECTOR);
+      tripPointsElement.innerHTML = ``;
+      element.classList.add(`visually-hidden`);
+    });
 
-const makeTripPoints = (tripPoints, destinations, offers, api) => {
-  makeStatistics(tripPoints);
+    tripPoints.forEach((tripPointData) => {
+      const startOfDayTimestamp = +moment(tripPointData.timeStart).startOf(`day`);
+      const tripPointsDayElement = document.querySelector(`[data-day="${startOfDayTimestamp}"]`);
+      const tripPointsElement = tripPointsDayElement.querySelector(TRIP_POINTS_SELECTOR);
 
-  tripPointsElement.innerHTML = ``;
+      const tripPointComponent = new TripPoint(tripPointData);
+      const editTripPointComponent = new EditTripPoint(tripPointData, destinations, offers);
 
-  tripPoints.forEach((tripPointData) => {
-    const tripPointComponent = new TripPoint(tripPointData);
-    const editTripPointComponent = new EditTripPoint(tripPointData, destinations, offers);
+      tripPointComponent.onEdit = () => {
+        editTripPointComponent.render();
+        tripPointsElement.replaceChild(editTripPointComponent.element, tripPointComponent.element);
+        tripPointComponent.unrender();
+      };
 
-    tripPointComponent.onEdit = () => {
-      editTripPointComponent.render();
-      tripPointsElement.replaceChild(editTripPointComponent.element, tripPointComponent.element);
-      tripPointComponent.unrender();
-    };
+      editTripPointComponent.onSubmit = (newObject) => {
+        tripPointData.type = newObject.type;
+        tripPointData.destination = newObject.destination;
+        tripPointData.offers = newObject.offers;
+        tripPointData.price = newObject.price;
+        tripPointData.favorite = newObject.favorite;
+        tripPointData.timeStart = newObject.timeStart;
+        tripPointData.timeEnd = newObject.timeEnd;
 
-    editTripPointComponent.onSubmit = (newObject) => {
-      tripPointData.type = newObject.type;
-      tripPointData.destination = newObject.destination;
-      tripPointData.offers = newObject.offers;
-      tripPointData.price = newObject.price;
-      tripPointData.favorite = newObject.favorite;
-      tripPointData.timeStart = newObject.timeStart;
-      tripPointData.timeEnd = newObject.timeEnd;
+        editTripPointComponent.blockSubmitting();
 
-      renderTripInfo(tripPoints);
+        api.updateTripPoint({id: tripPointData.id, data: tripPointData.toRAW()})
+          .then((newTripPoint) => {
+            editTripPointComponent.unBlock();
+            tripPointComponent.update(newTripPoint);
 
-      editTripPointComponent.blockSubmitting();
+            tripPointsDataModel.update(tripPointData);
+            renderTripDayInfo(tripPointsDataModel);
+            renderTripInfo(tripPointsDataModel);
+            makeTripPoints(tripPointsDataModel, destinations, offers, api);
+          })
+          .catch((err) => {
+            console.error(`submit error: ${err}`);
+            editTripPointComponent.shake();
+            editTripPointComponent.makeRedBorder();
+            editTripPointComponent.unBlock();
+          });
+      };
 
-      api.updateTripPoint({id: tripPointData.id, data: tripPointData.toRAW()})
-        .then((newTripPoint) => {
-          editTripPointComponent.unBlock();
-          tripPointComponent.update(newTripPoint);
+      editTripPointComponent.onDelete = ({id}) => {
+        editTripPointComponent.blockDeleting();
 
-          tripPointComponent.render();
-          tripPointsElement.replaceChild(tripPointComponent.element, editTripPointComponent.element);
-          editTripPointComponent.unrender();
+        api.deleteTripPoint({id})
+          .then(() => {
+            editTripPointComponent.unBlock();
 
-        })
-        .catch(() => {
-          editTripPointComponent.shake();
-          editTripPointComponent.makeRedBorder();
-          editTripPointComponent.unBlock();
-        });
-    };
+            tripPointComponent.unrender();
+            editTripPointComponent.unrender();
+          })
+          .catch((err) => {
+            console.error(`delete error: ${err}`);
+            editTripPointComponent.shake();
+            editTripPointComponent.makeRedBorder();
+            editTripPointComponent.unBlock();
+          });
 
-    editTripPointComponent.onDelete = ({id}) => {
-      editTripPointComponent.blockDeleting();
+        renderTripInfo(tripPoints);
+      };
 
-      api.deleteTripPoint({id})
-        .then(() => {
-          editTripPointComponent.unBlock();
+      editTripPointComponent.onEsc = () => {
+        tripPointComponent.render();
+        tripPointsElement.replaceChild(tripPointComponent.element, editTripPointComponent.element);
+        editTripPointComponent.unrender();
+      };
 
-          tripPointComponent.unrender();
-          editTripPointComponent.unrender();
-        })
-        .catch(() => {
-          editTripPointComponent.shake();
-          editTripPointComponent.makeRedBorder();
-          editTripPointComponent.unBlock();
-        });
+      editTripPointComponent.onClickOutside = () => {
+        tripPointComponent.render();
+        tripPointsElement.replaceChild(tripPointComponent.element, editTripPointComponent.element);
+        editTripPointComponent.unrender();
+      };
 
-      renderTripInfo(tripPoints);
-    };
+      tripPointsDayElement.classList.remove(`visually-hidden`);
+      tripPointsElement.appendChild(tripPointComponent.render());
+    });
+  };
 
-    editTripPointComponent.onEsc = () => {
-      tripPointComponent.render();
-      tripPointsElement.replaceChild(tripPointComponent.element, editTripPointComponent.element);
-      editTripPointComponent.unrender();
-    };
+  createTripPointComponents(tripPointsDataModel.data);
 
-    editTripPointComponent.onClickOutside = () => {
-      tripPointComponent.render();
-      tripPointsElement.replaceChild(tripPointComponent.element, editTripPointComponent.element);
-      editTripPointComponent.unrender();
-    };
 
-    tripPointsElement.appendChild(tripPointComponent.render());
+  document.body.addEventListener(`sort`, () => {
+    createTripPointComponents(tripPointsDataModel.sortedData);
+  });
+
+  document.body.addEventListener(`filter`, () => {
+    createTripPointComponents(tripPointsDataModel.filteredData);
   });
 
 };

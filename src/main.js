@@ -12,9 +12,12 @@ import {
 
 import API from './api';
 
+import ModelTripPoints from './model/trip-points';
+
 import makeTripPoints from './make/trip-point';
-import renderFilters from './make/filter';
-import renderSort from './make/sort';
+import makeStatistics from './make/statistics';
+import makeFilters from './make/filter';
+import makeSort from './make/sort';
 import renderTripInfo from './render/trip-info';
 import renderTripDayInfo from './render/trip-day-info';
 
@@ -23,25 +26,33 @@ const api = new API({endPoint: ENDPOINT_URL, authorization: AUTHORIZATION});
 const init = async () => {
   document.querySelector(TRIP_POINTS_SELECTOR).textContent = TRIP_POINT_GET_LOADING;
 
-  Promise.all([
+  await Promise.all([
     api.getTripPoints(),
     api.getDestinations(),
     api.getOffers(),
   ])
     .then((results) => {
-      const tripPoints = results[0];
-      renderFilters(tripPoints);
-      renderSort(tripPoints);
-      renderTripInfo(tripPoints);
-      makeTripPoints(...results, api);
+      const [
+        tripPoints,
+        ...rest
+      ] = results;
+
+      const tripPointsDataModel = new ModelTripPoints(tripPoints);
+
+      makeFilters(tripPointsDataModel);
+      makeSort(tripPointsDataModel);
+      renderTripInfo(tripPointsDataModel);
+      renderTripDayInfo(tripPointsDataModel);
+      makeTripPoints(tripPointsDataModel, ...rest, api);
+      makeStatistics(tripPointsDataModel.data);
+
+      checkUrlHash();
+
     })
-    .catch(() => {
+    .catch((err) => {
+      console.error(`initial error: ${err}`);
       document.querySelector(TRIP_POINTS_SELECTOR).textContent = TRIP_POINT_GET_ERROR;
     });
-
-  checkUrlHash();
-
-  renderTripDayInfo();
 };
 
 init();
