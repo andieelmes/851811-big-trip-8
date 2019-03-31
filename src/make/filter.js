@@ -1,11 +1,11 @@
 import moment from 'moment';
-import {FILTERS_SELECTOR} from '../constants';
-import filtersData from '../data/filters';
+import {FILTERS_SELECTOR, FILTER_TYPES} from '../constants';
 import Filter from '../render/filter';
 
 const filtersElement = document.querySelector(FILTERS_SELECTOR);
 
 const filterTasks = (initialTripPointData, filterName) => {
+  // TODO объект с функциями вместо switch, enum для фильтров
   switch (filterName) {
     case `everything`:
       return initialTripPointData;
@@ -26,16 +26,18 @@ const makeFilters = (tripPointsDataModel) => {
 
   const initialTripPointData = tripPointsDataModel.data;
 
-  filtersData.forEach((filterData) => {
-    const filteredTripPoints = filterTasks(initialTripPointData, filterData.type);
+  FILTER_TYPES.forEach((filterType) => {
+    // TODO перенести фильтрацию в модель, тут оставить только функции-фильтры, получать новые данные
+    const filteredTripPoints = filterTasks(initialTripPointData, filterType.type);
 
     if (!filteredTripPoints.length) {
-      filterData.disabled = true;
+      filterType.disabled = true;
     }
 
-    const filterCompontent = new Filter(filterData);
+    const filterCompontent = new Filter(filterType);
 
     filterCompontent.onFilter = () => {
+      // TODO вызвать makeTripPoints
       const filterEvent = new Event(`filter`);
       tripPointsDataModel.filteredData = filteredTripPoints;
       document.body.dispatchEvent(filterEvent);

@@ -30,9 +30,10 @@ const destroyCanvas = () => {
   }
 };
 
-const makeStatistics = (data) => {
+const makeStatistics = ({data}) => {
   statsElement.addEventListener(`click`, () => {
     destroyCanvas();
+    // TODO classList.toggle
     document.querySelector(STATS_SELECTOR).classList.remove(`visually-hidden`);
     document.querySelector(MAIN_SELECTOR).classList.add(`visually-hidden`);
     renderStatistics(data);

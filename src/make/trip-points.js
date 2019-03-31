@@ -19,8 +19,10 @@ import renderTripDayInfo from '../render/trip-day-info';
 
 import ModelTripPoint from '../model/trip-point';
 
-const makeTripPoints = (tripPointsDataModel, destinations, offers, api) => {
+const makeTripPoints = (tripPointsDataModel, api) => {
+  const {destinations, offers} = tripPointsDataModel;
   const createTripPointComponents = (tripPoints) => {
+    // TODO чистим весь trip-points, количество точек может меняться
     document.querySelectorAll(`[data-day]`).forEach((element) => {
       const tripPointsElement = element.querySelector(TRIP_POINTS_SELECTOR);
       tripPointsElement.innerHTML = ``;
@@ -42,13 +44,7 @@ const makeTripPoints = (tripPointsDataModel, destinations, offers, api) => {
       };
 
       editTripPointComponent.onSubmit = (newObject) => {
-        tripPointData.type = newObject.type;
-        tripPointData.destination = newObject.destination;
-        tripPointData.offers = newObject.offers;
-        tripPointData.price = newObject.price;
-        tripPointData.favorite = newObject.favorite;
-        tripPointData.timeStart = newObject.timeStart;
-        tripPointData.timeEnd = newObject.timeEnd;
+        Object.assign(tripPointData, newObject);
 
         editTripPointComponent.blockSubmitting();
 
@@ -60,9 +56,10 @@ const makeTripPoints = (tripPointsDataModel, destinations, offers, api) => {
             tripPointsDataModel.update(tripPointData);
             renderTripDayInfo(tripPointsDataModel);
             renderTripInfo(tripPointsDataModel);
-            makeTripPoints(tripPointsDataModel, destinations, offers, api);
+            makeTripPoints(tripPointsDataModel, api);
           })
           .catch((err) => {
+            // TODO вынести метод
             // eslint-disable-next-line no-console
             console.error(`submit error: ${err}`);
             editTripPointComponent.shake();
@@ -95,6 +92,7 @@ const makeTripPoints = (tripPointsDataModel, destinations, offers, api) => {
       };
 
       editTripPointComponent.onEsc = () => {
+        // TODO вынести функцию
         tripPointComponent.render();
         tripPointsElement.replaceChild(tripPointComponent.element, editTripPointComponent.element);
         editTripPointComponent.unrender();
@@ -108,18 +106,17 @@ const makeTripPoints = (tripPointsDataModel, destinations, offers, api) => {
 
       editTripPointComponent.onChangeType = (newObject) => {
         tripPointData.type = newObject.type;
-        const offerByType = offers.find((offer) => capitalize(offer.type) === newObject.type);
-        tripPointData.offers = offerByType && offerByType.offers.length ? offerByType.offers : tripPointData.offers;
-
+        tripPointData.offers = offers.find((offer) => capitalize(offer.type) === newObject.type) || [];
         tripPointComponent.update(tripPointData);
         editTripPointComponent.update(tripPointData);
         tripPointsDataModel.update(tripPointData);
       };
 
-      editTripPointComponent.onChangeDestination = (newObject) => {
-        tripPointData.destination = newObject.destination;
-        tripPointData.desc = destinations.find((destination) => destination.name === newObject.destination).description;
-        tripPointData.pictures = destinations.find((destination) => destination.name === newObject.destination).pictures;
+      editTripPointComponent.onChangeDestination = ({destination}) => {
+        const {description, pictures} = destinations.find(({name}) => name === destination);
+        tripPointData.destination = destination;
+        tripPointData.desc = description;
+        tripPointData.pictures = pictures;
 
         tripPointComponent.update(tripPointData);
         editTripPointComponent.update(tripPointData);
@@ -131,7 +128,7 @@ const makeTripPoints = (tripPointsDataModel, destinations, offers, api) => {
     });
   };
 
-
+  // TODO вынести в отдельный модуль
   const createNewTripPoint = () => {
     const tripPointsContainerElement = document.querySelector(TRIP_POINTS_CONTAINER_SELECTOR);
 
@@ -151,13 +148,7 @@ const makeTripPoints = (tripPointsDataModel, destinations, offers, api) => {
     const newTripPointComponent = new EditTripPoint(tripPointData, destinations);
 
     newTripPointComponent.onSubmit = (newObject) => {
-      tripPointData.type = newObject.type;
-      tripPointData.destination = newObject.destination;
-      tripPointData.offers = newObject.offers;
-      tripPointData.price = newObject.price;
-      tripPointData.favorite = newObject.favorite;
-      tripPointData.timeStart = newObject.timeStart;
-      tripPointData.timeEnd = newObject.timeEnd;
+      Object.assign(tripPointData, newObject);
 
       newTripPointComponent.blockSubmitting();
 
@@ -167,7 +158,7 @@ const makeTripPoints = (tripPointsDataModel, destinations, offers, api) => {
           tripPointsDataModel.update(tripPointData);
           renderTripDayInfo(tripPointsDataModel);
           renderTripInfo(tripPointsDataModel);
-          makeTripPoints(tripPointsDataModel, destinations, offers, api);
+          makeTripPoints(tripPointsDataModel, api);
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
@@ -197,7 +188,7 @@ const makeTripPoints = (tripPointsDataModel, destinations, offers, api) => {
       tripPointData.offers = offerByType && offerByType.offers.length ? offerByType.offers : tripPointData.offers;
 
       newTripPointComponent.update(tripPointData);
-      tripPointsDataModel.update(tripPointData);
+      // tripPointsDataModel.update(tripPointData);
     };
 
     newTripPointComponent.onChangeDestination = (newObject) => {
@@ -206,7 +197,7 @@ const makeTripPoints = (tripPointsDataModel, destinations, offers, api) => {
       tripPointData.pictures = destinations.find((destination) => destination.name === newObject.destination).pictures;
 
       newTripPointComponent.update(tripPointData);
-      tripPointsDataModel.update(tripPointData);
+      // tripPointsDataModel.update(tripPointData);
     };
 
     tripPointsContainerElement.prepend(newTripPointComponent.render());

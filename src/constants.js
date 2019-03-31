@@ -181,7 +181,7 @@ export const FLATPICKR_CONFIG = {
 
 export const ESC_KEYCODE = 27;
 
-export const ENDPOINT_URL = `https://es8-demo-srv.appspot.com/big-trip/`;
+export const ENDPOINT_URL = `https://es8-demo-srv.appspot.com/big-trip`;
 export const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=kekghghtjgfbjfgbfj-${Math.random()}-00019}`;
 
 export const TRIP_POINT_GET_LOADING = `Loading route...`;
@@ -195,3 +195,32 @@ export const Method = {
 };
 
 export const NEW_EVENT_BTN_SELECTOR = `.trip-controls__new-event`;
+export const FILTER_TYPES = [
+  {
+    type: `everything`,
+  },
+  {
+    type: `future`,
+  },
+  {
+    type: `past`,
+  }
+];
+export const SORT_TYPES = [
+  {
+    type: `event`,
+    tripPointType: `destination`,
+  },
+  {
+    type: `time`,
+    tripPointType: `timeStart`
+  },
+  {
+    type: `price`,
+    tripPointType: `price`
+  },
+  {
+    type: `offers`,
+    tripPointType: `offer`
+  }
+];

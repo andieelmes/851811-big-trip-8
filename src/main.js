@@ -22,39 +22,29 @@ import renderTripInfo from './render/trip-info';
 import renderTripDayInfo from './render/trip-day-info';
 
 const api = new API({endPoint: ENDPOINT_URL, authorization: AUTHORIZATION});
+const tripPointsWrapper = document.querySelector(TRIP_POINTS_SELECTOR);
 
-const init = async () => {
-  document.querySelector(TRIP_POINTS_SELECTOR).textContent = TRIP_POINT_GET_LOADING;
+(async () => {
+  tripPointsWrapper.textContent = TRIP_POINT_GET_LOADING;
+  try {
+    const [tripPoints, ...rest] = await Promise.all([
+      api.getTripPoints(),
+      api.getDestinations(),
+      api.getOffers(),
+    ]);
+    const tripPointsDataModel = new ModelTripPoints(tripPoints, rest);
 
-  await Promise.all([
-    api.getTripPoints(),
-    api.getDestinations(),
-    api.getOffers(),
-  ])
-    .then((results) => {
-      const [
-        tripPoints,
-        ...rest
-      ] = results;
-
-      const tripPointsDataModel = new ModelTripPoints(tripPoints);
-
-      makeFilters(tripPointsDataModel);
-      makeSort(tripPointsDataModel);
-      renderTripInfo(tripPointsDataModel);
-      renderTripDayInfo(tripPointsDataModel);
-      makeTripPoints(tripPointsDataModel, ...rest, api);
-      makeStatistics(tripPointsDataModel.data);
-
-      checkUrlHash();
-
-    })
-    .catch((err) => {
-      // eslint-disable-next-line no-console
-      console.error(`initial error: ${err}`);
-      document.querySelector(TRIP_POINTS_SELECTOR).textContent = TRIP_POINT_GET_ERROR;
-      throw err;
-    });
-};
-
-init();
+    makeFilters(tripPointsDataModel);
+    makeSort(tripPointsDataModel);
+    renderTripInfo(tripPointsDataModel);
+    renderTripDayInfo(tripPointsDataModel);
+    makeStatistics(tripPointsDataModel);
+    makeTripPoints(tripPointsDataModel, api);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error(`initial error: ${err}`);
+    tripPointsWrapper.textContent = TRIP_POINT_GET_ERROR;
+    throw err;
+  }
+  checkUrlHash();
+})();

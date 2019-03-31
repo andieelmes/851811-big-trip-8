@@ -1,14 +1,24 @@
 import moment from 'moment';
 
 class ModelTripPoints {
-  constructor(tripPointsData) {
+  constructor(tripPointsData, [destinations = [], offers = []]) {
     this._data = tripPointsData;
+    this._destinations = destinations;
+    this._offers = offers;
     this._sortedData = null;
     this._filteredData = null;
   }
 
   get data() {
     return this._data;
+  }
+
+  get destinations() {
+    return this._destinations;
+  }
+
+  get offers() {
+    return this._offers;
   }
 
   get sortedData() {
@@ -20,19 +30,16 @@ class ModelTripPoints {
   }
 
   get dataByDay() {
-    const timeStamps = this._data.map((tripPoint) => tripPoint.timeStart);
+    return Object.values(this._data.reduce((dataByDay, tripPoint) => {
+      const currentTimeStamp = moment(tripPoint.timeStart);
+      const startOfDay = currentTimeStamp.startOf(`day`).unix();
 
-    const dayTimestamps = timeStamps.reduce((dayStamps, timeStamp) => {
-      const currentTimeStamp = moment(timeStamp);
-      const startOfDay = currentTimeStamp.startOf(`day`);
-
-      if (dayStamps.every((dayStamp) => !dayStamp.isSame(startOfDay))) {
-        dayStamps.push(startOfDay);
+      if (!dataByDay[startOfDay]) {
+        dataByDay[startOfDay] = [];
       }
-      return dayStamps;
-    }, []);
-
-    return dayTimestamps.map((timeStamp) => this._data.filter((tripPoint) => moment(tripPoint.timeStart).startOf(`day`).isSame(timeStamp)));
+      dataByDay[startOfDay].push(tripPoint)
+      return dataByDay;
+    }, {}));
   }
 
   set sortedData(data) {
@@ -47,13 +54,9 @@ class ModelTripPoints {
     this._data = this._data.sort((a, b) => a.timeStart - b.timeStart);
   }
 
-  update(data) {
-    const tripPointIndexToUpdate = this._data.findIndex((id) => id === data.id);
-    if (tripPointIndexToUpdate) {
-      this._data[tripPointIndexToUpdate] = {...data};
-    } else {
-      this._data.push(data);
-    }
+  update(tripPoint) {
+    const tripPointIndexToUpdate = this._data.findIndex((id) => id === tripPoint.id) || this._data.length;
+    this._data[tripPointIndexToUpdate] = tripPoint;
   }
 }
 
