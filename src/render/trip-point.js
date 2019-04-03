@@ -1,7 +1,10 @@
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format'; // eslint-disable-line
 
-import {TYPES} from '../constants';
+import {
+  TYPES,
+  MAX_OFFER_NUMBER,
+} from '../constants';
 
 import {
   capitalize,
@@ -40,11 +43,11 @@ class TripPoint extends Component {
         &nbsp;&mdash;
         ${moment(this._timeEnd).format(`D MMM HH:mm`)}
       </span>
-      <span class="trip-point__duration">${moment.duration(moment(this._timeEnd).diff(this._timeStart), `milliseconds`).format(`d [days] h[H] m[M]`)}</span>
+      <span class="trip-point__duration">${moment.duration(moment(this._timeEnd).diff(this._timeStart), `milliseconds`).format(`d[D] h[H] m[M]`)}</span>
     </p>
     <p class="trip-point__price">&euro;&nbsp;${totalPrice}</p>
     <ul class="trip-point__offers">
-      ${(this._offers.map((offer) => this._makeTripPointOffer(offer))).join(``)}
+      ${this._getMaxAcceptedOffers(this._offers)}
     </ul>
   </article>`.trim();
   }
@@ -65,6 +68,15 @@ class TripPoint extends Component {
 
   _onTripPointClick() {
     return typeof this._onEdit === `function` && this._onEdit();
+  }
+
+  _getMaxAcceptedOffers(offers) {
+    return offers.reduce((acceptedOffers, offer) => {
+      if (offer.accepted && acceptedOffers.length < MAX_OFFER_NUMBER) {
+        acceptedOffers.push(this._makeTripPointOffer(offer));
+      }
+      return acceptedOffers;
+    }, []).join(``);
   }
 
   _makeTripPointOffer(offer) {
