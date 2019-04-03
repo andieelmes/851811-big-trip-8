@@ -23,8 +23,7 @@ const makeFilters = (tripPointsDataModel, api) => {
     const filterCompontent = new Filter(filterData);
 
     filterCompontent.onFilter = () => {
-      tripPointsDataModel.data = filteredTripPoints;
-      makeTripPoints(tripPointsDataModel, api);
+      makeTripPoints(tripPointsDataModel, filteredTripPoints, api);
     };
 
     filtersElement.appendChild(filterCompontent.render());

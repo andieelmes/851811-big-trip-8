@@ -35,13 +35,9 @@ class ModelTripPoints {
       if (!dataByDay[startOfDay]) {
         dataByDay[startOfDay] = [];
       }
-      dataByDay[startOfDay].push(tripPoint)
+      dataByDay[startOfDay].push(tripPoint);
       return dataByDay;
     }, {}));
-  }
-
-  set data(data) {
-    this._data = data;
   }
 
   sortByTimeStamp() {

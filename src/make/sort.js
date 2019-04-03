@@ -19,8 +19,7 @@ const makeSort = (tripPointsDataModel, api) => {
 
     filterComponent.onSort = () => {
       // TODO вызвать makeTripPoints
-      tripPointsDataModel.data = sortedTripPoints;
-      makeTripPoints(tripPointsDataModel, api);
+      makeTripPoints(tripPointsDataModel, sortedTripPoints, api);
     };
 
     sortElement.appendChild(filterComponent.render());

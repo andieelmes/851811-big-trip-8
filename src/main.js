@@ -39,7 +39,7 @@ const tripPointsWrapper = document.querySelector(TRIP_POINTS_SELECTOR);
     renderTripInfo(tripPointsDataModel);
     renderTripDayInfo(tripPointsDataModel);
     makeStatistics(tripPointsDataModel);
-    makeTripPoints(tripPointsDataModel, api);
+    makeTripPoints(tripPointsDataModel, tripPointsDataModel.data, api);
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error(`initial error: ${err}`);

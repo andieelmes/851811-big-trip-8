@@ -1,27 +1,31 @@
 import moment from 'moment';
-import nanoid from 'nanoid';
 
 import {
   TRIP_POINTS_SELECTOR,
   NEW_EVENT_BTN_SELECTOR,
-  FAVOURITE_OFF,
-  TRIP_POINTS_CONTAINER_SELECTOR,
 } from '../constants';
 
 import {
   capitalize,
+  catchError,
 } from '../utils';
 
 import TripPoint from '../render/trip-point';
 import EditTripPoint from '../render/edit-trip-point';
 import renderTripInfo from '../render/trip-info';
 import renderTripDayInfo from '../render/trip-day-info';
+import makeNewTripPoint from './new-trip-point';
+import makeFilters from '../make/filter';
 
-import ModelTripPoint from '../model/trip-point';
+const closeTripPoint = (tripPointComponent, editTripPointComponent, tripPointsElement) => {
+  tripPointComponent.render();
+  tripPointsElement.replaceChild(tripPointComponent.element, editTripPointComponent.element);
+  editTripPointComponent.unrender();
+};
 
-const makeTripPoints = (tripPointsDataModel, api) => {
+const makeTripPoints = (tripPointsDataModel, tripPoints, api) => {
   const {destinations, offers} = tripPointsDataModel;
-  const createTripPointComponents = (tripPoints) => {
+  const createTripPointComponents = () => {
     // TODO чистим весь trip-points, количество точек может меняться
     //
     // если добавить точку с датой, которой еще нет в разметке (аналогично если поменять при редактировании), то появляется новый блок с датой, или ты не это имел ввиду?
@@ -58,16 +62,12 @@ const makeTripPoints = (tripPointsDataModel, api) => {
             tripPointsDataModel.update(tripPointData);
             renderTripDayInfo(tripPointsDataModel);
             renderTripInfo(tripPointsDataModel);
-            makeTripPoints(tripPointsDataModel, api);
+            makeTripPoints(tripPointsDataModel, tripPointsDataModel.data, api);
+            makeFilters(tripPointsDataModel, api);
           })
           .catch((err) => {
             // TODO вынести метод
-            // eslint-disable-next-line no-console
-            console.error(`submit error: ${err}`);
-            editTripPointComponent.shake();
-            editTripPointComponent.makeRedBorder();
-            editTripPointComponent.unBlock();
-            throw err;
+            catchError(`submit`, err, editTripPointComponent);
           });
       };
 
@@ -83,11 +83,7 @@ const makeTripPoints = (tripPointsDataModel, api) => {
           })
           .catch((err) => {
             // eslint-disable-next-line no-console
-            console.error(`delete error: ${err}`);
-            editTripPointComponent.shake();
-            editTripPointComponent.makeRedBorder();
-            editTripPointComponent.unBlock();
-            throw err;
+            catchError(`delete`, err, editTripPointComponent);
           });
 
         renderTripInfo(tripPoints);
@@ -95,15 +91,11 @@ const makeTripPoints = (tripPointsDataModel, api) => {
 
       editTripPointComponent.onEsc = () => {
         // TODO вынести функцию
-        tripPointComponent.render();
-        tripPointsElement.replaceChild(tripPointComponent.element, editTripPointComponent.element);
-        editTripPointComponent.unrender();
+        closeTripPoint(tripPointComponent, editTripPointComponent, tripPointsElement);
       };
 
       editTripPointComponent.onClickOutside = () => {
-        tripPointComponent.render();
-        tripPointsElement.replaceChild(tripPointComponent.element, editTripPointComponent.element);
-        editTripPointComponent.unrender();
+        closeTripPoint(tripPointComponent, editTripPointComponent, tripPointsElement);
       };
 
       editTripPointComponent.onChangeType = (newObject) => {

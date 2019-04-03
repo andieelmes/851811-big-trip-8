@@ -134,3 +134,12 @@ export const escapeHtml = (s) => {
   p.appendChild(text);
   return p.innerHTML;
 };
+
+export const catchError = (type, err, component) => {
+  // eslint-disable-next-line no-console
+  console.error(`${type} error: ${err}`);
+  component.shake();
+  component.makeRedBorder();
+  component.unBlock();
+  throw err;
+};
