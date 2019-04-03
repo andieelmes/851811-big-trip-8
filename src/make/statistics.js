@@ -34,14 +34,14 @@ const makeStatistics = ({data}) => {
   statsElement.addEventListener(`click`, () => {
     destroyCanvas();
     // TODO classList.toggle
-    document.querySelector(STATS_SELECTOR).classList.remove(`visually-hidden`);
-    document.querySelector(MAIN_SELECTOR).classList.add(`visually-hidden`);
+    document.querySelector(STATS_SELECTOR).classList.toggle(`visually-hidden`);
+    document.querySelector(MAIN_SELECTOR).classList.toggle(`visually-hidden`);
     renderStatistics(data);
   });
 
   tripPointsTableElement.addEventListener(`click`, () => {
-    document.querySelector(MAIN_SELECTOR).classList.remove(`visually-hidden`);
-    document.querySelector(STATS_SELECTOR).classList.add(`visually-hidden`);
+    document.querySelector(MAIN_SELECTOR).classList.toggle(`visually-hidden`);
+    document.querySelector(STATS_SELECTOR).classList.toggle(`visually-hidden`);
     destroyCanvas();
   });
 };
