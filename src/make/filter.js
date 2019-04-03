@@ -1,46 +1,30 @@
-import moment from 'moment';
-import {FILTERS_SELECTOR, FILTER_TYPES} from '../constants';
+import {FILTERS_SELECTOR, FilterTypes} from '../constants';
 import Filter from '../render/filter';
+import makeTripPoints from '../make/trip-points';
 
 const filtersElement = document.querySelector(FILTERS_SELECTOR);
 
-const filterTasks = (initialTripPointData, filterName) => {
-  // TODO объект с функциями вместо switch, enum для фильтров
-  switch (filterName) {
-    case `everything`:
-      return initialTripPointData;
-
-    case `future`:
-      return initialTripPointData.filter((it) => it.timeEnd > moment());
-
-    case `past`:
-      return initialTripPointData.filter((it) => it.timeStart < moment());
-
-    default:
-      return initialTripPointData;
-  }
-};
-
-const makeFilters = (tripPointsDataModel) => {
+const makeFilters = (tripPointsDataModel, api) => {
   filtersElement.innerHTML = ``;
 
   const initialTripPointData = tripPointsDataModel.data;
 
-  FILTER_TYPES.forEach((filterType) => {
+  Object.values(FilterTypes).forEach((filterTypeName) => {
     // TODO перенести фильтрацию в модель, тут оставить только функции-фильтры, получать новые данные
-    const filteredTripPoints = filterTasks(initialTripPointData, filterType.type);
+    const filteredTripPoints = tripPointsDataModel.filter(initialTripPointData, filterTypeName);
+
+    let filterData = {};
+    filterData.type = filterTypeName;
 
     if (!filteredTripPoints.length) {
-      filterType.disabled = true;
+      filterData.disabled = true;
     }
 
-    const filterCompontent = new Filter(filterType);
+    const filterCompontent = new Filter(filterData);
 
     filterCompontent.onFilter = () => {
-      // TODO вызвать makeTripPoints
-      const filterEvent = new Event(`filter`);
-      tripPointsDataModel.filteredData = filteredTripPoints;
-      document.body.dispatchEvent(filterEvent);
+      tripPointsDataModel.data = filteredTripPoints;
+      makeTripPoints(tripPointsDataModel, api);
     };
 
     filtersElement.appendChild(filterCompontent.render());

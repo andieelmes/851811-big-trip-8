@@ -1,4 +1,10 @@
 import moment from 'moment';
+import sortBy from 'lodash.sortby';
+
+import {
+  FilterTypes,
+  OFFERS_FORM_NAME,
+} from '../constants';
 
 class ModelTripPoints {
   constructor(tripPointsData, [destinations = [], offers = []]) {
@@ -21,14 +27,6 @@ class ModelTripPoints {
     return this._offers;
   }
 
-  get sortedData() {
-    return this._sortedData || this._data;
-  }
-
-  get filteredData() {
-    return this._filteredData || this._data;
-  }
-
   get dataByDay() {
     return Object.values(this._data.reduce((dataByDay, tripPoint) => {
       const currentTimeStamp = moment(tripPoint.timeStart);
@@ -42,12 +40,8 @@ class ModelTripPoints {
     }, {}));
   }
 
-  set sortedData(data) {
-    this._sortedData = data;
-  }
-
-  set filteredData(data) {
-    this._filteredData = data;
+  set data(data) {
+    this._data = data;
   }
 
   sortByTimeStamp() {
@@ -62,6 +56,23 @@ class ModelTripPoints {
   add(tripPoint) {
     const tripPointIndex = tripPoint.id;
     this._data[tripPointIndex] = tripPoint;
+  }
+
+  filter(initialTripPointData, filterName) {
+    const filterTypes = {
+      [FilterTypes.EVERYTHING]: initialTripPointData,
+      [FilterTypes.FUTURE]: initialTripPointData.filter((it) => it.timeEnd > moment()),
+      [FilterTypes.PAST]: initialTripPointData.filter((it) => it.timeStart < moment()),
+    };
+
+    return filterTypes[filterName] || initialTripPointData;
+  }
+
+  sort(tripPointsByDay, tripPointType) {
+    return tripPointsByDay.map((tripPointsInDay) => {
+      const sorted = sortBy(tripPointsInDay, [(tripPoint) => tripPoint[tripPointType]]);
+      return tripPointType === OFFERS_FORM_NAME ? sorted.reverse() : sorted;
+    }).flat();
   }
 }
 

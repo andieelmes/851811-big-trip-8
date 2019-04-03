@@ -1,34 +1,26 @@
-import sortBy from 'lodash.sortby';
 import {
   SORTING_SELECTOR,
-  OFFERS_FORM_NAME,
   SORT_TYPES
 } from '../constants';
 
 import Sort from '../render/sort';
+import makeTripPoints from '../make/trip-points';
 
 const sortElement = document.querySelector(SORTING_SELECTOR);
 
-const sortTasks = (tripPointsByDay, tripPointType) => {
-  return tripPointsByDay.map((tripPointsInDay) => {
-    const sorted = sortBy(tripPointsInDay, [(tripPoint) => tripPoint[tripPointType]]);
-    return tripPointType === OFFERS_FORM_NAME ? sorted.reverse() : sorted;
-  }).flat();
-};
-
-const makeSort = (tripPointsDataModel) => {
+const makeSort = (tripPointsDataModel, api) => {
   sortElement.innerHTML = ``;
 
   SORT_TYPES.forEach((sortType) => {
     const tripPointsByDay = tripPointsDataModel.dataByDay;
     // TODO перенести сортировку в модель, тут оставить только функции, получать новые данные
-    const sortedTripPoints = sortTasks(tripPointsByDay, sortType.tripPointType);
+    const sortedTripPoints = tripPointsDataModel.sort(tripPointsByDay, sortType.tripPointType);
     const filterComponent = new Sort(sortType);
+
     filterComponent.onSort = () => {
       // TODO вызвать makeTripPoints
-      const sortingEvent = new Event(`sort`);
-      tripPointsDataModel.sortedData = sortedTripPoints;
-      document.body.dispatchEvent(sortingEvent);
+      tripPointsDataModel.data = sortedTripPoints;
+      makeTripPoints(tripPointsDataModel, api);
     };
 
     sortElement.appendChild(filterComponent.render());
