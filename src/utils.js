@@ -50,6 +50,8 @@ export const getRandomBool = () => getRandomInt(0, 1) === 1;
 
 export const getOfferId = (str) => str.replace(/\s/g, `-`).toLowerCase();
 
+export const getOffersPrice = (offers) => offers.reduce((price, current) => current.accepted ? price + +current.price : price + 0, 0);
+
 export const getTripPointInfoByLabel = (data, labels, tripPointKey) => {
 
   return data.reduce((activities, day) => {
@@ -59,18 +61,21 @@ export const getTripPointInfoByLabel = (data, labels, tripPointKey) => {
       timeEnd,
     } = day;
 
-    const typeLabel = type[0];
+    const typeLabel = capitalize(type);
     const label = labels[typeLabel];
 
     if (label) {
       let tripPointInfo;
       if (tripPointKey === `time`) {
         tripPointInfo = {label, [tripPointKey]: moment(timeEnd).diff(timeStart)};
+      } else if (tripPointKey === `price`) {
+        tripPointInfo = {label, [tripPointKey]: +day[tripPointKey] + +getOffersPrice(day.offers)};
       } else {
         tripPointInfo = tripPointKey ? {label, [tripPointKey]: day[tripPointKey]} : {label};
       }
       activities.push(tripPointInfo);
     }
+
     return activities;
   }, []);
 };
@@ -80,7 +85,7 @@ export const countTripPoints = (individualTripPoints, tripPointKey) => {
     const amount = obj[activity.label];
     let activityAmount;
     if (tripPointKey === `time`) {
-      activityAmount = moment(activity[tripPointKey]).hours();
+      activityAmount = +moment.duration(activity[tripPointKey], `milliseconds`).format(`h`);
     } else {
       activityAmount = +activity[tripPointKey] || 1;
     }
@@ -117,4 +122,24 @@ export const checkUrlHash = () => {
   }
 
   func();
+};
+
+
+export const capitalize = ([first, ...rest]) => first.toUpperCase().concat(...rest);
+
+export const escapeHtml = (s) => {
+  const text = document.createTextNode(s);
+  const p = document.createElement(`p`);
+
+  p.appendChild(text);
+  return p.innerHTML;
+};
+
+export const catchError = (type, err, component) => {
+  // eslint-disable-next-line no-console
+  console.error(`${type} error: ${err}`);
+  component.shake();
+  component.makeRedBorder();
+  component.unBlock();
+  throw err;
 };

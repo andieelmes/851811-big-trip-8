@@ -1,4 +1,4 @@
-import Component from './tripPointComponent';
+import Component from './trip-point-component';
 
 class Sort extends Component {
   constructor(data) {

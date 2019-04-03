@@ -1,49 +1,54 @@
 import flatpickr from 'flatpickr';
 import moment from 'moment';
+import nanoid from 'nanoid';
+
 import {
   getOfferId,
+  capitalize,
+  escapeHtml,
 } from '../utils';
 import {
-  OFFERS,
   TYPES,
   FAVOURITE_ON,
+  FAVOURITE_OFF,
   FLATPICKR_CONFIG,
   ESC_KEYCODE,
   AllTypeToInputLabel,
 } from '../constants';
-import Component from './tripPointComponent';
+import Component from './trip-point-component';
 
 class EditTripPoint extends Component {
-  constructor(data) {
+  constructor(data, destinations = []) {
     super();
-    this._allTypes = data.allTypes;
+    this._id = data.id;
     this._type = data.type;
-    this._allOffers = data.allOffers;
-    this._offer = data.offer;
+    this._offers = data.offers;
     this._timeStart = data.timeStart;
     this._timeEnd = data.timeEnd;
     this._price = data.price;
     this._desc = data.desc;
-    this._allCitites = data.allCitites;
     this._destination = data.destination;
     this._favorite = data.favorite;
     this._pictures = data.pictures;
+    this._destinations = destinations;
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
     this._onEscPress = this._onEscPress.bind(this);
     this._onDocumentClickOutside = this._onDocumentClickOutside.bind(this);
+    this._onChangeTypeBtnClick = this._onChangeTypeBtnClick.bind(this);
+    this._onChangeDestinationBtnClick = this._onChangeDestinationBtnClick.bind(this);
 
     this._onSubmit = null;
     this._onDelete = null;
     this._onEsc = null;
     this._onClickOutside = null;
-
-    this._onChangeType = this._onChangeType.bind(this);
+    this._onChangeType = null;
+    this._onChangeDestination = null;
   }
 
   get template() {
-    const [typeDesc, typeEmoji] = this._type;
+    const [typeDesc, typeEmoji] = [this._type, TYPES.get(capitalize(this._type))];
 
     return `
     <article class="point">
@@ -61,36 +66,34 @@ class EditTripPoint extends Component {
 
             <div class="travel-way__select">
               <div class="travel-way__select-group">
-                ${[...this._allTypes].map((type) => this._makeTripPointTypeRadioButton(type, typeDesc)).join(``)}
+                ${[...TYPES].map((type) => this._makeTripPointTypeRadioButton(type, typeDesc)).join(``)}
               </div>
             </div>
           </div>
 
           <div class="point__destination-wrap">
-            <label class="point__destination-label" for="destination">${AllTypeToInputLabel[typeDesc]}</label>
+            <label class="point__destination-label" for="destination">${AllTypeToInputLabel[capitalize(typeDesc)]}</label>
             <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination}" name="destination">
             <datalist id="destination-select">
-              ${this._allCitites.map((city) => `<option value="${city}"></option>`).join(``)}
+              ${this._makeDestinationsDatalist(this._destinations)}
             </datalist>
           </div>
 
-          <label class="point__time" style="margin-right: 0">
+          <div class="point__time">
             choose time
             <input class="point__input"
               type="text"
-              value="${moment(this._timeStart).format(`D MMM h:mm`)}"
-              name="timeStart"
-              placeholder="00:00 — 00:00">
-          </label>
-          &nbsp;&mdash;&nbsp;
-          <label class="point__time">
-            choose time
+              value="${moment(this._timeStart).unix()}"
+              name="date-start"
+              placeholder="19:00"
+            >
             <input class="point__input"
               type="text"
-              value="${moment(this._timeEnd).format(`D MMM h:mm`)}"
-              name="timeEnd"
-              placeholder="00:00 — 00:00">
-          </label>
+              value="${moment(this._timeEnd).unix()}"
+              name="date-end"
+              placeholder="21:00"
+            >
+          </div>
 
           <label class="point__price">
             write price
@@ -114,7 +117,7 @@ class EditTripPoint extends Component {
             <h3 class="point__details-title">offers</h3>
 
             <div class="point__offers-wrap">
-              ${this._allOffers.map((offerName) => this._makeTripPointOfferCheckbox(offerName, this._offer)).join(``)}
+              ${this._offers.map((offer, index) => this._makeTripPointOfferCheckbox(offer, index)).join(``)}
             </div>
 
           </section>
@@ -122,7 +125,7 @@ class EditTripPoint extends Component {
             <h3 class="point__details-title">Destination</h3>
             <p class="point__destination-text">${this._desc}</p>
             <div class="point__destination-images">
-              ${this._pictures.map((pictureSrc) => `<img src="${pictureSrc}" alt="picture from place" class="point__destination-image">`)}
+              ${this._pictures.map((picture) => `<img src="${picture.src}" alt="${picture.description} class="point__destination-image">`).join(``)}
             </div>
           </section>
           <input type="hidden" class="point__total-price" name="total-price" value="">
@@ -147,14 +150,86 @@ class EditTripPoint extends Component {
     this._onClickOutside = fn;
   }
 
+  set onChangeType(fn) {
+    this._onChangeType = fn;
+  }
+
+  set onChangeDestination(fn) {
+    this._onChangeDestination = fn;
+  }
+
   update(data) {
     this._type = data.type;
     this._destination = data.destination;
-    this._offer = data.offer;
+    this._desc = data.desc;
+    this._offers = data.offers;
     this._price = data.price;
     this._favorite = data.favorite;
     this._timeStart = data.timeStart;
     this._timeEnd = data.timeEnd;
+  }
+
+  shake() {
+    return new Promise((resolve) => {
+      const onShake = () => {
+        this._element.removeEventListener(`animationend`, onShake);
+        this._element.classList.remove(`shake`);
+        resolve();
+      };
+      this._element.classList.add(`shake`);
+      this._element.addEventListener(`animationend`, onShake);
+    });
+  }
+
+  makeRedBorder() {
+    this._element.style.border = `1px solid red`;
+  }
+
+  blockSubmitting() {
+    this._element.style.border = `none`;
+    this._element.querySelector(`form`).disabled = true;
+    this._element.querySelector(`.point__button--save`).disabled = true;
+    this._element.querySelector(`.point__button--save`).textContent = `Saving...`;
+  }
+
+  blockDeleting() {
+    this._element.style.border = `none`;
+    this._element.querySelector(`form`).disabled = true;
+    this._element.querySelector(`[type=reset]`).disabled = true;
+    this._element.querySelector(`[type=reset]`).textContent = `Deleting...`;
+  }
+
+  unBlock() {
+    this._element.querySelector(`form`).disabled = false;
+    this._element.querySelector(`.point__button--save`).disabled = false;
+    this._element.querySelector(`.point__button--save`).textContent = `Save`;
+  }
+
+  _createMapper(target) {
+    return {
+      type: (value) => {
+        target.type = value;
+      },
+      offer: (value) => {
+        this._offers[value].accepted = true;
+        target.offers = this._offers;
+      },
+      destination: (value) => {
+        target.destination = escapeHtml(value);
+      },
+      price: (value) => {
+        target.price = escapeHtml(value);
+      },
+      favorite: (value) => {
+        target.favorite = value === FAVOURITE_ON || FAVOURITE_OFF;
+      },
+      [`date-start`]: (value) => {
+        target.timeStart = value * 1000;
+      },
+      [`date-end`]: (value) => {
+        target.timeEnd = value * 1000;
+      },
+    };
   }
 
   _processForm(formData) {
@@ -163,12 +238,12 @@ class EditTripPoint extends Component {
       destination: ``,
       price: ``,
       favorite: ``,
-      offer: [],
+      offers: [],
       timeStart: ``,
       timeEnd: ``,
     };
 
-    const editTripPointMapper = EditTripPoint.createMapper(entry);
+    const editTripPointMapper = this._createMapper(entry);
 
     for (const pair of formData.entries()) {
       const [property, value] = pair;
@@ -181,7 +256,6 @@ class EditTripPoint extends Component {
     return entry;
   }
 
-
   _partialUpdate() {
     const newElement = document.createElement(`div`);
     newElement.innerHTML = this.template;
@@ -189,24 +263,25 @@ class EditTripPoint extends Component {
     this._element.appendChild(newElement.querySelector(`form`));
   }
 
-  _makeTripPointOfferCheckbox(offer, chosenOffers) {
+  _makeTripPointOfferCheckbox(offer, index) {
     const idName = getOfferId(offer.name);
-    const checked = chosenOffers.some((chosenOffer) => chosenOffer.name === offer.name);
+    const checked = offer.accepted;
+    const idSuffix = nanoid();
     return `<input
       class="point__offers-input visually-hidden"
       type="checkbox"
-      id="${idName}"
+      id="${idName}-${idSuffix}"
       name="offer"
-      value="${idName}"
+      value="${index}"
       ${checked ? `checked` : ``}
     >
-      <label for="${idName}" class="point__offers-label">
+      <label for="${idName}-${idSuffix}" class="point__offers-label">
         <span class="point__offer-service">${offer.name}</span> + €<span class="point__offer-price">${offer.price}</span>
       </label>`;
   }
 
   _makeTripPointTypeRadioButton([typeDesc, typeEmoji], chosenType) {
-    const checked = typeDesc === chosenType;
+    const checked = typeDesc === capitalize(chosenType);
     return `<input
       class="travel-way__select-input
       visually-hidden"
@@ -219,30 +294,41 @@ class EditTripPoint extends Component {
     <label class="travel-way__select-label" for="${typeDesc}">${typeEmoji} ${typeDesc}</label><br>`;
   }
 
+  _makeDestinationsDatalist(destinations) {
+    return destinations.map((destination) => this._makeDestinationsOption(destination)).join(``);
+  }
+
+  _makeDestinationsOption(destination) {
+    return `<option value="${destination.name}">`;
+  }
+
   bind() {
     this._element.querySelector(`.point form`)
         .addEventListener(`submit`, this._onSubmitButtonClick);
     this._element.querySelector(`[type=reset]`)
         .addEventListener(`click`, this._onDeleteButtonClick);
-    this._element.querySelectorAll(`.travel-way__select-input`).forEach((element) => {
-      element.addEventListener(`click`, this._onChangeType);
+    this._element.querySelectorAll(`[name=type]`).forEach((element) => {
+      element.addEventListener(`change`, this._onChangeTypeBtnClick);
     });
-    document.addEventListener(`keydown`, this._onEscPress);
-    document.addEventListener(`click`, this._onDocumentClickOutside);
+    this._element.querySelector(`[name=destination]`)
+        .addEventListener(`change`, this._onChangeDestinationBtnClick);
 
-    flatpickr(this._element.querySelector(`[name="timeStart"]`), {
+    document.addEventListener(`keydown`, this._onEscPress);
+    // document.addEventListener(`click`, this._onDocumentClickOutside, true);
+
+    flatpickr(this._element.querySelector(`[name="date-start"]`), {
       ...FLATPICKR_CONFIG,
       onChange: (dateStr) => {
         timeEndPicker.set(`disable`, [
-          (date) => date <= new Date(dateStr)
+          (date) => moment(date).startOf(`day`) < moment(dateStr).startOf(`day`)
         ]);
       },
     });
 
-    const timeEndPicker = flatpickr(this._element.querySelector(`[name="timeEnd"]`), {
+    const timeEndPicker = flatpickr(this._element.querySelector(`[name="date-end"]`), {
       ...FLATPICKR_CONFIG,
       disable: [
-        (date) => date <= new Date(this._timeStart)
+        (date) => moment(date).startOf(`day`) < moment(this._timeStart).startOf(`day`)
       ]
     });
 
@@ -254,30 +340,62 @@ class EditTripPoint extends Component {
         .removeEventListener(`submit`, this._onSubmitButtonClick);
       this._element.querySelector(`[type=reset]`)
         .removeEventListener(`click`, this._onDeleteButtonClick);
-      this._element.querySelectorAll(`.travel-way__select-input`).forEach((element) => {
-        element.removeEventListener(`click`, this._onChangeType);
+      this._element.querySelectorAll(`[name=type]`).forEach((element) => {
+        element.removeEventListener(`change`, this._onChangeTypeBtnClick);
       });
+      this._element.querySelector(`[name=destination]`)
+        .removeEventListener(`change`, this._onChangeDestinationBtnClick);
+
       document.removeEventListener(`keydown`, this._onEscPress);
-      document.removeEventListener(`click`, this._onDocumentClickOutside);
+      document.removeEventListener(`click`, this._onDocumentClickOutside, true);
     }
   }
 
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
 
+    this._offers = this._offers.map((offer) => {
+      return {
+        name: offer.name,
+        price: offer.price,
+        accepted: false,
+      };
+    });
+
     const formData = new FormData(this._element.querySelector(`form`));
     const newData = this._processForm(formData);
+
+    newData.offers = newData.offers.length ? newData.offers : this._offers;
 
     this.update(newData);
 
     return typeof this._onSubmit === `function` && this._onSubmit(newData);
   }
 
-  _onChangeType() {
+  _onChangeTypeBtnClick() {
     const formData = new FormData(this._element.querySelector(`form`));
     const newData = this._processForm(formData);
 
     this.update(newData);
+
+    if (typeof this._onChangeType === `function`) {
+      this._onChangeType(newData);
+    }
+
+    this.unbind();
+    this._partialUpdate();
+    this.bind();
+  }
+
+  _onChangeDestinationBtnClick() {
+    const formData = new FormData(this._element.querySelector(`form`));
+    const newData = this._processForm(formData);
+
+    this.update(newData);
+
+    if (typeof this._onChangeDestination === `function`) {
+      this._onChangeDestination(newData);
+    }
 
     this.unbind();
     this._partialUpdate();
@@ -285,43 +403,15 @@ class EditTripPoint extends Component {
   }
 
   _onDeleteButtonClick() {
-    return typeof this._onDelete === `function` && this._onDelete();
+    return typeof this._onDelete === `function` && this._onDelete({id: this._id});
   }
 
-  _onEscPress(e) {
-    return e.keyCode === ESC_KEYCODE && typeof this._onEsc === `function` && this._onEsc();
+  _onEscPress(evt) {
+    return evt.keyCode === ESC_KEYCODE && typeof this._onEsc === `function` && this._onEsc();
   }
 
-  _onDocumentClickOutside() {
-    // return this._element && !this._element.contains(e.target) && typeof this._onClickOutside === `function` && this._onClickOutside();
-  }
-
-  static createMapper(target) {
-    return {
-      type: (value) => {
-        const typeInfo = [...TYPES].find((type) => type[0] === value);
-        target.type = typeInfo;
-      },
-      offer: (value) => {
-        const offerInfo = OFFERS.find((offer) => getOfferId(offer.name) === value);
-        target.offer.push({name: offerInfo.name, price: offerInfo.price});
-      },
-      destination: (value) => {
-        target.destination = value;
-      },
-      price: (value) => {
-        target.price = value;
-      },
-      favorite: (value) => {
-        target.favorite = value;
-      },
-      timeStart: (value) => {
-        target.timeStart = value;
-      },
-      timeEnd: (value) => {
-        target.timeEnd = value;
-      },
-    };
+  _onDocumentClickOutside(evt) {
+    return !this._element.contains(evt.target) && !evt.target.closest(`.flatpickr-calendar`) && this._onClickOutside();
   }
 }
 

@@ -1,31 +1,50 @@
 import {
-  getRandomInt,
   checkUrlHash,
 } from './utils';
 
 import {
-  MIN_NUMBER_OF_TRIP_POINTS,
-  MAX_NUMBER_OF_TRIP_POINTS,
+  ENDPOINT_URL,
+  AUTHORIZATION,
+  TRIP_POINTS_SELECTOR,
+  TRIP_POINT_GET_LOADING,
+  TRIP_POINT_GET_ERROR,
 } from './constants';
 
-import renderTripPoints, {makeTripPoints} from './actions/tripPoint';
-import renderFilters from './actions/filter';
-import renderSort from './actions/sort';
-import renderTripInfo from './render/tripInfo';
-import renderTripDayInfo from './render/tripDayInfo';
+import API from './api';
 
-const defaultNumberOfTripPoints = getRandomInt(MIN_NUMBER_OF_TRIP_POINTS, MAX_NUMBER_OF_TRIP_POINTS);
+import ModelTripPoints from './model/trip-points';
 
-const init = () => {
-  const tripPoints = makeTripPoints(defaultNumberOfTripPoints);
+import makeTripPoints from './make/trip-points';
+import makeStatistics from './make/statistics';
+import makeFilters from './make/filter';
+import makeSort from './make/sort';
+import renderTripInfo from './render/trip-info';
+import renderTripDayInfo from './render/trip-day-info';
 
-  renderTripPoints(tripPoints);
-  renderFilters(tripPoints);
-  renderSort(tripPoints);
-  renderTripInfo(tripPoints);
-  renderTripDayInfo();
-};
+const api = new API({endPoint: ENDPOINT_URL, authorization: AUTHORIZATION});
+const tripPointsWrapper = document.querySelector(TRIP_POINTS_SELECTOR);
 
-init();
+(async () => {
+  tripPointsWrapper.textContent = TRIP_POINT_GET_LOADING;
+  try {
+    const [tripPoints, ...rest] = await Promise.all([
+      api.getTripPoints(),
+      api.getDestinations(),
+      api.getOffers(),
+    ]);
+    const tripPointsDataModel = new ModelTripPoints(tripPoints, rest);
 
-checkUrlHash();
+    makeFilters(tripPointsDataModel, api);
+    makeSort(tripPointsDataModel, api);
+    renderTripInfo(tripPointsDataModel);
+    renderTripDayInfo(tripPointsDataModel);
+    makeStatistics(tripPointsDataModel);
+    makeTripPoints(tripPointsDataModel, tripPointsDataModel.data, api);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error(`initial error: ${err}`);
+    tripPointsWrapper.textContent = TRIP_POINT_GET_ERROR;
+    throw err;
+  }
+  checkUrlHash();
+})();

@@ -1,4 +1,4 @@
-import Component from './tripPointComponent';
+import Component from './trip-point-component';
 
 class Filter extends Component {
   constructor(data) {
@@ -22,7 +22,7 @@ class Filter extends Component {
       class="trip-filter__item"
       for="filter-${this._type}"
     >
-      ${this._type[0].toUpperCase() + this._type.slice(1)}
+    ${this._type.toUpperCase()}
     </label></span>`.trim();
   }
 
