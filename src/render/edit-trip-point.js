@@ -10,6 +10,7 @@ import {
 import {
   TYPES,
   FAVOURITE_ON,
+  FAVOURITE_OFF,
   FLATPICKR_CONFIG,
   ESC_KEYCODE,
   AllTypeToInputLabel,
@@ -220,7 +221,7 @@ class EditTripPoint extends Component {
         target.price = escapeHtml(value);
       },
       favorite: (value) => {
-        target.favorite = value === FAVOURITE_ON;
+        target.favorite = value === FAVOURITE_ON || FAVOURITE_OFF;
       },
       [`date-start`]: (value) => {
         target.timeStart = value * 1000;

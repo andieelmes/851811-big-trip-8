@@ -153,9 +153,9 @@ const makeTripPoints = (tripPointsDataModel, api) => {
       newTripPointComponent.blockSubmitting();
 
       api.createTripPoint(tripPointData.toRAW())
-        .then(() => {
+        .then((tripPoint) => {
           newTripPointComponent.unBlock();
-          tripPointsDataModel.update(tripPointData);
+          tripPointsDataModel.add(tripPoint);
           renderTripDayInfo(tripPointsDataModel);
           renderTripInfo(tripPointsDataModel);
           makeTripPoints(tripPointsDataModel, api);
