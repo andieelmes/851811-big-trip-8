@@ -4,7 +4,14 @@ import sortBy from 'lodash.sortby';
 import {
   FilterTypes,
   OFFERS_FORM_NAME,
+  DESTINATION_FORM_NAME,
+  PRICE_FORM_NAME,
 } from '../constants';
+
+import {
+  getOffersPrice
+} from '../utils';
+
 
 class ModelTripPoints {
   constructor(tripPointsData, [destinations = [], offers = []]) {
@@ -66,7 +73,12 @@ class ModelTripPoints {
 
   sort(tripPointsByDay, tripPointType) {
     return tripPointsByDay.map((tripPointsInDay) => {
-      const sorted = sortBy(tripPointsInDay, [(tripPoint) => tripPoint[tripPointType]]);
+      if (tripPointType === DESTINATION_FORM_NAME) {
+        return tripPointsInDay;
+      }
+      const sorted = sortBy(tripPointsInDay, [(tripPoint) => {
+        return tripPointType === PRICE_FORM_NAME ? getOffersPrice(tripPoint.offers) + +tripPoint.price : tripPoint[tripPointType];
+      }]);
       return tripPointType === OFFERS_FORM_NAME ? sorted.reverse() : sorted;
     }).flat();
   }

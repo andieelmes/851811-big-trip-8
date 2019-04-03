@@ -5,6 +5,8 @@ export const MAX_NUMBER_OF_TRIP_POINTS = 15;
 export const FILTERS_SELECTOR = `.trip-filter`;
 export const SORTING_SELECTOR = `.trip-sorting`;
 export const OFFERS_FORM_NAME = `offer`;
+export const PRICE_FORM_NAME = `price`;
+export const DESTINATION_FORM_NAME = `destination`;
 export const MIN_PRICE = 50;
 export const MAX_PRICE = 100;
 export const MAX_OFFER_NUMBER = 3;
@@ -181,7 +183,7 @@ export const FLATPICKR_CONFIG = {
 export const ESC_KEYCODE = 27;
 
 export const ENDPOINT_URL = `https://es8-demo-srv.appspot.com/big-trip`;
-export const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=kekghghtjgfbjfgbfj--00020}`;
+export const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=kekghghtjgfbjfgbfj--00021}`;
 
 export const TRIP_POINT_GET_LOADING = `Loading route...`;
 export const TRIP_POINT_GET_ERROR = `Something went wrong while loading your route info. Check your connection or try again later`;
