@@ -33,7 +33,6 @@ const destroyCanvas = () => {
 const makeStatistics = ({data}) => {
   statsElement.addEventListener(`click`, () => {
     destroyCanvas();
-    // TODO classList.toggle
     document.querySelector(STATS_SELECTOR).classList.toggle(`visually-hidden`);
     document.querySelector(MAIN_SELECTOR).classList.toggle(`visually-hidden`);
     renderStatistics(data);

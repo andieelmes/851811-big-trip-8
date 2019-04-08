@@ -103,6 +103,7 @@ export const countTripPoints = (individualTripPoints, tripPointKey) => {
 
 const showCertainBlock = (urlHash) => {
   document.querySelector(`[href="#${urlHash}"]`).click();
+  return false;
 };
 
 export const checkUrlHash = () => {

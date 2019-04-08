@@ -32,7 +32,7 @@ const renderTrasnportStatistics = (data) => {
         anchor: `start`
       }]
     },
-    options: {
+    options: Object.assign({
       plugins: {
         datalabels: {
           fontSize: 13,
@@ -49,8 +49,7 @@ const renderTrasnportStatistics = (data) => {
         fontSize: 23,
         position: `left`
       },
-      ...CHART_OPTIONS_CONFIG
-    }
+    }, CHART_OPTIONS_CONFIG)
   });
 
   return transportChart;

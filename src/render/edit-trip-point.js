@@ -188,6 +188,7 @@ class EditTripPoint extends Component {
   blockSubmitting() {
     this._element.style.border = `none`;
     this._element.querySelector(`form`).disabled = true;
+    this._element.querySelector(`[type=reset]`).disabled = true;
     this._element.querySelector(`.point__button--save`).disabled = true;
     this._element.querySelector(`.point__button--save`).textContent = `Saving...`;
   }
@@ -195,6 +196,7 @@ class EditTripPoint extends Component {
   blockDeleting() {
     this._element.style.border = `none`;
     this._element.querySelector(`form`).disabled = true;
+    this._element.querySelector(`.point__button--save`).disabled = true;
     this._element.querySelector(`[type=reset]`).disabled = true;
     this._element.querySelector(`[type=reset]`).textContent = `Deleting...`;
   }
@@ -203,6 +205,8 @@ class EditTripPoint extends Component {
     this._element.querySelector(`form`).disabled = false;
     this._element.querySelector(`.point__button--save`).disabled = false;
     this._element.querySelector(`.point__button--save`).textContent = `Save`;
+    this._element.querySelector(`[type=reset]`).disabled = false;
+    this._element.querySelector(`[type=reset]`).textContent = `Delete`;
   }
 
   _createMapper(target) {
@@ -314,23 +318,21 @@ class EditTripPoint extends Component {
         .addEventListener(`change`, this._onChangeDestinationBtnClick);
 
     document.addEventListener(`keydown`, this._onEscPress);
-    // document.addEventListener(`click`, this._onDocumentClickOutside, true);
+    document.addEventListener(`click`, this._onDocumentClickOutside, true);
 
-    flatpickr(this._element.querySelector(`[name="date-start"]`), {
-      ...FLATPICKR_CONFIG,
+    flatpickr(this._element.querySelector(`[name="date-start"]`), Object.assign({
       onChange: (dateStr) => {
         timeEndPicker.set(`disable`, [
           (date) => moment(date).startOf(`day`) < moment(dateStr).startOf(`day`)
         ]);
       },
-    });
+    }, FLATPICKR_CONFIG));
 
-    const timeEndPicker = flatpickr(this._element.querySelector(`[name="date-end"]`), {
-      ...FLATPICKR_CONFIG,
+    const timeEndPicker = flatpickr(this._element.querySelector(`[name="date-end"]`), Object.assign({
       disable: [
         (date) => moment(date).startOf(`day`) < moment(this._timeStart).startOf(`day`)
       ]
-    });
+    }, FLATPICKR_CONFIG));
 
   }
 
