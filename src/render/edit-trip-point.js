@@ -320,21 +320,19 @@ class EditTripPoint extends Component {
     document.addEventListener(`keydown`, this._onEscPress);
     document.addEventListener(`click`, this._onDocumentClickOutside, true);
 
-    flatpickr(this._element.querySelector(`[name="date-start"]`), {
-      ...FLATPICKR_CONFIG,
+    flatpickr(this._element.querySelector(`[name="date-start"]`), Object.assign({
       onChange: (dateStr) => {
         timeEndPicker.set(`disable`, [
           (date) => moment(date).startOf(`day`) < moment(dateStr).startOf(`day`)
         ]);
       },
-    });
+    }, FLATPICKR_CONFIG));
 
-    const timeEndPicker = flatpickr(this._element.querySelector(`[name="date-end"]`), {
-      ...FLATPICKR_CONFIG,
+    const timeEndPicker = flatpickr(this._element.querySelector(`[name="date-end"]`), Object.assign({
       disable: [
         (date) => moment(date).startOf(`day`) < moment(this._timeStart).startOf(`day`)
       ]
-    });
+    }, FLATPICKR_CONFIG));
 
   }
 
