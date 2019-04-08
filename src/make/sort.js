@@ -13,12 +13,10 @@ const makeSort = (tripPointsDataModel, api) => {
 
   SORT_TYPES.forEach((sortType) => {
     const tripPointsByDay = tripPointsDataModel.dataByDay;
-    // TODO перенести сортировку в модель, тут оставить только функции, получать новые данные
     const sortedTripPoints = tripPointsDataModel.sort(tripPointsByDay, sortType.tripPointType);
     const filterComponent = new Sort(sortType);
 
     filterComponent.onSort = () => {
-      // TODO вызвать makeTripPoints
       makeTripPoints(tripPointsDataModel, sortedTripPoints, api);
     };
 

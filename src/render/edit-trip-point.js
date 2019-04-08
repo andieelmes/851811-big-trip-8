@@ -314,7 +314,7 @@ class EditTripPoint extends Component {
         .addEventListener(`change`, this._onChangeDestinationBtnClick);
 
     document.addEventListener(`keydown`, this._onEscPress);
-    // document.addEventListener(`click`, this._onDocumentClickOutside, true);
+    document.addEventListener(`click`, this._onDocumentClickOutside, true);
 
     flatpickr(this._element.querySelector(`[name="date-start"]`), {
       ...FLATPICKR_CONFIG,

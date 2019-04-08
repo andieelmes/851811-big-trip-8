@@ -26,9 +26,6 @@ const closeTripPoint = (tripPointComponent, editTripPointComponent, tripPointsEl
 const makeTripPoints = (tripPointsDataModel, tripPoints, api) => {
   const {destinations, offers} = tripPointsDataModel;
   const createTripPointComponents = () => {
-    // TODO чистим весь trip-points, количество точек может меняться
-    //
-    // если добавить точку с датой, которой еще нет в разметке (аналогично если поменять при редактировании), то появляется новый блок с датой, или ты не это имел ввиду?
     document.querySelectorAll(`[data-day]`).forEach((element) => {
       const tripPointsElement = element.querySelector(TRIP_POINTS_SELECTOR);
       tripPointsElement.innerHTML = ``;
@@ -66,7 +63,6 @@ const makeTripPoints = (tripPointsDataModel, tripPoints, api) => {
             makeFilters(tripPointsDataModel, api);
           })
           .catch((err) => {
-            // TODO вынести метод
             catchError(`submit`, err, editTripPointComponent);
           });
       };
@@ -89,7 +85,6 @@ const makeTripPoints = (tripPointsDataModel, tripPoints, api) => {
       };
 
       editTripPointComponent.onEsc = () => {
-        // TODO вынести функцию
         closeTripPoint(tripPointComponent, editTripPointComponent, tripPointsElement);
       };
 

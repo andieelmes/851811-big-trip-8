@@ -10,7 +10,6 @@ const makeFilters = (tripPointsDataModel, api) => {
   const initialTripPointData = tripPointsDataModel.data;
 
   Object.values(FilterTypes).forEach((filterTypeName) => {
-    // TODO перенести фильтрацию в модель, тут оставить только функции-фильтры, получать новые данные
     const filteredTripPoints = tripPointsDataModel.filter(initialTripPointData, filterTypeName);
 
     let filterData = {};

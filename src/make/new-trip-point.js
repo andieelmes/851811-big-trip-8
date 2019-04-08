@@ -75,7 +75,6 @@ const makeNewTripPoint = (tripPointsDataModel, api) => {
     tripPointData.offers = offerByType && offerByType.offers.length ? offerByType.offers : tripPointData.offers;
 
     newTripPointComponent.update(tripPointData);
-    // tripPointsDataModel.update(tripPointData);
   };
 
   newTripPointComponent.onChangeDestination = (newObject) => {
@@ -84,7 +83,6 @@ const makeNewTripPoint = (tripPointsDataModel, api) => {
     tripPointData.pictures = destinations.find((destination) => destination.name === newObject.destination).pictures;
 
     newTripPointComponent.update(tripPointData);
-    // tripPointsDataModel.update(tripPointData);
   };
 
   tripPointsContainerElement.prepend(newTripPointComponent.render());
