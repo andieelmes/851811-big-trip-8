@@ -1,5 +1,5 @@
 import moment from 'moment';
-import momentDurationFormatSetup from 'moment-duration-format'; // eslint-disable-line
+import 'moment-duration-format';
 
 import {
   TYPES,
