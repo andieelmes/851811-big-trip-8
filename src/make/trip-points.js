@@ -16,6 +16,7 @@ import renderTripInfo from '../render/trip-info';
 import renderTripDayInfo from '../render/trip-day-info';
 import makeNewTripPoint from './new-trip-point';
 import makeFilters from '../make/filter';
+import makeSort from '../make/sort';
 
 const closeTripPoint = (tripPointComponent, editTripPointComponent, tripPointsElement) => {
   tripPointComponent.render();
@@ -61,6 +62,7 @@ const makeTripPoints = (tripPointsDataModel, tripPoints, api) => {
             renderTripInfo(tripPointsDataModel);
             makeTripPoints(tripPointsDataModel, tripPointsDataModel.data, api);
             makeFilters(tripPointsDataModel, api);
+            makeSort(tripPointsDataModel, api);
           })
           .catch((err) => {
             catchError(`submit`, err, editTripPointComponent);
