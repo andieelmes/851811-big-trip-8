@@ -41,8 +41,6 @@ const tripPointsWrapper = document.querySelector(TRIP_POINTS_SELECTOR);
     makeStatistics(tripPointsDataModel);
     makeTripPoints(tripPointsDataModel, tripPointsDataModel.data, api);
   } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error(`initial error: ${err}`);
     tripPointsWrapper.textContent = TRIP_POINT_GET_ERROR;
     throw err;
   }

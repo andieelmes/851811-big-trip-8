@@ -82,7 +82,6 @@ const makeTripPoints = (tripPointsDataModel, tripPoints, api) => {
             editTripPointComponent.unrender();
           })
           .catch((err) => {
-            // eslint-disable-next-line no-console
             catchError(`delete`, err, editTripPointComponent);
           });
 

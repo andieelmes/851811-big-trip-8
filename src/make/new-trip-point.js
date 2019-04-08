@@ -53,7 +53,6 @@ const makeNewTripPoint = (tripPointsDataModel, api) => {
         makeFilters(tripPointsDataModel, api);
       })
       .catch((err) => {
-        // eslint-disable-next-line no-console
         catchError(`submit`, err, newTripPointComponent);
       });
   };

@@ -1,6 +1,6 @@
 import shuffle from 'lodash.shuffle';
 import moment from 'moment';
-import momentDurationFormatSetup from 'moment-duration-format'; // eslint-disable-line
+import 'moment-duration-format';
 
 export const getRandomInt = (min, max) => Math.floor(Math.random() * Math.floor((max - min) + 1) + min);
 
@@ -136,8 +136,6 @@ export const escapeHtml = (s) => {
 };
 
 export const catchError = (type, err, component) => {
-  // eslint-disable-next-line no-console
-  console.error(`${type} error: ${err}`);
   component.shake();
   component.makeRedBorder();
   component.unBlock();

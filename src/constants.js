@@ -40,10 +40,9 @@ export const TYPES = new Map([
   [Types.TRAVEL, `🌍`]
 ]);
 
-/* eslint-disable */
 export const AllTypeToLabel = {
   Flight: `✈️ FLY`,
-  "Check-in": `🏨 STAY`,
+  [`Check-in`]: `🏨 STAY`,
   Drive: `🚗 DRIVE`,
   Sightseeing: `🏛️ LOOK`,
   Restaurant: `🍴 EAT`,
@@ -52,11 +51,11 @@ export const AllTypeToLabel = {
   Train: `🚂 CHOO-CHOO`,
   Ship: `🛳️ SAIL`,
   Transport: `🚊 GO AROUND`,
-}
+};
 
 export const AllTypeToInputLabel = {
   Flight: `Flight to`,
-  "Check-in": `Check-in at hotel in`,
+  [`Check-in`]: `Check-in at hotel in`,
   Drive: `Drive to`,
   Sightseeing: `Sightseeing in`,
   Restaurant: `Restaurant in`,
@@ -66,8 +65,7 @@ export const AllTypeToInputLabel = {
   Ship: `Ship to`,
   Transport: `Transport to`,
   Travel: `Travel to`,
-}
-/* eslint-enable */
+};
 
 export const TrasnportTypeToLabel = {
   Drive: `🚗 DRIVE`,
@@ -177,7 +175,7 @@ export const FLATPICKR_CONFIG = {
   altInput: true,
   altFormat: `H:i`,
   dateFormat: `U`,
-  time_24hr: true, // eslint-disable-line
+  [`time_24hr`]: true
 };
 
 export const ESC_KEYCODE = 27;
