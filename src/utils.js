@@ -136,8 +136,6 @@ export const escapeHtml = (s) => {
 };
 
 export const catchError = (type, err, component) => {
-  // eslint-disable-next-line no-console
-  console.error(`${type} error: ${err}`);
   component.shake();
   component.makeRedBorder();
   component.unBlock();
