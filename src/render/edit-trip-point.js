@@ -56,7 +56,14 @@ class EditTripPoint extends Component {
         <header class="point__header">
           <label class="point__date">
             choose day
-            <input class="point__input" type="text" placeholder="MAR 18" name="day">
+            <input
+              readonly
+              class="point__input"
+              type="text"
+              placeholder="${moment(this._timeStart).format(`MMM DD`)}"
+              name="day"
+              value="${moment(this._timeStart).format(`MMM DD`)}"
+            >
           </label>
 
           <div class="travel-way">
@@ -318,12 +325,13 @@ class EditTripPoint extends Component {
         .addEventListener(`change`, this._onChangeDestinationBtnClick);
 
     document.addEventListener(`keydown`, this._onEscPress);
-    document.addEventListener(`click`, this._onDocumentClickOutside, true);
+    // document.addEventListener(`click`, this._onDocumentClickOutside, true);
 
     flatpickr(this._element.querySelector(`[name="date-start"]`), Object.assign({
       onChange: (dateStr) => {
+        this._element.querySelector(`[name=day]`).value = moment(new Date(dateStr)).format(`MMM DD`);
         timeEndPicker.set(`disable`, [
-          (date) => moment(date).startOf(`day`) < moment(dateStr).startOf(`day`)
+          (date) => moment(date).startOf(`day`) < moment(new Date(dateStr)).startOf(`day`)
         ]);
       },
     }, FLATPICKR_CONFIG));
