@@ -8,7 +8,7 @@ import makeTripPoints from '../make/trip-points';
 
 const sortElement = document.querySelector(SORTING_SELECTOR);
 
-const makeSort = (tripPointsDataModel, api) => {
+const makeSort = (tripPointsDataModel, provider) => {
   sortElement.innerHTML = ``;
 
   SORT_TYPES.forEach((sortType) => {
@@ -17,7 +17,7 @@ const makeSort = (tripPointsDataModel, api) => {
     const filterComponent = new Sort(sortType);
 
     filterComponent.onSort = () => {
-      makeTripPoints(tripPointsDataModel, sortedTripPoints, api);
+      makeTripPoints(tripPointsDataModel, sortedTripPoints, provider);
     };
 
     sortElement.appendChild(filterComponent.render());

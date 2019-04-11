@@ -181,7 +181,7 @@ export const FLATPICKR_CONFIG = {
 export const ESC_KEYCODE = 27;
 
 export const ENDPOINT_URL = `https://es8-demo-srv.appspot.com/big-trip`;
-export const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=kekghghtjgfbjfgbfj--00021}`;
+export const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=kekghghtjgfbjfgbfj--00025}`;
 
 export const TRIP_POINT_GET_LOADING = `Loading route...`;
 export const TRIP_POINT_GET_ERROR = `Something went wrong while loading your route info. Check your connection or try again later`;
@@ -217,3 +217,5 @@ export const SORT_TYPES = [
     tripPointType: `offer`
   }
 ];
+
+export const TRIP_POINT_STORE_KEY = `trip-point-store-key`;

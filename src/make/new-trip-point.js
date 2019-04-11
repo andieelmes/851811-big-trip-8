@@ -19,7 +19,7 @@ import makeSort from '../make/sort';
 import EditTripPoint from '../render/edit-trip-point';
 import ModelTripPoint from '../model/trip-point';
 
-const makeNewTripPoint = (tripPointsDataModel, api) => {
+const makeNewTripPoint = (tripPointsDataModel, provider) => {
   const {destinations, offers} = tripPointsDataModel;
 
   const tripPointsContainerElement = document.querySelector(TRIP_POINTS_CONTAINER_SELECTOR);
@@ -44,15 +44,15 @@ const makeNewTripPoint = (tripPointsDataModel, api) => {
 
     newTripPointComponent.blockSubmitting();
 
-    api.createTripPoint(tripPointData.toRAW())
+    provider.createTripPoint(tripPointData.toRAW())
       .then((tripPoint) => {
         newTripPointComponent.unBlock();
         tripPointsDataModel.add(tripPoint);
         renderTripDayInfo(tripPointsDataModel);
         renderTripInfo(tripPointsDataModel);
-        makeTripPoints(tripPointsDataModel, tripPointsDataModel.data, api);
-        makeFilters(tripPointsDataModel, api);
-        makeSort(tripPointsDataModel, api);
+        makeTripPoints(tripPointsDataModel, tripPointsDataModel.data, provider);
+        makeFilters(tripPointsDataModel, provider);
+        makeSort(tripPointsDataModel, provider);
       })
       .catch((err) => {
         catchError(`submit`, err, newTripPointComponent);

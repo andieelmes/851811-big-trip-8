@@ -4,7 +4,7 @@ import makeTripPoints from '../make/trip-points';
 
 const filtersElement = document.querySelector(FILTERS_SELECTOR);
 
-const makeFilters = (tripPointsDataModel, api) => {
+const makeFilters = (tripPointsDataModel, provider) => {
   filtersElement.innerHTML = ``;
 
   const initialTripPointData = tripPointsDataModel.data;
@@ -22,7 +22,7 @@ const makeFilters = (tripPointsDataModel, api) => {
     const filterCompontent = new Filter(filterData);
 
     filterCompontent.onFilter = () => {
-      makeTripPoints(tripPointsDataModel, filteredTripPoints, api);
+      makeTripPoints(tripPointsDataModel, filteredTripPoints, provider);
     };
 
     filtersElement.appendChild(filterCompontent.render());
