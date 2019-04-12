@@ -10,10 +10,8 @@ self.addEventListener('install', function(e) {
        '/img/star--check.svg',
        '/img/star.svg'
      ]);
-   })
+   }).catch(function(error) {
+    console.log(error);
+  })
  );
 });
-
-self.addEventListener('fetch', function(event) {
-  console.log(event.request.url);
- });
