@@ -24,7 +24,7 @@ const closeTripPoint = (tripPointComponent, editTripPointComponent, tripPointsEl
   editTripPointComponent.unrender();
 };
 
-const makeTripPoints = (tripPointsDataModel, tripPoints, api) => {
+const makeTripPoints = (tripPointsDataModel, tripPoints, provider) => {
   const {destinations, offers} = tripPointsDataModel;
   const createTripPointComponents = () => {
     document.querySelectorAll(`[data-day]`).forEach((element) => {
@@ -52,7 +52,7 @@ const makeTripPoints = (tripPointsDataModel, tripPoints, api) => {
 
         editTripPointComponent.blockSubmitting();
 
-        api.updateTripPoint({id: tripPointData.id, data: tripPointData.toRAW()})
+        provider.updateTripPoint({id: tripPointData.id, data: tripPointData.toRAW()})
           .then((newTripPoint) => {
             editTripPointComponent.unBlock();
             tripPointComponent.update(newTripPoint);
@@ -60,9 +60,9 @@ const makeTripPoints = (tripPointsDataModel, tripPoints, api) => {
             tripPointsDataModel.update(tripPointData);
             renderTripDayInfo(tripPointsDataModel);
             renderTripInfo(tripPointsDataModel);
-            makeTripPoints(tripPointsDataModel, tripPointsDataModel.data, api);
-            makeFilters(tripPointsDataModel, api);
-            makeSort(tripPointsDataModel, api);
+            makeTripPoints(tripPointsDataModel, tripPointsDataModel.data, provider);
+            makeFilters(tripPointsDataModel, provider);
+            makeSort(tripPointsDataModel, provider);
           })
           .catch((err) => {
             catchError(`submit`, err, editTripPointComponent);
@@ -72,7 +72,7 @@ const makeTripPoints = (tripPointsDataModel, tripPoints, api) => {
       editTripPointComponent.onDelete = ({id}) => {
         editTripPointComponent.blockDeleting();
 
-        api.deleteTripPoint({id})
+        provider.deleteTripPoint({id})
           .then(() => {
             editTripPointComponent.unBlock();
 
@@ -122,7 +122,7 @@ const makeTripPoints = (tripPointsDataModel, tripPoints, api) => {
 
   const newEventBtn = document.querySelector(NEW_EVENT_BTN_SELECTOR);
   newEventBtn.addEventListener(`click`, () => {
-    makeNewTripPoint(tripPointsDataModel, api);
+    makeNewTripPoint(tripPointsDataModel, provider);
   });
 
 };
