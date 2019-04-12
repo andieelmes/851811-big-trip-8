@@ -1,7 +1,4 @@
-import nanoid from 'nanoid';
-
 import {
-  FAVOURITE_OFF,
   TRIP_POINTS_CONTAINER_SELECTOR,
 } from '../constants';
 
