@@ -145,4 +145,4 @@ export const catchError = (type, err, component) => {
   throw err;
 };
 
-export const objectToArray = (object) => Object.keys(object).map((id) => object[id])
+export const objectToArray = (object) => Object.keys(object).map((id) => object[id]);

@@ -13,7 +13,7 @@ const Provider = class {
     if (this._isOnline()) {
       return this._api.updateTripPoint({id, data})
         .then((tripPoint) => {
-          this._store.setItem({key: tripPoint.id, item: tripPoint.toRAW()});
+          this._store.setItem({key: tripPoint.id, item: tripPoint.toRAW(tripPoint)});
           return tripPoint;
         });
     } else {
@@ -27,11 +27,12 @@ const Provider = class {
   createTripPoint(tripPoint) {
     if (this._isOnline()) {
       return this._api.createTripPoint(tripPoint)
-        .then((tripPoint) => {
-          this._store.setItem({key: tripPoint.id, item: tripPoint.toRAW()});
+        .then((createdTripPoint) => {
+          this._store.setItem({key: createdTripPoint.id, item: createdTripPoint.toRAW(createdTripPoint)});
           return tripPoint;
         });
     } else {
+      tripPoint.id = this._generateId();
       this._needSync = true;
 
       this._store.setItem({key: tripPoint.id, item: tripPoint});
@@ -56,7 +57,7 @@ const Provider = class {
     if (this._isOnline()) {
       return this._api.getTripPoints()
         .then((tripPoints) => {
-          tripPoints.map((it) => this._store.setItem({key: it.id, item: it.toRAW()}));
+          tripPoints.map((it) => this._store.setItem({key: it.id, item: it.toRAW(it)}));
           return tripPoints;
         });
     } else {

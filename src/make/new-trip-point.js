@@ -24,17 +24,19 @@ const makeNewTripPoint = (tripPointsDataModel, provider) => {
 
   const tripPointsContainerElement = document.querySelector(TRIP_POINTS_CONTAINER_SELECTOR);
 
-  const tripPointData = ModelTripPoint.parseTripPoint({
-    id: nanoid(),
-    favorite: FAVOURITE_OFF,
+  const tripPointData = new ModelTripPoint({
+    id: +tripPointsDataModel.data[tripPointsDataModel.data.length - 1].id + 1,
+    favorite: false,
     type: offers[0].type,
     timeStart: Date.now(),
     timeEnd: Date.now(),
-    price: 0,
+    price: 100,
     desc: destinations[0].description,
     destination: destinations[0].name,
     pictures: destinations[0].pictures,
     offers: offers[0].offers,
+  }, {
+    raw: false
   });
 
   const newTripPointComponent = new EditTripPoint(tripPointData, destinations);
@@ -44,8 +46,9 @@ const makeNewTripPoint = (tripPointsDataModel, provider) => {
 
     newTripPointComponent.blockSubmitting();
 
-    provider.createTripPoint(tripPointData.toRAW())
+    provider.createTripPoint(tripPointData.toRAW(tripPointData))
       .then((tripPoint) => {
+
         newTripPointComponent.unBlock();
         tripPointsDataModel.add(tripPoint);
         renderTripDayInfo(tripPointsDataModel);

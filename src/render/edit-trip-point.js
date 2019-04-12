@@ -35,7 +35,6 @@ class EditTripPoint extends Component {
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
     this._onEscPress = this._onEscPress.bind(this);
-    this._onDocumentClickOutside = this._onDocumentClickOutside.bind(this);
     this._onChangeTypeBtnClick = this._onChangeTypeBtnClick.bind(this);
     this._onChangeDestinationBtnClick = this._onChangeDestinationBtnClick.bind(this);
 
@@ -325,7 +324,6 @@ class EditTripPoint extends Component {
         .addEventListener(`change`, this._onChangeDestinationBtnClick);
 
     document.addEventListener(`keydown`, this._onEscPress);
-    // document.addEventListener(`click`, this._onDocumentClickOutside, true);
 
     flatpickr(this._element.querySelector(`[name="date-start"]`), Object.assign({
       onChange: (dateStr) => {
@@ -357,7 +355,6 @@ class EditTripPoint extends Component {
         .removeEventListener(`change`, this._onChangeDestinationBtnClick);
 
       document.removeEventListener(`keydown`, this._onEscPress);
-      document.removeEventListener(`click`, this._onDocumentClickOutside, true);
     }
   }
 
@@ -418,10 +415,6 @@ class EditTripPoint extends Component {
 
   _onEscPress(evt) {
     return evt.keyCode === ESC_KEYCODE && typeof this._onEsc === `function` && this._onEsc();
-  }
-
-  _onDocumentClickOutside(evt) {
-    return !this._element.contains(evt.target) && !evt.target.closest(`.flatpickr-calendar`) && this._onClickOutside();
   }
 }
 
