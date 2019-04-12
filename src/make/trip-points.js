@@ -33,8 +33,6 @@ const makeTripPoints = (tripPointsDataModel, tripPoints, provider) => {
       element.classList.add(`visually-hidden`);
     });
 
-    console.log(tripPoints);
-
     tripPoints.forEach((tripPointData) => {
       const startOfDayTimestamp = +moment(tripPointData.timeStart).startOf(`day`);
       const tripPointsDayElement = document.querySelector(`[data-day="${startOfDayTimestamp}"]`);
@@ -54,7 +52,7 @@ const makeTripPoints = (tripPointsDataModel, tripPoints, provider) => {
 
         editTripPointComponent.blockSubmitting();
 
-        provider.updateTripPoint({id: tripPointData.id, data: tripPointData.toRAW(tripPointData)})
+        provider.updateTripPoint({id: tripPointData.id, data: tripPointData.toRAW()})
           .then((newTripPoint) => {
             editTripPointComponent.unBlock();
             tripPointComponent.update(newTripPoint);

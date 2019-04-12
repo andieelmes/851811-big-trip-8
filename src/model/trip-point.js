@@ -5,13 +5,7 @@ import {
 } from '../constants';
 
 class ModelTripPoint {
-  constructor(data, config = {raw: true}) {
-    const {
-      raw,
-    } = config;
-    data = raw ? data : this.toRAW(data);
-
-    console.log(data);
+  constructor(data) {
 
     this.id = data[`id`];
     this.favorite = data[`is_favorite`] ? FAVOURITE_ON : FAVOURITE_OFF;
@@ -30,25 +24,22 @@ class ModelTripPoint {
       });
       return renamed;
     }, []);
-
-    console.log(this);
-
   }
 
-  toRAW(data) {
+  toRAW() {
     return {
-      'id': data.id,
-      'is_favorite': data.favorite,
-      'type': data.type.toLowerCase(),
-      'date_from': data.timeStart,
-      'date_to': data.timeEnd,
-      'base_price': data.price,
+      'id': this.id,
+      'is_favorite': this.favorite,
+      'type': this.type.toLowerCase(),
+      'date_from': this.timeStart,
+      'date_to': this.timeEnd,
+      'base_price': this.price,
       'destination': {
-        'description': data.desc,
-        'name': data.destination,
-        'pictures': data.pictures,
+        'description': this.desc,
+        'name': this.destination,
+        'pictures': this.pictures,
       },
-      'offers': data.offers.reduce((offers, current) => {
+      'offers': this.offers.reduce((offers, current) => {
         offers.push({
           title: current.name,
           price: current.price,
@@ -61,11 +52,6 @@ class ModelTripPoint {
 
   static parseTripPoint(data) {
     return new ModelTripPoint(data);
-  }
-
-  parseTripPointWithFrontData(data) {
-    const tripPointData = this.toRAW(data);
-    return new ModelTripPoint(tripPointData);
   }
 
   static parseTripPoints(data) {
