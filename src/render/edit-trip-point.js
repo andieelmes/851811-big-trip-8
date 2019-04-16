@@ -8,7 +8,7 @@ import {
   escapeHtml,
 } from '../utils';
 import {
-  TYPES,
+  types,
   FAVOURITE_ON,
   FAVOURITE_OFF,
   FLATPICKR_CONFIG,
@@ -47,7 +47,7 @@ class EditTripPoint extends Component {
   }
 
   get template() {
-    const [typeDesc, typeEmoji] = [this._type, TYPES.get(capitalize(this._type))];
+    const [typeDesc, typeEmoji] = [this._type, types.get(capitalize(this._type))];
 
     return `
     <article class="point">
@@ -72,7 +72,7 @@ class EditTripPoint extends Component {
 
             <div class="travel-way__select">
               <div class="travel-way__select-group">
-                ${[...TYPES].map((type) => this._makeTripPointTypeRadioButton(type, typeDesc)).join(``)}
+                ${[...types].map((type) => this._makeTripPointTypeRadioButton(type, typeDesc)).join(``)}
               </div>
             </div>
           </div>

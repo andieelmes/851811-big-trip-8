@@ -2,7 +2,7 @@ import moment from 'moment';
 import 'moment-duration-format';
 
 import {
-  TYPES,
+  types,
   MAX_OFFER_NUMBER,
 } from '../constants';
 
@@ -31,7 +31,7 @@ class TripPoint extends Component {
   }
 
   get template() {
-    const [typeDesc, typeEmoji] = [this._type, TYPES.get(capitalize(this._type))];
+    const [typeDesc, typeEmoji] = [this._type, types.get(capitalize(this._type))];
     const totalPrice = getOffersPrice(this._offers) + +this._price;
 
     return `<article class="trip-point">
