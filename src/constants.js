@@ -3,6 +3,8 @@ export const SORTING_SELECTOR = `.trip-sorting`;
 export const OFFERS_FORM_NAME = `offer`;
 export const PRICE_FORM_NAME = `price`;
 export const DESTINATION_FORM_NAME = `destination`;
+export const FAVOURITE_OFF = `off`;
+export const FAVOURITE_ON = `on`;
 export const MAX_OFFER_NUMBER = 3;
 
 export const Type = {
@@ -73,8 +75,7 @@ export const TransportTypeToLabel = {
 export const TRIP_POINTS_CONTAINER_SELECTOR = `.trip-points`;
 export const TRIP_POINTS_SELECTOR = `.trip-day__items`;
 export const TRIP_INFO_SELECTOR = `.trip`;
-export const FAVOURITE_OFF = `off`;
-export const FAVOURITE_ON = `on`;
+export const NEW_EVENT_BTN_SELECTOR = `.trip-controls__new-event`;
 
 export const STATS_BTN_SELECTOR = `[href="#stats"]`;
 export const TRIP_POINTS_TABLE_BTN_SELECTOR = `[href="#table"]`;
@@ -133,6 +134,7 @@ export const ESC_KEYCODE = 27;
 
 export const ENDPOINT_URL = `https://es8-demo-srv.appspot.com/big-trip`;
 export const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=kekghghtjgfbjfgbfj--00031}`;
+export const TRIP_POINT_STORE_KEY = `trip-point-store-key`;
 
 export const TRIP_POINT_GET_LOADING = `Loading route...`;
 export const TRIP_POINT_GET_ERROR = `Something went wrong while loading your route info. Check your connection or try again later`;
@@ -144,12 +146,12 @@ export const Method = {
   DELETE: `DELETE`
 };
 
-export const NEW_EVENT_BTN_SELECTOR = `.trip-controls__new-event`;
 export const FilterType = {
   EVERYTHING: `everything`,
   FUTURE: `future`,
   PAST: `past`,
 };
+
 export const SORT_TYPES = [
   {
     type: `event`,
@@ -168,5 +170,3 @@ export const SORT_TYPES = [
     tripPointType: `offer`
   }
 ];
-
-export const TRIP_POINT_STORE_KEY = `trip-point-store-key`;
