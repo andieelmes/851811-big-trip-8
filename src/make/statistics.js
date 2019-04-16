@@ -32,6 +32,8 @@ const destroyCanvas = () => {
 
 const makeStatistics = ({data}) => {
   statsElement.addEventListener(`click`, () => {
+    statsElement.classList.toggle(`view-switch__item--active`);
+    tripPointsTableElement.classList.toggle(`view-switch__item--active`);
     destroyCanvas();
     document.querySelector(STATS_SELECTOR).classList.toggle(`visually-hidden`);
     document.querySelector(MAIN_SELECTOR).classList.toggle(`visually-hidden`);
@@ -39,6 +41,8 @@ const makeStatistics = ({data}) => {
   });
 
   tripPointsTableElement.addEventListener(`click`, () => {
+    statsElement.classList.toggle(`view-switch__item--active`);
+    tripPointsTableElement.classList.toggle(`view-switch__item--active`);
     document.querySelector(MAIN_SELECTOR).classList.toggle(`visually-hidden`);
     document.querySelector(STATS_SELECTOR).classList.toggle(`visually-hidden`);
     destroyCanvas();
