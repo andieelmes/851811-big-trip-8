@@ -19,13 +19,13 @@ const makeFilters = (tripPointsDataModel, provider) => {
       filterData.disabled = true;
     }
 
-    const filterCompontent = new Filter(filterData);
+    const filterComponent = new Filter(filterData);
 
-    filterCompontent.onFilter = () => {
+    filterComponent.onFilter = () => {
       makeTripPoints(tripPointsDataModel, filteredTripPoints, provider);
     };
 
-    filtersElement.appendChild(filterCompontent.render());
+    filtersElement.appendChild(filterComponent.render());
   });
 
 };
