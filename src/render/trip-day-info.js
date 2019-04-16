@@ -29,15 +29,14 @@ const makeTripDayInfo = (tripPointsDataModel) => {
     const currentTimeStamp = moment(timeStamp);
     const startOfDay = currentTimeStamp.startOf(`day`);
 
-    if (dayStamps.every((dayStamp) => !dayStamp.isSame(startOfDay))) {
-      dayStamps.push(startOfDay);
-    }
+    dayStamps[startOfDay] = startOfDay;
+
     return dayStamps;
-  }, []);
+  }, {});
 
-  const firstDay = dayTimestamps[0];
+  const firstDay = Object.values(dayTimestamps)[0];
 
-  return dayTimestamps.map((dayTimestamp) => {
+  return Object.values(dayTimestamps).map((dayTimestamp) => {
     const count = dayTimestamp.diff(firstDay, `days`) + 1;
     const title = dayTimestamp.format(`MMMM D`);
 
