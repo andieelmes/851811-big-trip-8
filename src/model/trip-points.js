@@ -35,16 +35,7 @@ class ModelTripPoints {
   }
 
   get dataByDay() {
-    return Object.values(this._data.reduce((dataByDay, tripPoint) => {
-      const currentTimeStamp = moment(tripPoint.timeStart);
-      const startOfDay = currentTimeStamp.startOf(`day`).unix();
-
-      if (!dataByDay[startOfDay]) {
-        dataByDay[startOfDay] = [];
-      }
-      dataByDay[startOfDay].push(tripPoint);
-      return dataByDay;
-    }, {}));
+    return ModelTripPoints.sortTripPointsByDay(this._data);
   }
 
   sortByTimeStamp() {
@@ -76,7 +67,9 @@ class ModelTripPoints {
     return filterType[filterName] || initialTripPointData;
   }
 
-  sort(tripPointsByDay, tripPointType) {
+  sort(tripPointsData, tripPointType) {
+    const tripPointsByDay = ModelTripPoints.sortTripPointsByDay(tripPointsData);
+
     return tripPointsByDay.map((tripPointsInDay) => {
       if (tripPointType === DESTINATION_FORM_NAME) {
         return tripPointsInDay;
@@ -86,6 +79,19 @@ class ModelTripPoints {
       }]);
       return tripPointType === OFFERS_FORM_NAME ? sorted.reverse() : sorted;
     }).flat();
+  }
+
+  static sortTripPointsByDay(data) {
+    return Object.values(data.reduce((dataByDay, tripPoint) => {
+      const currentTimeStamp = moment(tripPoint.timeStart);
+      const startOfDay = currentTimeStamp.startOf(`day`).unix();
+
+      if (!dataByDay[startOfDay]) {
+        dataByDay[startOfDay] = [];
+      }
+      dataByDay[startOfDay].push(tripPoint);
+      return dataByDay;
+    }, {}));
   }
 }
 

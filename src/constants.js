@@ -133,7 +133,7 @@ export const FLATPICKR_CONFIG = {
 export const ESC_KEYCODE = 27;
 
 export const ENDPOINT_URL = `https://es8-demo-srv.appspot.com/big-trip`;
-export const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=kekghghtjgfbjfgbfj--00031}`;
+export const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=kekghghtjgfbjfgbfj--00032}`;
 export const TRIP_POINT_STORE_KEY = `trip-point-store-key`;
 
 export const TRIP_POINT_GET_LOADING = `Loading route...`;

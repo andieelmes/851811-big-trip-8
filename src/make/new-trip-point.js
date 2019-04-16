@@ -58,7 +58,7 @@ const makeNewTripPoint = (tripPointsDataModel, provider) => {
         renderTripInfo(tripPointsDataModel);
         makeTripPoints(tripPointsDataModel, tripPointsDataModel.data, provider);
         makeFilters(tripPointsDataModel, provider);
-        makeSort(tripPointsDataModel, provider);
+        makeSort(tripPointsDataModel, tripPointsDataModel.data, provider);
       })
       .catch((err) => {
         catchError(`submit`, err, newTripPointComponent);

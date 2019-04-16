@@ -1,6 +1,7 @@
 import {FILTERS_SELECTOR, FilterType} from '../constants';
 import Filter from '../render/filter';
-import makeTripPoints from '../make/trip-points';
+import makeTripPoints from './trip-points';
+import makeSort from './sort';
 
 const filtersElement = document.querySelector(FILTERS_SELECTOR);
 
@@ -23,6 +24,7 @@ const makeFilters = (tripPointsDataModel, provider) => {
 
     filterComponent.onFilter = () => {
       makeTripPoints(tripPointsDataModel, filteredTripPoints, provider);
+      makeSort(tripPointsDataModel, filteredTripPoints, provider);
     };
 
     filtersElement.appendChild(filterComponent.render());

@@ -29,7 +29,7 @@ const updateTrip = (tripPointsDataModel, provider) => {
   renderTripInfo(tripPointsDataModel);
   makeTripPoints(tripPointsDataModel, tripPointsDataModel.data, provider);
   makeFilters(tripPointsDataModel, provider);
-  makeSort(tripPointsDataModel, provider);
+  makeSort(tripPointsDataModel, tripPointsDataModel.data, provider);
 };
 
 const makeTripPoints = (tripPointsDataModel, tripPoints, provider) => {

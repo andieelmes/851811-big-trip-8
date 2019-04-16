@@ -40,7 +40,7 @@ const tripPointsWrapper = document.querySelector(TRIP_POINTS_SELECTOR);
     const tripPointsDataModel = new ModelTripPoints(tripPoints, rest);
 
     makeFilters(tripPointsDataModel, provider);
-    makeSort(tripPointsDataModel, provider);
+    makeSort(tripPointsDataModel, tripPointsDataModel.data, provider);
     renderTripInfo(tripPointsDataModel);
     renderTripDayInfo(tripPointsDataModel);
     makeStatistics(tripPointsDataModel);
