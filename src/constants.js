@@ -21,7 +21,7 @@ export const Type = {
   TRAVEL: `Travel`,
 };
 
-export const TYPES = new Map([
+export const types = new Map([
   [Type.TAXI, `🚕`],
   [Type.BUS, `🚌`],
   [Type.TRAIN, `🚂`],
