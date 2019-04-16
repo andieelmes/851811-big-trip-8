@@ -1,7 +1,7 @@
 import {
   FAVOURITE_ON,
   FAVOURITE_OFF,
-  Types,
+  Type,
 } from '../constants';
 
 class ModelTripPoint {
@@ -9,7 +9,7 @@ class ModelTripPoint {
 
     this.id = data[`id`];
     this.favorite = data[`is_favorite`] ? FAVOURITE_ON : FAVOURITE_OFF;
-    this.type = data[`type`] || Types.TRAVEL;
+    this.type = data[`type`] || Type.TRAVEL;
     this.timeStart = data[`date_from`] || data[`timeStart`];
     this.timeEnd = data[`date_to`] || data[`timeEnd`];
     this.price = data[`base_price`] || data[`price`];

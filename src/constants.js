@@ -12,7 +12,7 @@ export const MAX_PRICE = 100;
 export const MAX_OFFER_NUMBER = 3;
 export const LOREM_IPSUM = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
 
-export const Types = {
+export const Type = {
   FLIGHT: `Flight`,
   CHECK_IN: `Check-in`,
   DRIVE: `Drive`,
@@ -27,17 +27,17 @@ export const Types = {
 };
 
 export const TYPES = new Map([
-  [Types.TAXI, `🚕`],
-  [Types.BUS, `🚌`],
-  [Types.TRAIN, `🚂`],
-  [Types.SHIP, `🛳️`],
-  [Types.TRANSPORT, `🚊`],
-  [Types.DRIVE, `🚗`],
-  [Types.FLIGHT, `️✈️`],
-  [Types.CHECK_IN, `🏨`],
-  [Types.SIGHTSEEING, `🏛️`],
-  [Types.RESTATURANT, `🍴`],
-  [Types.TRAVEL, `🌍`]
+  [Type.TAXI, `🚕`],
+  [Type.BUS, `🚌`],
+  [Type.TRAIN, `🚂`],
+  [Type.SHIP, `🛳️`],
+  [Type.TRANSPORT, `🚊`],
+  [Type.DRIVE, `🚗`],
+  [Type.FLIGHT, `️✈️`],
+  [Type.CHECK_IN, `🏨`],
+  [Type.SIGHTSEEING, `🏛️`],
+  [Type.RESTATURANT, `🍴`],
+  [Type.TRAVEL, `🌍`]
 ]);
 
 export const AllTypeToLabel = {
@@ -194,7 +194,7 @@ export const Method = {
 };
 
 export const NEW_EVENT_BTN_SELECTOR = `.trip-controls__new-event`;
-export const FilterTypes = {
+export const FilterType = {
   EVERYTHING: `everything`,
   FUTURE: `future`,
   PAST: `past`,

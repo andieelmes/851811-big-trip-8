@@ -2,7 +2,7 @@ import moment from 'moment';
 import sortBy from 'lodash.sortby';
 
 import {
-  FilterTypes,
+  FilterType,
   OFFERS_FORM_NAME,
   DESTINATION_FORM_NAME,
   PRICE_FORM_NAME,
@@ -62,13 +62,13 @@ class ModelTripPoints {
   }
 
   filter(initialTripPointData, filterName) {
-    const filterTypes = {
-      [FilterTypes.EVERYTHING]: initialTripPointData,
-      [FilterTypes.FUTURE]: initialTripPointData.filter((it) => it.timeEnd > moment()),
-      [FilterTypes.PAST]: initialTripPointData.filter((it) => it.timeStart < moment()),
+    const filterType = {
+      [FilterType.EVERYTHING]: initialTripPointData,
+      [FilterType.FUTURE]: initialTripPointData.filter((it) => it.timeEnd > moment()),
+      [FilterType.PAST]: initialTripPointData.filter((it) => it.timeStart < moment()),
     };
 
-    return filterTypes[filterName] || initialTripPointData;
+    return filterType[filterName] || initialTripPointData;
   }
 
   sort(tripPointsByDay, tripPointType) {

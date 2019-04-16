@@ -1,4 +1,4 @@
-import {FILTERS_SELECTOR, FilterTypes} from '../constants';
+import {FILTERS_SELECTOR, FilterType} from '../constants';
 import Filter from '../render/filter';
 import makeTripPoints from '../make/trip-points';
 
@@ -9,7 +9,7 @@ const makeFilters = (tripPointsDataModel, provider) => {
 
   const initialTripPointData = tripPointsDataModel.data;
 
-  Object.values(FilterTypes).forEach((filterTypeName) => {
+  Object.values(FilterType).forEach((filterTypeName) => {
     const filteredTripPoints = tripPointsDataModel.filter(initialTripPointData, filterTypeName);
 
     let filterData = {};
