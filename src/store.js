@@ -2,13 +2,15 @@ const Store = class {
   constructor({key, storage}) {
     this._storage = storage;
     this._storeKey = key;
+
+    this._setItemInStorage = this._setItemInStorage.bind(this);
   }
 
   setItem({key, item}) {
     const items = this.getAll();
     items[key] = item;
 
-    this._storage.setItem(this._storeKey, JSON.stringify(items));
+    this._setItemInStorage(items);
   }
 
   getItem({key}) {
@@ -20,7 +22,7 @@ const Store = class {
     const items = this.getAll();
     delete items[key];
 
-    this._storage.setItem(this._storeKey, JSON.stringify(items));
+    this._setItemInStorage(items);
   }
 
   getAll() {
@@ -36,6 +38,10 @@ const Store = class {
     } catch (e) {
       return emptyItems;
     }
+  }
+
+  _setItemInStorage(items) {
+    this._storage.setItem(this._storeKey, JSON.stringify(items));
   }
 };
 

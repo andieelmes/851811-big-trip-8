@@ -7,35 +7,38 @@ const Provider = class {
     this._store = store;
     this._generateId = generateId;
     this._needSync = false;
+
+    this._sendToStore = this._sendToStore.bind(this);
   }
 
   updateTripPoint({id, data}) {
     if (this._isOnline()) {
       return this._api.updateTripPoint({id, data})
         .then((tripPoint) => {
-          this._store.setItem({key: tripPoint.id, item: tripPoint.toRAW()});
+          this._sendToStore(tripPoint, true);
           return tripPoint;
         });
     } else {
       const tripPoint = data;
       this._needSync = true;
-      this._store.setItem({key: tripPoint.id, item: tripPoint});
+
+      this._store.setItem(tripPoint);
       return Promise.resolve(ModelTripPoint.parseTripPoint(tripPoint));
     }
   }
 
   createTripPoint(tripPoint) {
     if (this._isOnline()) {
-      return this._api.createTripPoint(tripPoint)
+      return this._api.createTripPoint(tripPoint, true)
         .then((createdTripPoint) => {
-          this._store.setItem({key: createdTripPoint.id, item: createdTripPoint.toRAW()});
+          this._sendToStore(createdTripPoint);
           return createdTripPoint;
         });
     } else {
       tripPoint.id = this._generateId();
       this._needSync = true;
 
-      this._store.setItem({key: tripPoint.id, item: tripPoint});
+      this._sendToStore(tripPoint);
       return Promise.resolve(ModelTripPoint.parseTripPoint(tripPoint));
     }
   }
@@ -48,6 +51,7 @@ const Provider = class {
         });
     } else {
       this._needSync = true;
+
       this._store.removeItem({key: id});
       return Promise.resolve(true);
     }
@@ -57,7 +61,7 @@ const Provider = class {
     if (this._isOnline()) {
       return this._api.getTripPoints()
         .then((tripPoints) => {
-          tripPoints.map((it) => this._store.setItem({key: it.id, item: it.toRAW()}));
+          tripPoints.map(((tripPoint) => this._sendToStore(tripPoint, true)));
           return tripPoints;
         });
     } else {
@@ -75,6 +79,10 @@ const Provider = class {
 
   _isOnline() {
     return window.navigator.onLine;
+  }
+
+  _sendToStore(point, toRaw = false) {
+    return this._store.setItem({key: point.id, item: toRaw ? point.toRAW() : point});
   }
 };
 
