@@ -1,33 +1,10 @@
-import shuffle from 'lodash.shuffle';
 import moment from 'moment';
 import 'moment-duration-format';
-
-export const getRandomInt = (min, max) => Math.floor(Math.random() * Math.floor((max - min) + 1) + min);
-
-export const getRandomElements = (array, length = 1) => shuffle(array).slice(0, length);
 
 export const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
   return newElement.firstChild;
-};
-
-export const populateDom = (config) => {
-  const {
-    array,
-    parentElement,
-    render,
-    clear = false,
-    fromMock = true
-  } = config;
-
-  const fragment = document.createElement(`template`);
-  fragment.innerHTML = array.map((item) => fromMock ? render(item) : item).join(``);
-
-  if (clear) {
-    parentElement.innerHTML = ``;
-  }
-  parentElement.appendChild(fragment.content);
 };
 
 export const appendToDom = (config) => {
@@ -45,8 +22,6 @@ export const appendToDom = (config) => {
   }
   parentElement.appendChild(fragment.content);
 };
-
-export const getRandomBool = () => getRandomInt(0, 1) === 1;
 
 export const getOfferId = (str) => str.replace(/\s/g, `-`).toLowerCase();
 
@@ -93,13 +68,6 @@ export const countTripPoints = (individualTripPoints, tripPointKey) => {
     return obj;
   }, {});
 };
-
-/**
- * shows certain block by clicking on corresponding link
- * block set depends on url hash
- * @param {String} urlHash
- * @return
- */
 
 const showCertainBlock = (urlHash) => {
   document.querySelector(`[href="#${urlHash}"]`).click();
