@@ -3,6 +3,7 @@ import {
   TRIP_POINTS_TABLE_BTN_SELECTOR,
   STATS_SELECTOR,
   MAIN_SELECTOR,
+  FILTERS_SELECTOR,
 } from '../constants';
 
 import renderMoneyStatistics from '../statistics/money';
@@ -32,19 +33,21 @@ const destroyCanvas = () => {
 
 const makeStatistics = ({data}) => {
   statsElement.addEventListener(`click`, () => {
-    statsElement.classList.toggle(`view-switch__item--active`);
-    tripPointsTableElement.classList.toggle(`view-switch__item--active`);
+    statsElement.classList.add(`view-switch__item--active`);
+    tripPointsTableElement.classList.remove(`view-switch__item--active`);
     destroyCanvas();
-    document.querySelector(STATS_SELECTOR).classList.toggle(`visually-hidden`);
-    document.querySelector(MAIN_SELECTOR).classList.toggle(`visually-hidden`);
+    document.querySelector(STATS_SELECTOR).classList.remove(`visually-hidden`);
+    document.querySelector(MAIN_SELECTOR).classList.add(`visually-hidden`);
+    document.querySelector(FILTERS_SELECTOR).classList.add(`visually-hidden`);
     renderStatistics(data);
   });
 
   tripPointsTableElement.addEventListener(`click`, () => {
-    statsElement.classList.toggle(`view-switch__item--active`);
-    tripPointsTableElement.classList.toggle(`view-switch__item--active`);
-    document.querySelector(MAIN_SELECTOR).classList.toggle(`visually-hidden`);
-    document.querySelector(STATS_SELECTOR).classList.toggle(`visually-hidden`);
+    statsElement.classList.remove(`view-switch__item--active`);
+    tripPointsTableElement.classList.add(`view-switch__item--active`);
+    document.querySelector(MAIN_SELECTOR).classList.remove(`visually-hidden`);
+    document.querySelector(FILTERS_SELECTOR).classList.remove(`visually-hidden`);
+    document.querySelector(STATS_SELECTOR).classList.add(`visually-hidden`);
     destroyCanvas();
   });
 };
