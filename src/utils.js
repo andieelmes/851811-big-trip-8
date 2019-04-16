@@ -109,7 +109,6 @@ export const escapeHtml = (string) => {
 export const catchError = (type, err, component) => {
   component.shake();
   component.makeRedBorder();
-  component.unBlock();
   throw err;
 };
 
