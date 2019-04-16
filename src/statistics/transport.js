@@ -2,7 +2,7 @@ import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import {
-  TrasnportTypeToLabel,
+  TransportTypeToLabel,
   BAR_HEIGHT,
   CHART_OPTIONS_CONFIG,
   STATISTICS_TRANSPORT_SELECTOR,
@@ -14,7 +14,7 @@ import {
 } from '../utils';
 
 const renderTrasnportStatistics = (data) => {
-  const individualTransportActivity = getTripPointInfoByLabel(data, TrasnportTypeToLabel);
+  const individualTransportActivity = getTripPointInfoByLabel(data, TransportTypeToLabel);
   const transportActivityCounts = countTripPoints(individualTransportActivity);
   const transportCtx = document.querySelector(STATISTICS_TRANSPORT_SELECTOR);
 

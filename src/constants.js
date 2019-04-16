@@ -1,16 +1,9 @@
-import moment from 'moment';
-
-export const MIN_NUMBER_OF_TRIP_POINTS = 10;
-export const MAX_NUMBER_OF_TRIP_POINTS = 15;
 export const FILTERS_SELECTOR = `.trip-filter`;
 export const SORTING_SELECTOR = `.trip-sorting`;
 export const OFFERS_FORM_NAME = `offer`;
 export const PRICE_FORM_NAME = `price`;
 export const DESTINATION_FORM_NAME = `destination`;
-export const MIN_PRICE = 50;
-export const MAX_PRICE = 100;
 export const MAX_OFFER_NUMBER = 3;
-export const LOREM_IPSUM = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
 
 export const Type = {
   FLIGHT: `Flight`,
@@ -67,7 +60,7 @@ export const AllTypeToInputLabel = {
   TRAVEL: `Travel to`,
 };
 
-export const TrasnportTypeToLabel = {
+export const TransportTypeToLabel = {
   DRIVE: `🚗 DRIVE`,
   TAXI: `🚕 RIDE`,
   FLIGHT: `✈️ FLY`,
@@ -77,51 +70,9 @@ export const TrasnportTypeToLabel = {
   BUS: `🚌 BUS`,
 };
 
-export const CITIES = [
-  `Paris`,
-  `Dubrovnik`,
-  `Barcelona`,
-  `Oslo`,
-  `Seul`,
-  `Malmo`,
-  `Amsterdam`,
-  `San-Francisco`,
-  `Derry`,
-  `Fargo`,
-  `New York`,
-  `Los Angeles`
-];
-export const OFFERS = [
-  {
-    name: `Add luggage`,
-    price: 10,
-  },
-  {
-    name: `Switch to comfort class`,
-    price: 11,
-  },
-  {
-    name: `Add meal`,
-    price: 12,
-  },
-  {
-    name: `Choose seats`,
-    price: 13,
-  },
-];
-export const MIN_CITIES = 2;
-export const MAX_CITIES = 5;
-export const MIN_TOTAL_PRICE = 750;
-export const MAX_TOTAL_PRICE = 2000;
 export const TRIP_POINTS_CONTAINER_SELECTOR = `.trip-points`;
 export const TRIP_POINTS_SELECTOR = `.trip-day__items`;
 export const TRIP_INFO_SELECTOR = `.trip`;
-export const TRIP_DAY_INFO_SELECTOR = `.trip-day__info`;
-export const START_HOURS = [10, 16];
-export const END_HOURS = [16, 23];
-export const MINUTES = [0, 59];
-export const START_DATE = [moment().date() - 2, moment().date() + 2];
-export const END_DATE = [moment().date() + 3, moment().date() + 2];
 export const FAVOURITE_OFF = `off`;
 export const FAVOURITE_ON = `on`;
 
