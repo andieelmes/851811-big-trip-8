@@ -24,6 +24,14 @@ const closeTripPoint = (tripPointComponent, editTripPointComponent, tripPointsEl
   editTripPointComponent.unrender();
 };
 
+const updateTrip = (tripPointsDataModel, provider) => {
+  renderTripDayInfo(tripPointsDataModel);
+  renderTripInfo(tripPointsDataModel);
+  makeTripPoints(tripPointsDataModel, tripPointsDataModel.data, provider);
+  makeFilters(tripPointsDataModel, provider);
+  makeSort(tripPointsDataModel, provider);
+};
+
 const makeTripPoints = (tripPointsDataModel, tripPoints, provider) => {
   const {destinations, offers} = tripPointsDataModel;
   const createTripPointComponents = () => {
@@ -58,11 +66,7 @@ const makeTripPoints = (tripPointsDataModel, tripPoints, provider) => {
             tripPointComponent.update(newTripPoint);
 
             tripPointsDataModel.update(tripPointData);
-            renderTripDayInfo(tripPointsDataModel);
-            renderTripInfo(tripPointsDataModel);
-            makeTripPoints(tripPointsDataModel, tripPointsDataModel.data, provider);
-            makeFilters(tripPointsDataModel, provider);
-            makeSort(tripPointsDataModel, provider);
+            updateTrip(tripPointsDataModel, provider);
           })
           .catch((err) => {
             catchError(`submit`, err, editTripPointComponent);
@@ -78,12 +82,14 @@ const makeTripPoints = (tripPointsDataModel, tripPoints, provider) => {
 
             tripPointComponent.unrender();
             editTripPointComponent.unrender();
+
+            tripPointsDataModel.remove(id);
+
+            updateTrip(tripPointsDataModel, provider);
           })
           .catch((err) => {
             catchError(`delete`, err, editTripPointComponent);
           });
-
-        renderTripInfo(tripPoints);
       };
 
       editTripPointComponent.onEsc = () => {

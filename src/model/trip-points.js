@@ -52,8 +52,13 @@ class ModelTripPoints {
   }
 
   update(tripPoint) {
-    const tripPointIndexToUpdate = this._data.findIndex((id) => id === tripPoint.id) || this._data.length;
+    const tripPointIndexToUpdate = this._data.findIndex((id) => id === tripPoint.id);
     this._data[tripPointIndexToUpdate] = tripPoint;
+  }
+
+  remove(id) {
+    const tripPointIndexToRemove = this._data.findIndex((point) => point.id === id);
+    this._data.splice(tripPointIndexToRemove, 1);
   }
 
   add(tripPoint) {
@@ -77,7 +82,7 @@ class ModelTripPoints {
         return tripPointsInDay;
       }
       const sorted = sortBy(tripPointsInDay, [(tripPoint) => {
-        return tripPointType === PRICE_FORM_NAME ? getOffersPrice(tripPoint.offers) + +tripPoint.price : tripPoint[tripPointType];
+        return tripPointType === PRICE_FORM_NAME ? +getOffersPrice(tripPoint.offers) + +tripPoint.price : tripPoint[tripPointType];
       }]);
       return tripPointType === OFFERS_FORM_NAME ? sorted.reverse() : sorted;
     }).flat();
