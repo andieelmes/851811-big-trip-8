@@ -61,7 +61,7 @@ export const getTripPointInfoByLabel = (data, labels, tripPointKey) => {
       timeEnd,
     } = day;
 
-    const typeLabel = capitalize(type);
+    const typeLabel = type.toUpperCase();
     const label = labels[typeLabel];
 
     if (label) {

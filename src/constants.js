@@ -41,40 +41,40 @@ export const TYPES = new Map([
 ]);
 
 export const AllTypeToLabel = {
-  Flight: `✈️ FLY`,
-  [`Check-in`]: `🏨 STAY`,
-  Drive: `🚗 DRIVE`,
-  Sightseeing: `🏛️ LOOK`,
-  Restaurant: `🍴 EAT`,
-  Taxi: `🚕 RIDE`,
-  Bus: `🚌 BUS`,
-  Train: `🚂 CHOO-CHOO`,
-  Ship: `🛳️ SAIL`,
-  Transport: `🚊 GO AROUND`,
+  FLIGHT: `✈️ FLY`,
+  [`CHECK-IN`]: `🏨 STAY`,
+  DRIVE: `🚗 DRIVE`,
+  SIGHTSEEING: `🏛️ LOOK`,
+  RESTATURANT: `🍴 EAT`,
+  TAXI: `🚕 RIDE`,
+  BUS: `🚌 BUS`,
+  TRAIN: `🚂 CHOO-CHOO`,
+  SHIP: `🛳️ SAIL`,
+  TRANSPORT: `🚊 GO AROUND`,
 };
 
 export const AllTypeToInputLabel = {
-  Flight: `Flight to`,
-  [`Check-in`]: `Check-in at hotel in`,
-  Drive: `Drive to`,
-  Sightseeing: `Sightseeing in`,
-  Restaurant: `Restaurant in`,
-  Taxi: `Taxi to`,
-  Bus: `Bus to`,
-  Train: `Train to`,
-  Ship: `Ship to`,
-  Transport: `Transport to`,
-  Travel: `Travel to`,
+  FLIGHT: `Flight to`,
+  [`CHECK-IN`]: `Check-in at hotel in`,
+  DRIVE: `Drive to`,
+  SIGHTSEEING: `Sightseeing in`,
+  RESTATURANT: `Restaurant in`,
+  TAXI: `Taxi to`,
+  BUS: `Bus to`,
+  TRAIN: `Train to`,
+  SHIP: `Ship to`,
+  TRANSPORT: `Transport to`,
+  TRAVEL: `Travel to`,
 };
 
 export const TrasnportTypeToLabel = {
-  Drive: `🚗 DRIVE`,
-  Taxi: `🚕 RIDE`,
-  Flight: `✈️ FLY`,
-  Ship: `🛳️ SAIL`,
-  Train: `🚂 CHOO-CHOO`,
-  Transport: `🚊 GO AROUND`,
-  Bus: `🚌 BUS`,
+  DRIVE: `🚗 DRIVE`,
+  TAXI: `🚕 RIDE`,
+  FLIGHT: `✈️ FLY`,
+  SHIP: `🛳️ SAIL`,
+  TRAIN: `🚂 CHOO-CHOO`,
+  TRANSPORT: `🚊 GO AROUND`,
+  BUS: `🚌 BUS`,
 };
 
 export const CITIES = [
