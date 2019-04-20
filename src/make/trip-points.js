@@ -55,6 +55,21 @@ const makeTripPoints = (tripPointsDataModel, tripPoints, provider) => {
         tripPointComponent.unrender();
       };
 
+      tripPointComponent.onOfferAdd = (newObject) => {
+        Object.assign(tripPointData, newObject);
+
+        provider.updateTripPoint({id: tripPointData.id, data: tripPointData.toRAW()})
+          .then((newTripPoint) => {
+            tripPointComponent.update(newTripPoint);
+
+            tripPointsDataModel.update(tripPointData);
+            updateTrip(tripPointsDataModel, provider);
+          })
+          .catch((err) => {
+            catchError(`submit`, err, tripPointComponent);
+          });
+      };
+
       editTripPointComponent.onSubmit = (newObject) => {
         Object.assign(tripPointData, newObject);
 

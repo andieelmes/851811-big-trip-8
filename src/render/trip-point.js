@@ -27,6 +27,7 @@ class TripPoint extends Component {
     this._onTripPointClick = this._onTripPointClick.bind(this);
 
     this._onEdit = null;
+    this._onOfferAdd = null;
 
   }
 
@@ -47,13 +48,17 @@ class TripPoint extends Component {
     </p>
     <p class="trip-point__price">&euro;&nbsp;${totalPrice}</p>
     <ul class="trip-point__offers">
-      ${this._getMaxAcceptedOffers(this._offers)}
+      ${this._getMaxAvailiableOffers(this._offers)}
     </ul>
   </article>`.trim();
   }
 
   set onEdit(fn) {
     this._onEdit = fn;
+  }
+
+  set onOfferAdd(fn) {
+    this._onOfferAdd = fn;
   }
 
   update(data) {
@@ -66,23 +71,52 @@ class TripPoint extends Component {
     this._timeEnd = data.timeEnd;
   }
 
-  _onTripPointClick() {
-    return typeof this._onEdit === `function` && this._onEdit();
+  _convertDataVariables(data) {
+    return {
+      type: data._type,
+      destination: data._destination,
+      offers: data._offers,
+      price: data._price,
+      favorite: data._favorite,
+      timeStart: data._timeStart,
+      timeEnd: data._timeEnd,
+    };
   }
 
-  _getMaxAcceptedOffers(offers) {
-    return offers.reduce((acceptedOffers, offer) => {
-      if (offer.accepted && acceptedOffers.length < MAX_OFFER_NUMBER) {
-        acceptedOffers.push(this._makeTripPointOffer(offer));
+  _onTripPointClick(evt) {
+    if (evt.target.closest(`.trip-point__offers`)) {
+      return this._onOfferClick(evt);
+    } else {
+      return typeof this._onEdit === `function` && this._onEdit();
+    }
+  }
+
+  _getMaxAvailiableOffers(offers) {
+    return offers.reduce((availableOffers, offer) => {
+      if (!offer.accepted && availableOffers.length < MAX_OFFER_NUMBER) {
+        const offerIndex = offers.indexOf(offer);
+        availableOffers.push(this._makeTripPointOffer(offer, offerIndex));
       }
-      return acceptedOffers;
+      return availableOffers;
     }, []).join(``);
   }
 
-  _makeTripPointOffer(offer) {
-    return offer.accepted ? `<li>
-        <button class="trip-point__offer">${offer.name} +&euro;&nbsp;${offer.price}</button>
+  _makeTripPointOffer(offer, index) {
+    return !offer.accepted ? `<li>
+        <button class="trip-point__offer" data-index="${index}">${offer.name} +&euro;&nbsp;${offer.price}</button>
       </li>` : ``;
+  }
+
+  _onOfferClick(evt) {
+    if (!evt.target.classList.contains((`trip-point__offer`))) {
+      return false;
+    }
+    const offerIndex = evt.target.closest(`.trip-point__offer`).getAttribute(`data-index`);
+    const chosenOffer = this._offers[offerIndex];
+    chosenOffer.accepted = true;
+    const newData = Object.assign(this, chosenOffer);
+
+    return typeof this._onOfferAdd === `function` && this._onOfferAdd(this._convertDataVariables(newData));
   }
 
   bind() {
