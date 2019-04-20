@@ -1,3 +1,5 @@
+import nanoid from 'nanoid';
+
 import {
   TRIP_POINTS_CONTAINER_SELECTOR,
 } from '../constants';
@@ -22,7 +24,7 @@ const makeNewTripPoint = (tripPointsDataModel, provider) => {
   const tripPointsContainerElement = document.querySelector(TRIP_POINTS_CONTAINER_SELECTOR);
 
   const tripPointData = new ModelTripPoint({
-    'id': +tripPointsDataModel.data[tripPointsDataModel.data.length - 1].id + 1,
+    'id': nanoid(),
     'is_favorite': false,
     'type': offers[0].type.toLowerCase(),
     'date_from': Date.now(),
